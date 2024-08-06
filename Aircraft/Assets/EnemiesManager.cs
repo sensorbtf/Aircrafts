@@ -10,19 +10,8 @@ public class EnemiesManager : MonoBehaviour
 
     private List<GameObject> enemyAircrafts = new List<GameObject>();
 
-    public void CustomStart(AircraftSO p_firstAircraft)
+    public void CustomStart(VehicleSO pFirstVehicle)
     {
         //SpawnEnemyAircrafts(p_firstAircraft);
-    }
-
-    void SpawnEnemyAircrafts(AircraftSO p_firstAircraft)
-    {
-        for (int i = 0; i < _numberOfEnemyAircraft; i++)
-        {
-            var spawnPosition = _playerBase.position;
-            var newEnemyAircraft = Instantiate(_enemyAircraftPrefab, spawnPosition, Quaternion.identity);
-            newEnemyAircraft.GetComponent<EnemyAircraftController>().CustomStart(new Aircraft(p_firstAircraft));
-            enemyAircrafts.Add(newEnemyAircraft);
-        }
     }
 }

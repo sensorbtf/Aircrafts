@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e63353ffd12a49fdb81c1b38e1ad6802, type: 3}
-  m_Name: First_Aircraft_SO
+  m_Name: GPUV_SO
   m_EditorClassIdentifier: 
-  Icon: {fileID: 21300000, guid: 722492e193f28124ab22568b1a70766b, type: 3}
-  IngameModel: {fileID: 21300000, guid: 722492e193f28124ab22568b1a70766b, type: 3}
-  Type: 0
-  MaxHp: 5
-  Speed: 50
-  Maneuverability: 50
+  _prefab: {fileID: 935343325555934533, guid: f3f5c2842a34750479de831f22dc21a0, type: 3}
+  _icon: {fileID: 21300000, guid: 722492e193f28124ab22568b1a70766b, type: 3}
+  _type: 1
+  _weaponsType: []
+  _maxHp: 50
+  _speed: 10
+  _maneuverability: 10

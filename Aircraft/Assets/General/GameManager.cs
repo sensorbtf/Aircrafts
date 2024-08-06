@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Vehicles;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private EnemiesManager _enemiesManager;
-    [SerializeField] private PlayerController _playerController;
-    [SerializeField] private AircraftSO _firstAircraft;
+    [SerializeField] private VehiclesManager _vehiclesManager;
+    [SerializeField] private UIManager _uiManager;
 
     void Start()
     {
-        _playerController.CustomStart(_firstAircraft);
-        _enemiesManager.CustomStart(_firstAircraft);
+        _vehiclesManager.CustomStart();
+        _uiManager.CustomStart();
     }
 }

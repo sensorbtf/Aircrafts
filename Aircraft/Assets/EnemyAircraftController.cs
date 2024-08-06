@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyAircraftController : MonoBehaviour
 {
-    [SerializeField] private Aircraft _currentAircraft;
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private float patrolRadius = 10.0f;
     [SerializeField] private float patrolSpeed = 5.0f;
@@ -22,13 +21,7 @@ public class EnemyAircraftController : MonoBehaviour
     private Vector2 _patrolCenter;
     private Vector2 _targetPosition;
 
-    public void CustomStart(Aircraft aircraft)
-    {
-        _currentAircraft = aircraft;
 
-        _patrolCenter = transform.position;
-        SetNewTargetPosition();
-    }
 
     void Update()
     {
@@ -37,9 +30,6 @@ public class EnemyAircraftController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (_rigidbody2D == null || _currentAircraft == null)
-            return;
-
         float step = patrolSpeed * Time.deltaTime;
         transform.position = Vector2.MoveTowards(transform.position, _targetPosition, step);
 
@@ -94,7 +84,7 @@ public class EnemyAircraftController : MonoBehaviour
         {
             float altitude = Mathf.Abs(transform.position.y - groundLevel);
             float speedFactor = Mathf.Clamp01(1 - altitude / maxAltitude);
-            return _currentThrust * 0.01f * _currentAircraft.Data.Speed * speedFactor;
+            return 1;
         }
     }
 }

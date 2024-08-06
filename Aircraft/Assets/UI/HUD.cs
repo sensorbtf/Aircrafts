@@ -1,38 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vehicles;
 
 public class HUD : MonoBehaviour
 {
-    [SerializeField] private PlayerController _playerController;
-    [SerializeField] private Slider _powerSlider;
-    [SerializeField] private TextMeshProUGUI _powerSliderText;
-    
+    [SerializeField] private VehiclesManager VehiclesManager;
     [SerializeField] private Slider _fuelSlider;
     [SerializeField] private TextMeshProUGUI _fuelSliderText;
+    [SerializeField] private GameObject _combatVehicles;
+    [SerializeField] private GameObject _utilityVehicles;
     
-    // Start is called before the first frame update
-    void Start()
+    [Header("Prefabs")]
+    [SerializeField] private GameObject _vehicleIconPrefab;
+    
+    public void CustomStart()
     {
-        _powerSlider.minValue = 0;
-        _powerSlider.maxValue = 100;        
-        _powerSlider.value = Mathf.CeilToInt(_playerController.CurrentThrust);
-        _powerSliderText.text = Mathf.CeilToInt(_playerController.CurrentThrust).ToString();
+        foreach (var vehicle in VehiclesManager.AllVehicles)
+        {
+            GameObject newGo = null;
             
-        _fuelSlider.minValue = 0;
-        _fuelSlider.maxValue = 100;
-        _fuelSlider.value = _playerController.CurrentAircraftFuel;
-        _fuelSliderText.text = Mathf.CeilToInt(_playerController.CurrentAircraftFuel).ToString();
+            if (vehicle.VehicleData.Type == VehicleType.Combat)
+            {
+                newGo = Instantiate(_vehicleIconPrefab, _combatVehicles.transform);
+            }
+            else
+            {
+                newGo = Instantiate(_vehicleIconPrefab, _utilityVehicles.transform);
+            }
+
+            var refs = newGo.GetComponent<VehicleIconRefs>();
+            refs.Icon.sprite = vehicle.VehicleData.Icon;
+            refs.Button.onClick.AddListener(delegate { SelectVehicle(vehicle);}); 
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SelectVehicle(Vehicle p_vehicle)
     {
-        _powerSlider.value = Mathf.CeilToInt(_playerController.CurrentThrust);
-        _powerSliderText.text = Mathf.CeilToInt(_playerController.CurrentThrust).ToString();
-        _fuelSlider.value = _playerController.CurrentAircraftFuel;
-        _fuelSliderText.text = Mathf.CeilToInt(_playerController.CurrentAircraftFuel).ToString();
+        VehiclesManager.SelectVehicle(p_vehicle);
+    }
+
+    private void Update()
+    {
     }
 }
