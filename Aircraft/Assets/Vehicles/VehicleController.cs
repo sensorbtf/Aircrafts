@@ -13,6 +13,7 @@ namespace Vehicles
             if (CurrentVehicle != null)
             {
                 CurrentVehicle.HandleMovement();
+                CurrentVehicle.HandleSpecialAction();
             }
         }
     }

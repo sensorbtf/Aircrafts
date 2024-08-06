@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TV_SO
   m_EditorClassIdentifier: 
   _prefab: {fileID: 935343325555934533, guid: ec66cc061408f9942bd110102683008d, type: 3}
-  _icon: {fileID: 21300000, guid: 722492e193f28124ab22568b1a70766b, type: 3}
+  _icon: {fileID: 21300000, guid: 0eeba1f942330a240b8b1c6f3cd385c9, type: 3}
   _type: 2
   _weaponsType: []
   _maxHp: 50

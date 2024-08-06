@@ -39,10 +39,15 @@ namespace Vehicles
             CurrentFuel--;
         }
 
-        public void HandleMovement()
+        public virtual void HandleMovement()
         {
             float move = Input.GetAxis("Horizontal") * VehicleData.Speed * Time.deltaTime;
             transform.Translate(move, 0, 0);
+        }
+
+        public virtual void HandleSpecialAction()
+        {
+            
         }
 
         public void OnPointerClick(PointerEventData p_eventData)

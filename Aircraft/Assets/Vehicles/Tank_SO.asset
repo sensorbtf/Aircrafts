@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tank_SO
   m_EditorClassIdentifier: 
   _prefab: {fileID: 935343325555934533, guid: c5b7348ea1470c941af8c6fcb50aed91, type: 3}
-  _icon: {fileID: 21300000, guid: a5de0d02caa207e459c61a30a8e773b5, type: 3}
+  _icon: {fileID: 21300000, guid: 26c949db03a2d24438f553854d8ab424, type: 3}
   _type: 0
   _weaponsType:
   - Type: 0
