@@ -12,6 +12,9 @@ namespace Vehicles
         public bool IsSelected { get; private set; }
 
         public float CurrentFuel { get; private set; }
+        public Rigidbody2D Rigidbody2D;
+        public SpriteRenderer Renderer = null;
+
 
         internal Action<Vehicle> OnVehicleClicked;
         internal Action<Vehicle> OnVehicleDestroyed;
@@ -21,6 +24,9 @@ namespace Vehicles
             VehicleData = p_vehicleData;
             CurrentFuel = 100;
             IsSelected = false;
+
+            Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
+            Renderer = gameObject.GetComponent<SpriteRenderer>();
         }
 
         public void SelectVehicle()

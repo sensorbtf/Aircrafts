@@ -15,6 +15,10 @@ namespace Vehicles
         private void Update()
         {
             VehicleController.Update();
+        } 
+        private void FixedUpdate()
+        {
+            VehicleController.FixedUpdate();
         }
 
         public void CustomStart()

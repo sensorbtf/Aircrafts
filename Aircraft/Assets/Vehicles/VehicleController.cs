@@ -8,12 +8,19 @@ namespace Vehicles
     {
         public Vehicle CurrentVehicle;
 
+        public void FixedUpdate()
+        {
+            if (CurrentVehicle != null)
+            {
+                CurrentVehicle.HandleMovement();
+            }
+        }
+
         public void Update()
         {
             if (CurrentVehicle != null)
             {
                 CurrentVehicle.HandleMovement();
-                CurrentVehicle.HandleSpecialAction();
             }
         }
     }

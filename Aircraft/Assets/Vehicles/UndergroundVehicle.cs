@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Vehicles
 {
@@ -14,11 +15,9 @@ namespace Vehicles
 
         public override void HandleMovement()
         {
-            // Get the input for movement
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
 
-            // Determine the direction based on the input
             Vector2 direction = Vector2.zero;
 
             if (moveHorizontal > 0)
@@ -42,21 +41,42 @@ namespace Vehicles
                 transform.rotation = Quaternion.Euler(0, 0, 270); // Rotate to face South
             }
 
-            // Move the vehicle in the determined direction
-            transform.Translate(direction * VehicleData.Speed * Time.deltaTime, Space.World);
+            if (direction != Vector2.zero)
+            {
+                Vector2 newPosition = (Vector2)transform.position + direction * VehicleData.Speed * Time.deltaTime;
+                Rigidbody2D.MovePosition(newPosition);
+            }
         }
-        
+
+        private SpriteRenderer renderer = null;
+
         public override void HandleSpecialAction()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            var hitCollider = Physics2D.OverlapCircle(_crushPoint.position, 0.1f); // Reduced radius for precision
+            if (hitCollider != null && hitCollider.CompareTag("CrushableCell"))
             {
-                Collider2D hitCollider = Physics2D.OverlapCircle(_crushPoint.position, 0.1f); // Reduced radius for precision
-                if (hitCollider != null)
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    if (hitCollider.CompareTag("CrushableCell"))
-                    {
                         Destroy(hitCollider.gameObject);
+                }
+                else
+                {
+                    if (renderer != null)
+                    {
+                        renderer.color = Color.white;
+                        renderer = null;
                     }
+
+                    renderer = hitCollider.gameObject.GetComponent<SpriteRenderer>();
+                    renderer.color = Color.red;
+                }
+            }
+            else
+            {
+                if (renderer != null)
+                {
+                    renderer.color = Color.white;
+                    renderer = null;
                 }
             }
         }
