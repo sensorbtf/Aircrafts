@@ -7,12 +7,6 @@ namespace Vehicles
     {
         [SerializeField] private Transform _crushPoint;
 
-        void Update()
-        {
-            HandleMovement();
-            HandleSpecialAction();
-        }
-
         public override void HandleMovement()
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
@@ -82,3 +76,8 @@ namespace Vehicles
         }
     }
 }
+
+// Cały loop fabularny (narrator, questy -> QuestManager i SO z questami (narracja + cel)
+// Enemies, SO, controllers i enemy manager (one enemy)
+// System POI z colliderami na trigger dla szkieletu, panelów słonecznych
+// System budynków (baza, panele słoneczne, ropa) i produkcji

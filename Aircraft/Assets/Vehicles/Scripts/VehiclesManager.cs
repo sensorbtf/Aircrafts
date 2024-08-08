@@ -15,7 +15,8 @@ namespace Vehicles
         private void Update()
         {
             VehicleController.Update();
-        } 
+        }
+
         private void FixedUpdate()
         {
             VehicleController.FixedUpdate();
@@ -27,7 +28,7 @@ namespace Vehicles
             
             foreach (var vehicleSo in _vehiclesDatabase.Vehicles)
             {
-                var newVehicle = Instantiate(vehicleSo.Prefab);
+                var newVehicle = Instantiate(vehicleSo.Prefab, gameObject.transform, true);
                 
                 switch (vehicleSo.Type)
                 {

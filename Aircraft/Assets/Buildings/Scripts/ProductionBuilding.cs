@@ -1,6 +1,6 @@
 ﻿namespace Buildings
 {
-    public class BuildingsManager
+    public class ProductionBuilding: Building
     {
         
     }

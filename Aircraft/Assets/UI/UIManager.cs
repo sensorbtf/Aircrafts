@@ -1,13 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+using UI.HUD;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+namespace UI
 {
-    [SerializeField] private HUD _hud;
-    
-    public void CustomStart()
+    public class UIManager : MonoBehaviour
     {
-        _hud.CustomStart();
+        [SerializeField] private HUDManager _hud;
+
+        public void CustomStart()
+        {
+            _hud.CustomStart();
+        }
     }
 }
