@@ -8,6 +8,9 @@ namespace Buildings
     {
         [SerializeField] private BuildingSO _buildingData;
 
+        private bool _isBroken;
+        private bool _isFunctioning;
+        
         public BuildingSO BuildingData => _buildingData;
         
         internal Action<Building> OnBuildingClicked;

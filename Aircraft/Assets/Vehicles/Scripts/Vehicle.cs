@@ -15,7 +15,6 @@ namespace Vehicles
         public Rigidbody2D Rigidbody2D;
         public SpriteRenderer Renderer = null;
 
-
         internal Action<Vehicle> OnVehicleClicked;
         internal Action<Vehicle> OnVehicleDestroyed;
         
@@ -47,8 +46,31 @@ namespace Vehicles
 
         public virtual void HandleMovement()
         {
-            float move = Input.GetAxis("Horizontal") * VehicleData.Speed * Time.deltaTime;
-            transform.Translate(move, 0, 0);
+            float moveHorizontal = Input.GetAxis("Horizontal");
+
+            Vector2 force = Vector2.zero;
+
+            if (moveHorizontal > 0)
+            {
+                force = Vector2.right * VehicleData.Speed;
+                Renderer.flipX = true;
+            }
+            else if (moveHorizontal < 0)
+            {
+                force = Vector2.left * VehicleData.Speed;
+                Renderer.flipX = false;
+            }
+
+            if (force != Vector2.zero)
+            {
+                Rigidbody2D.AddForce(force, ForceMode2D.Force);
+            }
+
+            float maxSpeed = 10f; 
+            if (Rigidbody2D.velocity.magnitude > maxSpeed)
+            {
+                Rigidbody2D.velocity = Rigidbody2D.velocity.normalized * maxSpeed;
+            }
         }
 
         public virtual void HandleSpecialAction()

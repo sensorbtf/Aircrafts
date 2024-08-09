@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 962a2774b1c945a89f76bb390583d93e, type: 3}
+  m_Name: FirstEnemySO
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 3931662045494198967, guid: f81ab6106595f3c4bba9e645d04bd411, type: 3}
+  _icon: {fileID: 21300000, guid: 69e964041c59e594997f655c88827a00, type: 3}
+  _type: 0
+  _maxHp: 100
+  _speed: 10
+  _attackRange: 1
+  _attackCooldown: 1

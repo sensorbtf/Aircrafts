@@ -42,11 +42,9 @@ namespace Vehicles
             }
         }
 
-        private SpriteRenderer renderer = null;
-
         public override void HandleSpecialAction()
         {
-            var hitCollider = Physics2D.OverlapCircle(_crushPoint.position, 0.1f); // Reduced radius for precision
+            var hitCollider = Physics2D.OverlapCircle(_crushPoint.position, 0.1f); 
             if (hitCollider != null && hitCollider.CompareTag("CrushableCell"))
             {
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -55,29 +53,24 @@ namespace Vehicles
                 }
                 else
                 {
-                    if (renderer != null)
+                    if (Renderer != null)
                     {
-                        renderer.color = Color.white;
-                        renderer = null;
+                        Renderer.color = Color.white;
+                        Renderer = null;
                     }
 
-                    renderer = hitCollider.gameObject.GetComponent<SpriteRenderer>();
-                    renderer.color = Color.red;
+                    Renderer = hitCollider.gameObject.GetComponent<SpriteRenderer>();
+                    Renderer.color = Color.red;
                 }
             }
             else
             {
-                if (renderer != null)
+                if (Renderer != null)
                 {
-                    renderer.color = Color.white;
-                    renderer = null;
+                    Renderer.color = Color.white;
+                    Renderer = null;
                 }
             }
         }
     }
 }
-
-// Cały loop fabularny (narrator, questy -> QuestManager i SO z questami (narracja + cel)
-// Enemies, SO, controllers i enemy manager (one enemy)
-// System POI z colliderami na trigger dla szkieletu, panelów słonecznych
-// System budynków (baza, panele słoneczne, ropa) i produkcji

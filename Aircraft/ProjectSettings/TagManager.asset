@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - CrushableCell
+  - Building
+  - Vehicle
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -18,7 +21,7 @@ TagManager:
   - 
   - 
   - Vehicles
-  - 
+  - Ground
   - 
   - 
   - 

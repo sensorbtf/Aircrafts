@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Buildings;
 using UnityEngine;
 
 namespace Vehicles
@@ -9,27 +10,39 @@ namespace Vehicles
     {
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private VehiclesDatabase _vehiclesDatabase;
+        [SerializeField] private BuildingsManager _buildingsManager;
+
         public VehicleController VehicleController;
         public List<Vehicle> AllVehicles;
 
         private void Update()
         {
-            VehicleController.Update();
+            if (VehicleController != null)
+            {
+                VehicleController.Update();
+            }
         }
 
         private void FixedUpdate()
         {
-            VehicleController.FixedUpdate();
+            if (VehicleController != null)
+            {
+                VehicleController.FixedUpdate();
+            }
+        }
+
+        private void Start()
+        {
+            VehicleController = new VehicleController();
         }
 
         public void CustomStart()
         {
-            VehicleController = new VehicleController();
-            
             foreach (var vehicleSo in _vehiclesDatabase.Vehicles)
             {
                 var newVehicle = Instantiate(vehicleSo.Prefab, gameObject.transform, true);
-                
+                newVehicle.transform.position = _buildingsManager.GetMainBase().transform.position;
+
                 switch (vehicleSo.Type)
                 {
                     case VehicleType.Combat:

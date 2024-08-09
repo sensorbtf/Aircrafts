@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Enemies;
 using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,5 +18,6 @@ public class GameManager : MonoBehaviour
     {
         _vehiclesManager.CustomStart();
         _uiManager.CustomStart();
+        _enemiesManager.CustomStart();
     }
 }

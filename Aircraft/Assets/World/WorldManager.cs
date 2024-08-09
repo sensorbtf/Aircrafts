@@ -29,3 +29,8 @@ namespace World
         }
     }
 }
+
+// TODO: Cały loop fabularny (narrator, questy -> QuestManager i SO z questami (narracja + cel)
+// Enemies, SO, controllers i enemy manager (one enemy)
+// System POI z colliderami na trigger dla szkieletu, panelów słonecznych, czyli do połączenia z innymi systemami
+// System budynków (baza, panele słoneczne, ropa) i produkcji np. piasek

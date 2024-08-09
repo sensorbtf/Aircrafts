@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Buildings
@@ -13,6 +14,11 @@ namespace Buildings
             foreach (var building in Buildings)
             {
             }
+        }
+
+        public Building GetMainBase()
+        {
+            return Buildings.FirstOrDefault(x => x.BuildingData.Type == BuildingType.Main_Base);
         }
     }
 }
