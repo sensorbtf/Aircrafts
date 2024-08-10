@@ -6,6 +6,7 @@ namespace Vehicles
     public class UndergroundVehicle : Vehicle
     {
         [SerializeField] private Transform _crushPoint;
+        private SpriteRenderer _cellSprite;
 
         public override void HandleMovement()
         {
@@ -53,22 +54,22 @@ namespace Vehicles
                 }
                 else
                 {
-                    if (Renderer != null)
+                    if (_cellSprite != null)
                     {
-                        Renderer.color = Color.white;
-                        Renderer = null;
+                        _cellSprite.color = Color.white;
+                        _cellSprite = null;
                     }
 
-                    Renderer = hitCollider.gameObject.GetComponent<SpriteRenderer>();
-                    Renderer.color = Color.red;
+                    _cellSprite = hitCollider.gameObject.GetComponent<SpriteRenderer>();
+                    _cellSprite.color = Color.red;
                 }
             }
             else
             {
-                if (Renderer != null)
+                if (_cellSprite != null)
                 {
-                    Renderer.color = Color.white;
-                    Renderer = null;
+                    _cellSprite.color = Color.white;
+                    _cellSprite = null;
                 }
             }
         }

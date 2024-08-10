@@ -13,7 +13,7 @@ public class VehicleSO : ScriptableObject
     [SerializeField] private int _maxHp;
     [SerializeField] private int _speed;
     [SerializeField] private int _maneuverability;
-    
+    [SerializeField] private int _attackDamage;
     
     public Sprite Icon => _icon;
     public GameObject Prefab => _prefab;
@@ -22,6 +22,7 @@ public class VehicleSO : ScriptableObject
     public int MaxHp => _maxHp;
     public int Speed => _speed;
     public int Maneuverability => _maneuverability;
+    public int AttackDamage => _attackDamage;
 }
 
 public enum VehicleType

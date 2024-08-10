@@ -19,5 +19,10 @@ namespace Buildings
         {
             OnBuildingClicked?.Invoke(this);
         }
+
+        public void RecieveDamage(int p_damage)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

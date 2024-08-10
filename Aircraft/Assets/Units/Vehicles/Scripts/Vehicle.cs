@@ -1,19 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Buildings;
+using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Vehicles
 {
-    public abstract class Vehicle: MonoBehaviour, IPointerClickHandler
+    public abstract class Vehicle: Unit, IPointerClickHandler
     {
         public VehicleSO VehicleData { get; private set; }
         public bool IsSelected { get; private set; }
 
         public float CurrentFuel { get; private set; }
-        public Rigidbody2D Rigidbody2D;
-        public SpriteRenderer Renderer = null;
 
         internal Action<Vehicle> OnVehicleClicked;
         internal Action<Vehicle> OnVehicleDestroyed;
@@ -25,7 +25,7 @@ namespace Vehicles
             IsSelected = false;
 
             Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-            Renderer = gameObject.GetComponent<SpriteRenderer>();
+            SpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         }
 
         public void SelectVehicle()
@@ -53,12 +53,12 @@ namespace Vehicles
             if (moveHorizontal > 0)
             {
                 force = Vector2.right * VehicleData.Speed;
-                Renderer.flipX = true;
+                SpriteRenderer.flipX = false;
             }
             else if (moveHorizontal < 0)
             {
                 force = Vector2.left * VehicleData.Speed;
-                Renderer.flipX = false;
+                SpriteRenderer.flipX = true;
             }
 
             if (force != Vector2.zero)
@@ -72,6 +72,27 @@ namespace Vehicles
                 Rigidbody2D.velocity = Rigidbody2D.velocity.normalized * maxSpeed;
             }
         }
+        
+        public override void AttackTarget(GameObject target)
+        {
+            Debug.Log($"Attacking {target.name}");
+            
+            var potentialVehicle = target.GetComponent<Vehicle>();
+            
+            if (potentialVehicle != null)
+            {
+                potentialVehicle.ReceiveDamage(VehicleData.AttackDamage);
+            }
+            else
+            {
+                var potentialBuilding = target.GetComponent<Building>();
+
+                if (potentialBuilding != null)
+                {
+                    potentialBuilding.RecieveDamage(VehicleData.AttackDamage);
+                }
+            }
+        }
 
         public virtual void HandleSpecialAction()
         {
@@ -81,6 +102,11 @@ namespace Vehicles
         public void OnPointerClick(PointerEventData p_eventData)
         {
             OnVehicleClicked?.Invoke(this);
+        }
+
+        public override void ReceiveDamage(int p_damage)
+        {
+            throw new NotImplementedException();
         }
     }
 }

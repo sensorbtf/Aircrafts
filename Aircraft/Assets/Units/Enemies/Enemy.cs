@@ -1,25 +1,31 @@
 ﻿using System;
+using Buildings;
+using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Vehicles;
 
 namespace Enemies
 {
-    public abstract class Enemy : MonoBehaviour, IPointerClickHandler
+    public abstract class Enemy: Unit, IPointerClickHandler
     {
         public EnemySO EnemyData { get; private set; }
-        public Rigidbody2D Rigidbody2D { get; private set; }
-        public Transform AttackPoint;  // The point from which the attack range is calculated
-
+        public Transform AttackPoint; 
 
         internal Action<Enemy> OnEnemyClicked;
 
-        private Transform _currentTarget;  // To keep track of the current target
-        private float _attackCooldown;  // Timer to manage the attack interval
+        private Transform _currentTarget;
+        private float _attackCooldown;
 
         public void Initialize(EnemySO p_enemyData)
         {
             EnemyData = p_enemyData;
             Rigidbody2D = GetComponent<Rigidbody2D>();
+            HealthBar.maxValue = EnemyData.MaxHp;
+            HealthBar.minValue = 0;
+            CurrentHp = EnemyData.MaxHp;
+            HealthBar.value = EnemyData.MaxHp;
             // Rigidbody2D.drag = EnemyData.Drag;  // Adjust drag to control sliding
             // Rigidbody2D.angularDrag = EnemyData.AngularDrag;  // Control rotational drag
         }
@@ -28,19 +34,12 @@ namespace Enemies
         {
             if (_currentTarget == null)
             {
-                // Move towards the player base
                 Vector2 direction = (p_playerBase.position - transform.position).normalized;
                 MoveTowards(direction);
             }
             else
             {
-                // Stop moving when attacking
                 StopMovement();
-
-                // Rotate towards the current target
-                RotateTowards();
-
-                // Handle attack if in range
                 HandleAttackCooldown();
             }
         }
@@ -56,9 +55,9 @@ namespace Enemies
             Rigidbody2D.velocity = Vector2.zero;
         }
 
-        private void RotateTowards()
+        private void RotateTowards(Vector3 p_position)
         {
-            var direction = (Vector2)_currentTarget.position - (Vector2)AttackPoint.position;
+            var direction = (Vector2)p_position - (Vector2)AttackPoint.position;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
         }
@@ -69,22 +68,37 @@ namespace Enemies
 
             if (_attackCooldown <= 0f && _currentTarget != null)
             {
-                HandleAttack(_currentTarget.gameObject);
+                AttackTarget(_currentTarget.gameObject);
                 _attackCooldown = EnemyData.AttackCooldown;
             }
         }
 
-        public virtual void HandleAttack(GameObject target)
+        public override void AttackTarget(GameObject p_target)
         {
-            Debug.Log($"Attacking {target.name}");
-            // Implement specific attack logic here, like reducing target health
+            Debug.Log($"Attacking {p_target.name}");
+            
+            var potentialVehicle = p_target.GetComponent<Vehicle>();
+            
+            if (potentialVehicle != null)
+            {
+                potentialVehicle.ReceiveDamage(EnemyData.AttackDamage);
+            }
+            else
+            {
+                var potentialBuilding = p_target.GetComponent<Building>();
+
+                if (potentialBuilding != null)
+                {
+                    potentialBuilding.RecieveDamage(EnemyData.AttackDamage);
+                }
+            }
         }
 
         public virtual void HandleSpecialAction()
         {
             var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, 0.1f); 
-            if (hitCollider != null && hitCollider.gameObject.CompareTag("Building") || 
-                hitCollider.gameObject.CompareTag("Vehicle"))
+            if (hitCollider != null && (hitCollider.gameObject.CompareTag("Building") || 
+                hitCollider.gameObject.CompareTag("Vehicle")))
             {
                 _currentTarget = hitCollider.transform;
             }
@@ -92,6 +106,10 @@ namespace Enemies
             {
                 _currentTarget = null;
             }
+        }
+        
+        public override void ReceiveDamage(int p_damage)
+        {
         }
 
         public void OnPointerClick(PointerEventData p_eventData)

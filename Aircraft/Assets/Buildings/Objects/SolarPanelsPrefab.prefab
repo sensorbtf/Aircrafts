@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2668630092746190941}
   - component: {fileID: 4350256608933847526}
   - component: {fileID: 6278019809007403939}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SolarPanelsPrefab
   m_TagString: Building
   m_Icon: {fileID: 0}

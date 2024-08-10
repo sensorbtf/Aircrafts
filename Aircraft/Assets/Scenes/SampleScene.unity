@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984e13523b8c1ab468afa3118d2a5555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _worldManager: {fileID: 0}
+  _worldManager: {fileID: 1766359980}
   _enemiesManager: {fileID: 240285277}
   _vehiclesManager: {fileID: 1187814174}
   _uiManager: {fileID: 1097696750}
@@ -1632,7 +1632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -9.28}
+  m_AnchoredPosition: {x: 0, y: -8.3}
   m_SizeDelta: {x: 149.02, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1346847187
