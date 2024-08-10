@@ -1,28 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Units;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "VehicleSO", menuName = "Vehicle/Data", order = 2)]
-public class VehicleSO : ScriptableObject
+public class VehicleSO: UnitSO
 {
-    [SerializeField] private GameObject _prefab;
-    [SerializeField] private Sprite _icon;
     [SerializeField] private VehicleType _type;
-    [SerializeField] private Weapon[] _weaponsType;
-    [SerializeField] private int _maxHp;
-    [SerializeField] private int _speed;
-    [SerializeField] private int _maneuverability;
-    [SerializeField] private int _attackDamage;
     
-    public Sprite Icon => _icon;
-    public GameObject Prefab => _prefab;
     public VehicleType Type => _type;
-    public Weapon[] WeaponsType => _weaponsType;
-    public int MaxHp => _maxHp;
-    public int Speed => _speed;
-    public int Maneuverability => _maneuverability;
-    public int AttackDamage => _attackDamage;
 }
 
 public enum VehicleType

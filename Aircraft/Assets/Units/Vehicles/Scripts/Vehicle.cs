@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Buildings;
+using Enemies;
 using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,12 +18,18 @@ namespace Vehicles
 
         internal Action<Vehicle> OnVehicleClicked;
         internal Action<Vehicle> OnVehicleDestroyed;
-        
+
         public void Initialize(VehicleSO p_vehicleData)
         {
             VehicleData = p_vehicleData;
+            Data = p_vehicleData;
             CurrentFuel = 100;
             IsSelected = false;
+
+            HealthBar.maxValue = VehicleData.MaxHp;
+            HealthBar.minValue = 0;
+            CurrentHp = VehicleData.MaxHp;
+            HealthBar.value = CurrentHp;
 
             Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
             SpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
@@ -66,37 +73,27 @@ namespace Vehicles
                 Rigidbody2D.AddForce(force, ForceMode2D.Force);
             }
 
-            float maxSpeed = 10f; 
+            float maxSpeed = 10f;
             if (Rigidbody2D.velocity.magnitude > maxSpeed)
             {
                 Rigidbody2D.velocity = Rigidbody2D.velocity.normalized * maxSpeed;
             }
         }
-        
+
         public override void AttackTarget(GameObject target)
         {
             Debug.Log($"Attacking {target.name}");
-            
-            var potentialVehicle = target.GetComponent<Vehicle>();
-            
-            if (potentialVehicle != null)
-            {
-                potentialVehicle.ReceiveDamage(VehicleData.AttackDamage);
-            }
-            else
-            {
-                var potentialBuilding = target.GetComponent<Building>();
 
-                if (potentialBuilding != null)
-                {
-                    potentialBuilding.RecieveDamage(VehicleData.AttackDamage);
-                }
+            var potentialEnemy = target.GetComponent<Enemy>();
+
+            if (potentialEnemy != null)
+            {
+                potentialEnemy.ReceiveDamage(VehicleData.AttackDamage);
             }
         }
 
         public virtual void HandleSpecialAction()
         {
-            
         }
 
         public void OnPointerClick(PointerEventData p_eventData)
@@ -106,7 +103,18 @@ namespace Vehicles
 
         public override void ReceiveDamage(int p_damage)
         {
-            throw new NotImplementedException();
+            CurrentHp -= p_damage;
+            HealthBar.value = CurrentHp;
+
+            if (CurrentHp <= 0)
+            {
+                OnUnitDied?.Invoke(this);
+            }
+        }
+        
+        public override void DestroyHandler()
+        {
+            Destroy(gameObject);
         }
     }
 }

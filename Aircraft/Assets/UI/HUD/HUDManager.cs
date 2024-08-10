@@ -1,72 +1,99 @@
+using System;
+using System.Collections.Generic;
 using Buildings;
 using TMPro;
+using Units;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Vehicles;
+
 namespace UI.HUD
 {
     public class HUDManager : MonoBehaviour
     {
-        [Header("Panels")]
-        [SerializeField] private RightDownPanelController _rightDownPanelController;
-        
-        [SerializeField] private VehiclesManager VehiclesManager;
-        [SerializeField] private BuildingsManager BuildingsManager;
+        [Header("Panels")] [SerializeField] private RightDownPanelController _rightDownPanelController;
+
+        [SerializeField] private UnitsManager _unitsManager;
         [SerializeField] private Slider _fuelSlider;
         [SerializeField] private TextMeshProUGUI _fuelSliderText;
         [SerializeField] private GameObject _combatVehicles;
         [SerializeField] private GameObject _utilityVehicles;
         [SerializeField] private GameObject _buildings;
+        [SerializeField] private Dictionary<Unit, Transform> _createdIcons = new Dictionary<Unit, Transform>();
 
         [Header("Prefabs")] 
-        [SerializeField] private GameObject _vehicleIconPrefab;
+        [SerializeField] private GameObject _iconPrefab;
 
-        public void CustomStart()
+        private void Awake()
         {
-            foreach (var vehicle in VehiclesManager.AllVehicles)
-            {
-                GameObject newGo = null;
+            _unitsManager.OnUnitCreated += HandleUnitCreation;
+        }
 
+        public void HandleUnitCreation(Unit p_unit)
+        {
+            GameObject newGo = null;
+            HudIconRefs refs = null;
+
+            if (p_unit is Vehicle vehicle)
+            {
                 if (vehicle.VehicleData.Type == VehicleType.Combat)
                 {
-                    newGo = Instantiate(_vehicleIconPrefab, _combatVehicles.transform);
+                    newGo = Instantiate(_iconPrefab, _combatVehicles.transform);
                 }
                 else
                 {
-                    newGo = Instantiate(_vehicleIconPrefab, _utilityVehicles.transform);
+                    newGo = Instantiate(_iconPrefab, _utilityVehicles.transform);
                 }
 
-                var refs = newGo.GetComponent<HudIconRefs>();
+                refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = vehicle.VehicleData.Icon;
-                refs.Button.onClick.AddListener(delegate { SelectVehicle(vehicle); });
-                vehicle.OnVehicleClicked += SelectVehicle;
+                refs.Button.onClick.AddListener(delegate { SelectUnit(vehicle); });
+                _createdIcons.Add(p_unit, refs.transform);
+                vehicle.OnVehicleClicked += SelectUnit;
+                p_unit.OnUnitDied += RefreshIcons;
             }
-            
-            foreach (var building in BuildingsManager.Buildings)
+
+            if (p_unit is Building building)
             {
-                var newGo = Instantiate(_vehicleIconPrefab, _buildings.transform);
-                var refs = newGo.GetComponent<HudIconRefs>();
+                newGo = Instantiate(_iconPrefab, _buildings.transform);
+                refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = building.BuildingData.Icon;
-                refs.Button.onClick.AddListener(delegate { SelectBuilding(building); });
-                building.OnBuildingClicked += SelectBuilding;
+                refs.Button.onClick.AddListener(delegate { SelectUnit(building); });
+                _createdIcons.Add(p_unit, refs.transform);
+                building.OnUnitClicked += SelectUnit;
+                p_unit.OnUnitDied += RefreshIcons;
             }
         }
 
-        private void SelectVehicle(Vehicle p_vehicle)
+        private void RefreshIcons(Unit p_units)
         {
-            VehiclesManager.SelectVehicle(p_vehicle);
-            _rightDownPanelController.OpenPanel(PanelType.Vehicle, p_vehicle);
-        }
-        
-        private void SelectBuilding(Building p_building)
-        {
-            if (p_building.BuildingData.Type == BuildingType.Main_Base)
+            foreach (var icons in _createdIcons)
             {
-                // Open research window
+                if (icons.Key != p_units)
+                    continue;
+                
+                Destroy(icons.Value.gameObject);
             }
-            else
+        }
+
+        private void SelectUnit(Unit p_unit)
+        {
+            if (p_unit is Building building)
             {
-                _rightDownPanelController.OpenPanel(PanelType.Building, p_building);
+                if (building.BuildingData.Type == BuildingType.Main_Base)
+                {
+                    // Open research window
+                }
+                else
+                {
+                    _rightDownPanelController.OpenPanel(PanelType.Building, building);
+                }
+            }
+            else if (p_unit is Vehicle vehicle)
+            {
+                _unitsManager.SelectUnit(vehicle);
+                _rightDownPanelController.OpenPanel(PanelType.Vehicle, vehicle);
             }
         }
 

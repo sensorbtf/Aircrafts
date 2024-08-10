@@ -8,12 +8,10 @@ using Vehicles;
 
 namespace Enemies
 {
-    public abstract class Enemy: Unit, IPointerClickHandler
+    public abstract class Enemy : Unit, IPointerClickHandler
     {
         public EnemySO EnemyData { get; private set; }
-        public Transform AttackPoint; 
-
-        internal Action<Enemy> OnEnemyClicked;
+        public Transform AttackPoint;
 
         private Transform _currentTarget;
         private float _attackCooldown;
@@ -21,11 +19,12 @@ namespace Enemies
         public void Initialize(EnemySO p_enemyData)
         {
             EnemyData = p_enemyData;
+            Data = p_enemyData;
             Rigidbody2D = GetComponent<Rigidbody2D>();
             HealthBar.maxValue = EnemyData.MaxHp;
             HealthBar.minValue = 0;
             CurrentHp = EnemyData.MaxHp;
-            HealthBar.value = EnemyData.MaxHp;
+            HealthBar.value = CurrentHp;
             // Rigidbody2D.drag = EnemyData.Drag;  // Adjust drag to control sliding
             // Rigidbody2D.angularDrag = EnemyData.AngularDrag;  // Control rotational drag
         }
@@ -76,29 +75,14 @@ namespace Enemies
         public override void AttackTarget(GameObject p_target)
         {
             Debug.Log($"Attacking {p_target.name}");
-            
-            var potentialVehicle = p_target.GetComponent<Vehicle>();
-            
-            if (potentialVehicle != null)
-            {
-                potentialVehicle.ReceiveDamage(EnemyData.AttackDamage);
-            }
-            else
-            {
-                var potentialBuilding = p_target.GetComponent<Building>();
-
-                if (potentialBuilding != null)
-                {
-                    potentialBuilding.RecieveDamage(EnemyData.AttackDamage);
-                }
-            }
+            OnUnitAttack?.Invoke(this, p_target.GetComponent<Unit>());
         }
 
         public virtual void HandleSpecialAction()
         {
-            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, 0.1f); 
-            if (hitCollider != null && (hitCollider.gameObject.CompareTag("Building") || 
-                hitCollider.gameObject.CompareTag("Vehicle")))
+            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, 0.1f);
+            if (hitCollider != null && (hitCollider.gameObject.CompareTag("Building") ||
+                                        hitCollider.gameObject.CompareTag("Vehicle")))
             {
                 _currentTarget = hitCollider.transform;
             }
@@ -107,14 +91,26 @@ namespace Enemies
                 _currentTarget = null;
             }
         }
-        
+
         public override void ReceiveDamage(int p_damage)
         {
+            CurrentHp -= p_damage;
+            HealthBar.value = CurrentHp;
+
+            if (CurrentHp <= 0)
+            {
+                OnUnitDied?.Invoke(this);
+            }
         }
 
         public void OnPointerClick(PointerEventData p_eventData)
         {
-            OnEnemyClicked?.Invoke(this);
+            OnUnitClicked?.Invoke(this);
+        }
+        
+        public override void DestroyHandler()
+        {
+            Destroy(gameObject);
         }
     }
 }

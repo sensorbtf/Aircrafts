@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: DV_SO
   m_EditorClassIdentifier: 
   _prefab: {fileID: 935343325555934533, guid: 448a03e7f05a80e4d9495e5396a6f0e5, type: 3}
-  _icon: {fileID: 21300000, guid: 722492e193f28124ab22568b1a70766b, type: 3}
-  _type: 3
-  _weaponsType: []
+  _icon: {fileID: 21300000, guid: 2288c43328996bf46a8812e6d094a306, type: 3}
   _maxHp: 50
   _speed: 10
-  _maneuverability: 10
+  _attackRange: 0
+  _attackCooldown: 0
+  _attackDamage: 0
+  _type: 3
