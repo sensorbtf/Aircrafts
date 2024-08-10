@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Units
@@ -9,7 +10,7 @@ namespace Units
         public UnitSO Data;
         public Slider HealthBar;
         public Rigidbody2D Rigidbody2D;
-        public SpriteRenderer SpriteRenderer = null;
+        public SpriteRenderer UnitRenderer = null;
 
         public Action<Unit> OnUnitClicked;
         public Action<Unit> OnUnitDied;

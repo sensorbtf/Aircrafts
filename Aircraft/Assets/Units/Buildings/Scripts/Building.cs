@@ -25,7 +25,7 @@ namespace Buildings
             HealthBar.value = CurrentHp;
 
             Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-            SpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+            UnitRenderer = gameObject.GetComponent<SpriteRenderer>();
         }
         
         public void OnPointerClick(PointerEventData p_eventData)

@@ -32,7 +32,7 @@ namespace Vehicles
             HealthBar.value = CurrentHp;
 
             Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-            SpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+            UnitRenderer = gameObject.GetComponent<SpriteRenderer>();
         }
 
         public void SelectVehicle()
@@ -60,12 +60,12 @@ namespace Vehicles
             if (moveHorizontal > 0)
             {
                 force = Vector2.right * VehicleData.Speed;
-                SpriteRenderer.flipX = false;
+                UnitRenderer.flipX = false;
             }
             else if (moveHorizontal < 0)
             {
                 force = Vector2.left * VehicleData.Speed;
-                SpriteRenderer.flipX = true;
+                UnitRenderer.flipX = true;
             }
 
             if (force != Vector2.zero)

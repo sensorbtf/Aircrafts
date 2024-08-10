@@ -8,6 +8,7 @@ TagManager:
   - Building
   - Vehicle
   - Enemy
+  - Ground
   layers:
   - Default
   - TransparentFX
