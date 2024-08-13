@@ -20,13 +20,8 @@ namespace Enemies
         {
             EnemyData = p_enemyData;
             Data = p_enemyData;
-            Rigidbody2D = GetComponent<Rigidbody2D>();
-            HealthBar.maxValue = EnemyData.MaxHp;
-            HealthBar.minValue = 0;
-            CurrentHp = EnemyData.MaxHp;
-            HealthBar.value = CurrentHp;
-            // Rigidbody2D.drag = EnemyData.Drag;  // Adjust drag to control sliding
-            // Rigidbody2D.angularDrag = EnemyData.AngularDrag;  // Control rotational drag
+    
+            base.Initialize(p_enemyData);
         }
 
         public virtual void HandleMovement(Transform p_playerBase)

@@ -58,8 +58,9 @@ MonoBehaviour:
   _firePoint: {fileID: 3535767281258828823}
   _projectilePrefab: {fileID: 5379655993277838872, guid: 323ccfc358b70514caf1b765cdd5188a, type: 3}
   _lineRenderer: {fileID: 2602011147114782621}
-  _projectileSpeed: 10
-  _lineRendererResolution: 100
+  _lineRendererResolution: 500
+  _minFireAngle: -10
+  _maxFireAngle: 40
 --- !u!212 &56588586327154509
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -2,12 +2,18 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private int _damage = 10;
-    [SerializeField] private float _lifeTime = 5f; 
+    private float _lifeTime = 5f; 
+    private int _damage; 
 
     private void Start()
     {
         Destroy(gameObject, _lifeTime); 
+    }
+
+    public void Initialize(Vector2 p_initialVelocity, int p_damage)
+    {
+        _damage = p_damage;
+        gameObject.GetComponent<Rigidbody2D>().velocity = p_initialVelocity;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

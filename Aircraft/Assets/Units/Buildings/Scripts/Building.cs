@@ -19,13 +19,7 @@ namespace Buildings
             _buildingData = p_buildingData;
             Data = p_buildingData;
 
-            HealthBar.maxValue = _buildingData.MaxHp;
-            HealthBar.minValue = 0;
-            CurrentHp = _buildingData.MaxHp;
-            HealthBar.value = CurrentHp;
-
-            Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-            UnitRenderer = gameObject.GetComponent<SpriteRenderer>();
+            base.Initialize(p_buildingData);
         }
         
         public void OnPointerClick(PointerEventData p_eventData)

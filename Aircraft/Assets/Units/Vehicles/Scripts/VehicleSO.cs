@@ -5,11 +5,15 @@ using Units;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "VehicleSO", menuName = "Vehicle/Data", order = 2)]
-public class VehicleSO: UnitSO
+public class VehicleSO : UnitSO
 {
     [SerializeField] private VehicleType _type;
-    
+    [SerializeField] private WeaponData[] _weapons;
+    [SerializeField] private int _maxFuel;
+
     public VehicleType Type => _type;
+    public WeaponData[] Weapons => _weapons;
+    public int MaxFuel => _maxFuel;
 }
 
 public enum VehicleType
@@ -23,19 +27,31 @@ public enum VehicleType
 public enum WeaponType
 {
     GatlingGun = 0,
+    MainGun = 1,
+}
+
+[Serializable]
+public struct WeaponData // tutaj lokalizacja samej broni przy finishu
+{
+    public WeaponType Type;
+    public Sprite Icon;
+    public int Damage;
+    public float FireRate;
+    public int MaxAmmo;
+    public float ProjectileSpeed;
+    public float MinFireAngle;
+    public float MaxFireAngle;
 }
 
 [Serializable]
 public class Weapon
 {
-    public WeaponType Type;
+    public WeaponData Data;
     public int CurrentAmmo;
-    public int MaxAmmo;
 
-    public Weapon(WeaponType p_type, int p_maxAmmo, int p_currentAmmo)
+    public Weapon(WeaponData p_weaponData)
     {
-        Type = p_type;
-        MaxAmmo = p_maxAmmo;
-        CurrentAmmo = p_currentAmmo;
+        Data = p_weaponData;
+        CurrentAmmo = p_weaponData.MaxAmmo;
     }
 }

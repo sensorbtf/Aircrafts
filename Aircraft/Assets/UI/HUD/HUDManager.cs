@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Buildings;
+using Enemies;
 using TMPro;
 using Units;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Vehicles;
 
@@ -30,6 +31,11 @@ namespace UI.HUD
             _unitsManager.OnUnitCreated += HandleUnitCreation;
         }
 
+        private void OnDestroy()
+        {
+            _unitsManager.OnUnitCreated -= HandleUnitCreation;
+        }
+
         public void HandleUnitCreation(Unit p_unit)
         {
             GameObject newGo = null;
@@ -48,9 +54,14 @@ namespace UI.HUD
 
                 refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = vehicle.VehicleData.Icon;
-                refs.Button.onClick.AddListener(delegate { SelectUnit(vehicle); });
+                refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
+                refs.Button.onClick.AddListener(delegate
+                {
+                    Debug.Log("Button clicked, selecting building: " + vehicle.name);
+                    SelectUnit(vehicle);
+                });
                 _createdIcons.Add(p_unit, refs.transform);
-                vehicle.OnVehicleClicked += SelectUnit;
+                vehicle.OnUnitClicked += SelectUnit;
                 p_unit.OnUnitDied += RefreshIcons;
             }
 
@@ -59,7 +70,11 @@ namespace UI.HUD
                 newGo = Instantiate(_iconPrefab, _buildings.transform);
                 refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = building.BuildingData.Icon;
-                refs.Button.onClick.AddListener(delegate { SelectUnit(building); });
+                refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
+                refs.Button.onClick.AddListener(delegate
+                {
+                    SelectUnit(building);
+                });
                 _createdIcons.Add(p_unit, refs.transform);
                 building.OnUnitClicked += SelectUnit;
                 p_unit.OnUnitDied += RefreshIcons;
@@ -95,10 +110,12 @@ namespace UI.HUD
                 _unitsManager.SelectUnit(vehicle);
                 _rightDownPanelController.OpenPanel(PanelType.Vehicle, vehicle);
             }
-        }
-
-        private void Update()
-        {
+            else if (p_unit is Enemy enemy)
+            {
+                _rightDownPanelController.OpenPanel(PanelType.Enemy, enemy);
+            }
+            
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }

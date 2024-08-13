@@ -50,12 +50,14 @@ namespace Units
                     case EnemyType.Flying:
                         break;
                 }
+
+                var unit = newEnemy.GetComponent<Unit>();
                 
-                newEnemy.GetComponent<GroundEnemy>().OnUnitClicked += SelectUnit;
-                newEnemy.GetComponent<GroundEnemy>().OnUnitAttack += UnitAttacked;
-                newEnemy.GetComponent<GroundEnemy>().OnUnitDied += UnitDied;
+                unit.OnUnitClicked += SelectUnit;
+                unit.OnUnitAttack += UnitAttacked;
+                unit.OnUnitDied += UnitDied;
                 
-                OnUnitCreated?.Invoke(newEnemy.GetComponent<Unit>());
+                OnUnitCreated?.Invoke(unit);
             }
             
             foreach (var vehicleSo in _vehiclesDatabase.Vehicles)
@@ -165,12 +167,13 @@ namespace Units
             if (VehicleController.CurrentVehicle != null)
             {
                 VehicleController.CurrentVehicle.UnSelectVehicle();
+                VehicleController.SetNewVehicle(null);
                 _cameraController.PlayerTransform = null;
             }
             
             if (p_unit is Vehicle vehicle)
             {
-                VehicleController.CurrentVehicle = vehicle;
+                VehicleController.SetNewVehicle(vehicle);
                 VehicleController.CurrentVehicle.SelectVehicle();
                 _cameraController.PlayerTransform = VehicleController.CurrentVehicle.transform;
             }
@@ -212,9 +215,10 @@ namespace Units
             
             if (p_unit is Vehicle vehicle)
             {
-                if (VehicleController.CurrentVehicle != null)
+                if (VehicleController.CurrentVehicle != null && VehicleController.CurrentVehicle == vehicle)
                 {
                     VehicleController.CurrentVehicle.UnSelectVehicle();
+                    VehicleController.SetNewVehicle(null);
                     _cameraController.PlayerTransform = null;
                 }
 

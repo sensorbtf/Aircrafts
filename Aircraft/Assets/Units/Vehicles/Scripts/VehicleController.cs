@@ -6,22 +6,29 @@ namespace Vehicles
 {
     public class VehicleController
     {
-        public Vehicle CurrentVehicle;
+        private Vehicle _currentVehicle;
+
+        public Vehicle CurrentVehicle => _currentVehicle;
 
         public void FixedUpdate()
         {
-            if (CurrentVehicle != null)
+            if (_currentVehicle != null)
             {
-                CurrentVehicle.HandleMovement();
+                _currentVehicle.HandleMovement();
             }
         }
 
         public void Update()
         {
-            if (CurrentVehicle != null)
+            if (_currentVehicle != null)
             {
-                CurrentVehicle.HandleSpecialAction();
+                _currentVehicle.HandleSpecialAction();
             }
+        }
+
+        public void SetNewVehicle(Vehicle p_newlySelectedVehicle)
+        {
+            _currentVehicle = p_newlySelectedVehicle;
         }
     }
 }

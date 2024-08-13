@@ -17,7 +17,7 @@ namespace Units
         public int MaxHp => _maxHp;
         public int AttackRange => _attackRange;
         public int AttackCooldown => _attackCooldown;
-        public int Speed => _speed;
         public int AttackDamage => _attackDamage;
+        public int Speed => _speed;
     }
 }

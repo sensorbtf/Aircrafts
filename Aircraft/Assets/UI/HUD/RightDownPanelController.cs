@@ -1,4 +1,5 @@
 ﻿using Buildings;
+using Enemies;
 using UnityEngine;
 using Vehicles;
 
@@ -8,6 +9,7 @@ namespace UI.HUD
     {
         [SerializeField] private VehiclePanel _vehiclePanel;
         [SerializeField] private BuildingPanel _buildingPanel;
+        [SerializeField] private EnemyPanel _enemyPanel;
 
         private PanelType _currentPanelType;
 
@@ -16,6 +18,7 @@ namespace UI.HUD
             _currentPanelType = p_panelType;
             _vehiclePanel.OpenPanel(p_vehicle);
             _buildingPanel.ClosePanel();
+            _enemyPanel.ClosePanel();
         }
 
         public void OpenPanel(PanelType p_panelType, Building p_building)
@@ -23,11 +26,20 @@ namespace UI.HUD
             _currentPanelType = p_panelType;
             _buildingPanel.OpenPanel(p_building);
             _vehiclePanel.ClosePanel();
+            _enemyPanel.ClosePanel();
+        }
+        
+        public void OpenPanel(PanelType p_panelType, Enemy p_enemy)
+        {
+            _currentPanelType = p_panelType;
+            _enemyPanel.OpenPanel(p_enemy);
+            _vehiclePanel.ClosePanel();
+            _buildingPanel.ClosePanel();
         }
     }
 
     public enum PanelType
     {
-        Vehicle, Building
+        Vehicle, Building, Enemy
     }
 }

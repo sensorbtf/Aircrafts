@@ -12,27 +12,16 @@ namespace Vehicles
     public abstract class Vehicle: Unit, IPointerClickHandler
     {
         public VehicleSO VehicleData { get; private set; }
-        public bool IsSelected { get; private set; }
-
         public float CurrentFuel { get; private set; }
 
-        internal Action<Vehicle> OnVehicleClicked;
-        internal Action<Vehicle> OnVehicleDestroyed;
+        internal Action OnFireShot;
 
-        public void Initialize(VehicleSO p_vehicleData)
+        public virtual void Initialize(VehicleSO p_vehicleData)
         {
             VehicleData = p_vehicleData;
             Data = p_vehicleData;
-            CurrentFuel = 100;
-            IsSelected = false;
-
-            HealthBar.maxValue = VehicleData.MaxHp;
-            HealthBar.minValue = 0;
-            CurrentHp = VehicleData.MaxHp;
-            HealthBar.value = CurrentHp;
-
-            Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-            UnitRenderer = gameObject.GetComponent<SpriteRenderer>();
+            CurrentFuel = p_vehicleData.MaxFuel;
+            base.Initialize(p_vehicleData);
         }
 
         public void SelectVehicle()
@@ -98,7 +87,7 @@ namespace Vehicles
 
         public void OnPointerClick(PointerEventData p_eventData)
         {
-            OnVehicleClicked?.Invoke(this);
+            OnUnitClicked?.Invoke(this);
         }
 
         public override void ReceiveDamage(int p_damage)

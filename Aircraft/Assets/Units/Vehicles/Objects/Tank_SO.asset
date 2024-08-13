@@ -14,11 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 935343325555934533, guid: c5b7348ea1470c941af8c6fcb50aed91, type: 3}
   _icon: {fileID: 21300000, guid: 26c949db03a2d24438f553854d8ab424, type: 3}
-  _type: 0
-  _weaponsType:
-  - Type: 0
-    CurrentAmmo: 55
-    MaxAmmo: 5
   _maxHp: 50
   _speed: 10
-  _maneuverability: 10
+  _attackRange: 0
+  _attackCooldown: 0
+  _attackDamage: 5
+  _type: 0
+  _weapons:
+  - Type: 1
+    Icon: {fileID: 21300000, guid: 417ae11a755c231499e2f895facfee69, type: 3}
+    Damage: 5
+    FireRate: 2
+    MaxAmmo: 10
+    ProjectileSpeed: 30
+    MinFireAngle: -10
+    MaxFireAngle: 40
+  - Type: 0
+    Icon: {fileID: 21300000, guid: 69e964041c59e594997f655c88827a00, type: 3}
+    Damage: 2
+    FireRate: 1
+    MaxAmmo: 200
+    ProjectileSpeed: 30
+    MinFireAngle: -10
+    MaxFireAngle: 40
+  _maxFuel: 100
