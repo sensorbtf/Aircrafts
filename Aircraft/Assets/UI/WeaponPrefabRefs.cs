@@ -8,5 +8,7 @@ public class WeaponPrefabRefs : MonoBehaviour
 {
     public WeaponType Weapon;
     public Image WeaponIcon;
+    public Image Background;
+    public Slider Timer;
     public TextMeshProUGUI WeaponAmmo;
 }

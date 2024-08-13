@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Vector3 offset;
     [SerializeField] private Transform _baseTransform;
-    public Transform PlayerTransform;
+    public Transform UnitTransform;
 
     private void Start()
     {
@@ -16,9 +17,13 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (PlayerTransform != null)
+        if (UnitTransform != null)
         {
-            transform.position = PlayerTransform.position + offset;
+            transform.position = UnitTransform.position + offset;
+        }
+        else
+        {
+            transform.position = _baseTransform.position + offset;
         }
     }
 }

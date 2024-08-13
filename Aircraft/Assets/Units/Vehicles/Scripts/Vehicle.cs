@@ -9,35 +9,20 @@ using UnityEngine.EventSystems;
 
 namespace Vehicles
 {
-    public abstract class Vehicle: Unit, IPointerClickHandler
+    public abstract class Vehicle : Unit, IPointerClickHandler
     {
-        public VehicleSO VehicleData { get; private set; }
-        public float CurrentFuel { get; private set; }
-
-        internal Action OnFireShot;
+        [Header("Vehicle")]
+        private VehicleSO _vehicleData;
+        private int _currentFuel;
+        public float CurrentFuel => _currentFuel;
+        public VehicleSO VehicleData => _vehicleData;
 
         public virtual void Initialize(VehicleSO p_vehicleData)
         {
-            VehicleData = p_vehicleData;
-            Data = p_vehicleData;
-            CurrentFuel = p_vehicleData.MaxFuel;
+            _vehicleData = p_vehicleData;
+            UnitData = p_vehicleData;
+            _currentFuel = p_vehicleData.MaxFuel;
             base.Initialize(p_vehicleData);
-        }
-
-        public void SelectVehicle()
-        {
-            IsSelected = true;
-        }
-
-        public void UnSelectVehicle()
-        {
-            IsSelected = false;
-            // make AI logic
-        }
-
-        public void LowerFuel()
-        {
-            CurrentFuel--;
         }
 
         public virtual void HandleMovement()
@@ -48,12 +33,12 @@ namespace Vehicles
 
             if (moveHorizontal > 0)
             {
-                force = Vector2.right * VehicleData.Speed;
+                force = Vector2.right * _vehicleData.Speed;
                 UnitRenderer.flipX = false;
             }
             else if (moveHorizontal < 0)
             {
-                force = Vector2.left * VehicleData.Speed;
+                force = Vector2.left * _vehicleData.Speed;
                 UnitRenderer.flipX = true;
             }
 
@@ -71,13 +56,11 @@ namespace Vehicles
 
         public override void AttackTarget(GameObject target)
         {
-            Debug.Log($"Attacking {target.name}");
-
             var potentialEnemy = target.GetComponent<Enemy>();
 
             if (potentialEnemy != null)
             {
-                potentialEnemy.ReceiveDamage(VehicleData.AttackDamage);
+                potentialEnemy.ReceiveDamage(_vehicleData.AttackDamage);
             }
         }
 
@@ -100,10 +83,20 @@ namespace Vehicles
                 OnUnitDied?.Invoke(this);
             }
         }
-        
+
         public override void DestroyHandler()
         {
             Destroy(gameObject);
+        }
+
+        public void LowerFuel(int p_amount)
+        {
+            _currentFuel -= p_amount;
+        }
+
+        public void RiseFuel(int p_amount)
+        {
+            _currentFuel += p_amount;
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Units
 {
     public abstract class UnitSO: ScriptableObject
     {
+        [Header("UnitSO")]
         [SerializeField] private GameObject _prefab;
         [SerializeField] private Sprite _icon;
         [SerializeField] private int _maxHp;

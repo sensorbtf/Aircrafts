@@ -28,41 +28,41 @@ namespace UI.HUD
 
         private void Awake()
         {
-            _unitsManager.OnUnitCreated += HandleUnitCreation;
+            _unitsManager.OnUnitCreated += HandleUnitIconCreation;
         }
 
         private void OnDestroy()
         {
-            _unitsManager.OnUnitCreated -= HandleUnitCreation;
+            _unitsManager.OnUnitCreated -= HandleUnitIconCreation;
         }
 
-        public void HandleUnitCreation(Unit p_unit)
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                DeselectUnit();
+            }
+        }
+
+        private void HandleUnitIconCreation(Unit p_unit)
         {
             GameObject newGo = null;
             HudIconRefs refs = null;
 
             if (p_unit is Vehicle vehicle)
             {
-                if (vehicle.VehicleData.Type == VehicleType.Combat)
-                {
-                    newGo = Instantiate(_iconPrefab, _combatVehicles.transform);
-                }
-                else
-                {
-                    newGo = Instantiate(_iconPrefab, _utilityVehicles.transform);
-                }
+                newGo = Instantiate(_iconPrefab, vehicle.VehicleData.Type == VehicleType.Combat ? 
+                    _combatVehicles.transform : _utilityVehicles.transform);
 
                 refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = vehicle.VehicleData.Icon;
                 refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
                 refs.Button.onClick.AddListener(delegate
                 {
-                    Debug.Log("Button clicked, selecting building: " + vehicle.name);
                     SelectUnit(vehicle);
                 });
+                
                 _createdIcons.Add(p_unit, refs.transform);
-                vehicle.OnUnitClicked += SelectUnit;
-                p_unit.OnUnitDied += RefreshIcons;
             }
 
             if (p_unit is Building building)
@@ -75,10 +75,16 @@ namespace UI.HUD
                 {
                     SelectUnit(building);
                 });
+                
                 _createdIcons.Add(p_unit, refs.transform);
-                building.OnUnitClicked += SelectUnit;
-                p_unit.OnUnitDied += RefreshIcons;
             }
+            
+            if (p_unit is Enemy enemy)
+            {
+            }
+            
+            p_unit.OnUnitDied += RefreshIcons;
+            p_unit.OnUnitClicked += SelectUnit;
         }
 
         private void RefreshIcons(Unit p_units)
@@ -94,8 +100,19 @@ namespace UI.HUD
 
         private void SelectUnit(Unit p_unit)
         {
+            if (p_unit == null)
+                return;
+
+            if (p_unit.IsSelected)
+            {
+                _unitsManager.SelectUnit(_unitsManager.GetMainBase());
+                return;
+            }
+            
             if (p_unit is Building building)
             {
+                _unitsManager.SelectUnit(building);
+
                 if (building.BuildingData.Type == BuildingType.Main_Base)
                 {
                     // Open research window
@@ -107,15 +124,25 @@ namespace UI.HUD
             }
             else if (p_unit is Vehicle vehicle)
             {
-                _unitsManager.SelectUnit(vehicle);
+                _unitsManager.SelectVehicle(vehicle);
                 _rightDownPanelController.OpenPanel(PanelType.Vehicle, vehicle);
             }
             else if (p_unit is Enemy enemy)
             {
+                _unitsManager.SelectUnit(enemy);
+
                 _rightDownPanelController.OpenPanel(PanelType.Enemy, enemy);
             }
             
             EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        private void DeselectUnit()
+        {
+            if (_unitsManager.SelectedUnit != null)
+            {
+                _unitsManager.SelectUnit(_unitsManager.GetMainBase());
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Enemies
         public void Initialize(EnemySO p_enemyData)
         {
             EnemyData = p_enemyData;
-            Data = p_enemyData;
+            UnitData = p_enemyData;
     
             base.Initialize(p_enemyData);
         }

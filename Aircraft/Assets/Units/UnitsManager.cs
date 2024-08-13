@@ -24,7 +24,7 @@ namespace Units
         public List<Building> AllBuildings = new List<Building>();
 
         public VehicleController VehicleController;
-        
+        public Unit SelectedUnit;
         public Action<Unit> OnUnitCreated;
         
         private void Start()
@@ -164,46 +164,49 @@ namespace Units
 
         public void SelectUnit(Unit p_unit)
         {
+            if (SelectedUnit != null)
+            {
+                SelectedUnit.UnSelectUnit();
+            }
+            SelectedUnit = p_unit;
+            
             if (VehicleController.CurrentVehicle != null)
             {
-                VehicleController.CurrentVehicle.UnSelectVehicle();
-                VehicleController.SetNewVehicle(null);
-                _cameraController.PlayerTransform = null;
+                UnselectVehicle();
             }
             
             if (p_unit is Vehicle vehicle)
             {
                 VehicleController.SetNewVehicle(vehicle);
-                VehicleController.CurrentVehicle.SelectVehicle();
-                _cameraController.PlayerTransform = VehicleController.CurrentVehicle.transform;
+                VehicleController.CurrentVehicle.SelectUnit();
             }
             else if (p_unit is Enemy enemy)
             {
-                
             }
             else if (p_unit is Building building)
             {
-                
             }
             else
             {
                 Debug.LogError("What have I clicked? " + p_unit);
             }
+            
+            _cameraController.UnitTransform = p_unit.transform;
         }
-        
+
         private void UnitAttacked(Unit p_attacker, Unit p_defender)
         {
             if (p_defender is Vehicle vehicle)
             {
-                vehicle.ReceiveDamage(p_attacker.Data.AttackDamage);
+                vehicle.ReceiveDamage(p_attacker.UnitData.AttackDamage);
             }
             else if (p_defender is Enemy enemy)
             {
-                enemy.ReceiveDamage(p_attacker.Data.AttackDamage);
+                enemy.ReceiveDamage(p_attacker.UnitData.AttackDamage);
             }
             else if (p_defender is Building building)
             {
-                building.ReceiveDamage(p_attacker.Data.AttackDamage);
+                building.ReceiveDamage(p_attacker.UnitData.AttackDamage);
             }
         }
         
@@ -215,15 +218,12 @@ namespace Units
             
             if (p_unit is Vehicle vehicle)
             {
-                if (VehicleController.CurrentVehicle != null && VehicleController.CurrentVehicle == vehicle)
-                {
-                    VehicleController.CurrentVehicle.UnSelectVehicle();
-                    VehicleController.SetNewVehicle(null);
-                    _cameraController.PlayerTransform = null;
-                }
-
                 vehicle.DestroyHandler();
                 AllVehicles.Remove(vehicle);
+                if (SelectedUnit == p_unit)
+                {
+                    SelectUnit(GetMainBase());
+                }
             }
             else if (p_unit is Enemy enemy)
             {
@@ -232,6 +232,11 @@ namespace Units
             }
             else if (p_unit is Building building)
             {
+                if (building.BuildingData.Type == BuildingType.Main_Base)
+                {
+                    // Restart/menu
+                }
+                
                 building.DestroyHandler();
                 AllBuildings.Remove(building);
             }
@@ -244,6 +249,21 @@ namespace Units
         public Building GetMainBase()
         {
             return AllBuildings.FirstOrDefault(x => x.BuildingData.Type == BuildingType.Main_Base);
+        }
+
+        public void SelectVehicle(Vehicle p_vehicle)
+        {
+            VehicleController.SetNewVehicle(p_vehicle);
+            VehicleController.CurrentVehicle.SelectUnit();
+            _cameraController.UnitTransform = VehicleController.CurrentVehicle.transform;
+            SelectedUnit = p_vehicle;
+        }
+        
+        private void UnselectVehicle()
+        {
+            VehicleController.CurrentVehicle.UnSelectUnit();
+            VehicleController.SetNewVehicle(null);
+            _cameraController.UnitTransform = null;
         }
     }
 }

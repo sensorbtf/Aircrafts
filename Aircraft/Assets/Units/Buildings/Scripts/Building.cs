@@ -17,7 +17,7 @@ namespace Buildings
         public void Initialize(BuildingSO p_buildingData)
         {
             _buildingData = p_buildingData;
-            Data = p_buildingData;
+            UnitData = p_buildingData;
 
             base.Initialize(p_buildingData);
         }

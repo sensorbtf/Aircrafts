@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,23 @@ namespace UI.HUD
             ClosePanel();
         }
 
+        private void Update()
+        {
+            if (_currentVehicle == null)
+                return;
+
+            if (_currentVehicle is CombatVehicle vehicle)
+            {
+                foreach (var refs in _createdWeapons)
+                {
+                    var weapon = vehicle.Weapons.FirstOrDefault(x => x.Data.Type == refs.Value.Weapon);
+                    var targetValue = weapon.CurrentTimer >= weapon.Data.FireRate ? 0 : 1 - (weapon.CurrentTimer / weapon.Data.FireRate);
+
+                    refs.Value.Timer.value = Mathf.Lerp(refs.Value.Timer.value, targetValue, Time.deltaTime * 10f);
+                }
+            }
+        }
+
         public void OpenPanel(Vehicle p_selectedVehicle)
         {
             ClosePanel();
@@ -43,31 +61,15 @@ namespace UI.HUD
                     _createdWeapons.Add(newGo, refs);
                 }
 
-                p_selectedVehicle.OnFireShot += UpdateWeaponTab;
+                combatVehicle.OnFireShot += UpdateWeaponTab;
+                combatVehicle.OnWeaponSwitch += UpdateWeaponTab;
             }
 
             _vehicleHeader.text = p_selectedVehicle.VehicleData.Type.ToString();
             _currentVehicle = p_selectedVehicle;
+            UpdateWeaponTab();
         }
-
-        public void UpdateWeaponTab()
-        {
-            if (_currentVehicle is CombatVehicle combatVehicle)
-            {
-                foreach (var weapon in combatVehicle.VehicleData.Weapons)
-                {
-                    var newGo = Instantiate(_weaponPrefab, _weaponsGrid.transform);
-                    var refs = newGo.GetComponent<WeaponPrefabRefs>();
-
-                    refs.Weapon = weapon.Type;
-                    refs.WeaponIcon.sprite = weapon.Icon;
-                    refs.WeaponAmmo.text = $"Ammo: {combatVehicle.CurrentWeapon.CurrentAmmo}";
-
-                    _createdWeapons.Add(newGo, refs);
-                }
-            }
-        }
-
+        
         public void ClosePanel()
         {
             gameObject.SetActive(false);
@@ -77,10 +79,35 @@ namespace UI.HUD
             }
 
             _createdWeapons.Clear();
+            
             if (_currentVehicle != null)
             {
                 _currentVehicle.OnFireShot -= UpdateWeaponTab;
+                _currentVehicle.OnWeaponSwitch -= UpdateWeaponTab;
                 _currentVehicle = null;
+            }
+        }
+
+        private void UpdateWeaponTab()
+        {
+            if (_currentVehicle is CombatVehicle combatVehicle)
+            {
+                foreach (var refs in _createdWeapons)
+                {
+                    var weapon = combatVehicle.Weapons.FirstOrDefault(x => x.Data.Type == refs.Value.Weapon);
+                    
+                    if (combatVehicle.CurrentWeapon != null && weapon.CurrentAmmo > 0)
+                    {
+                        refs.Value.Background.color = refs.Value.Weapon == combatVehicle.CurrentWeapon.Data.Type ? Color.cyan : new Color(0, 0, 0, 0);
+                        refs.Value.WeaponAmmo.text = $"Ammo: {weapon.CurrentAmmo}";
+                    }
+                    else
+                    {
+                        refs.Value.Background.color = Color.red;
+                        refs.Value.WeaponAmmo.text = $"Replenish Ammo!";
+
+                    }
+                }
             }
         }
     }
