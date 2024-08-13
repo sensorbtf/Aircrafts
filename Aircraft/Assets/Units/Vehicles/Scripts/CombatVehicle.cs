@@ -8,8 +8,9 @@ namespace Vehicles
 {
     public class CombatVehicle : Vehicle
     {
-        [Header("Combat Vehicle")]
-        [SerializeField] private Transform _rightfirePoint;
+        [Header("Combat Vehicle")] [SerializeField]
+        private Transform _rightfirePoint;
+
         [SerializeField] private Transform _leftfirePoint;
         [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private LineRenderer _lineRenderer;
@@ -46,7 +47,7 @@ namespace Vehicles
         {
             base.SelectUnit();
             _lineRenderer.enabled = true;
-            
+
             CycleThroughWeapon();
         }
 
@@ -61,17 +62,9 @@ namespace Vehicles
             var moveHorizontal = Input.GetAxis("Horizontal");
             var direction = Vector2.zero;
 
-            if (moveHorizontal > 0)
+            if (moveHorizontal != 0)
             {
-                direction = Vector2.right;
-                UnitRenderer.flipX = false;
-                _currentFirePoint = _rightfirePoint;
-            }
-            else if (moveHorizontal < 0)
-            {
-                direction = Vector2.left;
-                UnitRenderer.flipX = true;
-                _currentFirePoint = _leftfirePoint;
+                direction = moveHorizontal > 0 ? Vector2.right : Vector2.left;
             }
 
             if (direction != Vector2.zero)
@@ -80,7 +73,37 @@ namespace Vehicles
                 Rigidbody2D.MovePosition(newPosition);
             }
 
-            DrawTrajectory(_currentFirePoint.localPosition, GetInitialVelocity(), Time.fixedDeltaTime);
+            HandleTurretRotationAndFirePoint();
+            DrawTrajectory(_currentFirePoint.localPosition, Time.fixedDeltaTime);
+        }
+
+        private void HandleTurretRotationAndFirePoint() // tutaj dostosowywać kąt działa
+        {
+            var mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            mousePosition.z = 0;
+
+            if (mousePosition.x >= transform.position.x)
+            {
+                _currentFirePoint = _rightfirePoint;
+                UnitRenderer.flipX = false;
+            }
+            else
+            {
+                _currentFirePoint = _leftfirePoint;
+                UnitRenderer.flipX = true;
+            }
+
+            Vector2 directionToMouse = (mousePosition - _currentFirePoint.position).normalized;
+            var angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
+
+            if (UnitRenderer.flipX)
+            {
+                angle = 180f - angle;
+            }
+
+            angle = Mathf.Clamp(angle, _currentWeapon.Data.MinFireAngle, _currentWeapon.Data.MaxFireAngle);
+
+            _currentFirePoint.rotation = Quaternion.Euler(0, 0, angle);
         }
 
         public override void HandleSpecialAction()
@@ -111,7 +134,7 @@ namespace Vehicles
         {
             if (_currentWeapon == null)
             {
-                _currentWeapon = _weapons.FirstOrDefault(x=> x.CurrentAmmo > 0);
+                _currentWeapon = _weapons.FirstOrDefault(x => x.CurrentAmmo > 0);
             }
             else
             {
@@ -125,11 +148,11 @@ namespace Vehicles
 
                 _currentWeapon = _weapons[currentIndex];
             }
-            
+
             OnWeaponSwitch?.Invoke();
         }
 
-        private void DrawTrajectory(Vector2 p_startPosition, Vector2 p_initialVelocity, float p_timeStep)
+        private void DrawTrajectory(Vector2 p_startPosition, float p_timeStep)
         {
             _lineRenderer.positionCount = _lineRendererResolution;
             var positions = new Vector3[_lineRendererResolution];
@@ -138,7 +161,7 @@ namespace Vehicles
             for (int i = 1; i < positions.Length; i++)
             {
                 var time = i * p_timeStep;
-                positions[i] = p_startPosition + p_initialVelocity * time + 0.5f * Physics2D.gravity * time * time;
+                positions[i] = p_startPosition + GetInitialVelocity() * time + Physics2D.gravity * (0.5f * time * time);
 
                 Vector2 rayOrigin = transform.TransformPoint(positions[i - 1]);
                 Vector2 rayDirection = positions[i] - positions[i - 1];
@@ -156,18 +179,37 @@ namespace Vehicles
 
             _lineRenderer.SetPositions(positions);
         }
-        
+
         private Vector2 GetInitialVelocity()
         {
             var mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0;
 
             Vector2 direction = (mousePosition - _currentFirePoint.position).normalized;
-            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            // Adjust the angle based on flipX
+            if (UnitRenderer.flipX)
+            {
+                // Invert the direction on the x-axis
+                angle = Mathf.Atan2(direction.y, -direction.x) * Mathf.Rad2Deg;
+            }
+
+            // Clamp the angle to weapon's allowed firing range
             angle = Mathf.Clamp(angle, _currentWeapon.Data.MinFireAngle, _currentWeapon.Data.MaxFireAngle);
+
+            // Recalculate direction based on the adjusted angle
             direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+
+            // Adjust direction for flipped unit
+            if (UnitRenderer.flipX)
+            {
+                direction.x = -direction.x;
+            }
+
             return direction * _currentWeapon.Data.ProjectileSpeed;
         }
+
 
         private void FireProjectile()
         {
@@ -176,7 +218,7 @@ namespace Vehicles
 
             var projectile = Instantiate(_projectilePrefab, _currentFirePoint.position, Quaternion.identity);
             projectile.GetComponent<Projectile>().Initialize(GetInitialVelocity(), _currentWeapon.Data.Damage);
-            
+
             _currentWeapon.CurrentAmmo--;
             _currentWeapon.CurrentTimer = 0f;
 
