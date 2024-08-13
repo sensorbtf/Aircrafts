@@ -15,7 +15,7 @@ namespace Units
         public UnitSO UnitData;
         public Slider HealthBar;
 
-        public Action<Unit> OnUnitClicked;
+        public Action<Unit, bool> OnUnitClicked;
         public Action<Unit> OnUnitDied;
         public Action<Unit, Unit> OnUnitAttack;
         

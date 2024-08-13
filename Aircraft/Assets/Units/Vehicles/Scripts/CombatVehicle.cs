@@ -43,18 +43,15 @@ namespace Vehicles
             base.Initialize(p_vehicleData);
         }
 
-        public override void SelectUnit()
+        private void Update()
         {
-            base.SelectUnit();
-            _lineRenderer.enabled = true;
-
-            CycleThroughWeapon();
-        }
-
-        public override void UnSelectUnit()
-        {
-            base.UnSelectUnit();
-            _lineRenderer.enabled = false;
+            foreach (var weapon in _weapons)
+            {
+                if (weapon.CurrentTimer < weapon.Data.FireRate && weapon.CurrentAmmo > 0)
+                {
+                    weapon.CurrentTimer += Time.deltaTime;
+                }
+            }
         }
 
         public override void HandleMovement()
@@ -75,6 +72,36 @@ namespace Vehicles
 
             HandleTurretRotationAndFirePoint();
             DrawTrajectory(_currentFirePoint.localPosition, Time.fixedDeltaTime);
+        }
+        
+        public override void HandleSpecialAction()
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                if (_currentWeapon.CurrentTimer >= _currentWeapon.Data.FireRate)
+                {
+                    FireProjectile();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                CycleThroughWeapon();
+            }
+        }
+        
+        public override void SelectUnit()
+        {
+            base.SelectUnit();
+            _lineRenderer.enabled = true;
+
+            CycleThroughWeapon();
+        }
+
+        public override void UnSelectUnit()
+        {
+            base.UnSelectUnit();
+            _lineRenderer.enabled = false;
         }
 
         private void HandleTurretRotationAndFirePoint() // tutaj dostosowywać kąt działa
@@ -104,30 +131,6 @@ namespace Vehicles
             angle = Mathf.Clamp(angle, _currentWeapon.Data.MinFireAngle, _currentWeapon.Data.MaxFireAngle);
 
             _currentFirePoint.rotation = Quaternion.Euler(0, 0, angle);
-        }
-
-        public override void HandleSpecialAction()
-        {
-            foreach (var weapon in _weapons)
-            {
-                if (weapon.CurrentTimer < weapon.Data.FireRate && weapon.CurrentAmmo > 0)
-                {
-                    weapon.CurrentTimer += Time.deltaTime;
-                }
-            }
-
-            if (Input.GetKey(KeyCode.Space))
-            {
-                if (_currentWeapon.CurrentTimer >= _currentWeapon.Data.FireRate)
-                {
-                    FireProjectile();
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                CycleThroughWeapon();
-            }
         }
 
         private void CycleThroughWeapon()
@@ -188,20 +191,15 @@ namespace Vehicles
             Vector2 direction = (mousePosition - _currentFirePoint.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            // Adjust the angle based on flipX
             if (UnitRenderer.flipX)
             {
-                // Invert the direction on the x-axis
                 angle = Mathf.Atan2(direction.y, -direction.x) * Mathf.Rad2Deg;
             }
 
-            // Clamp the angle to weapon's allowed firing range
             angle = Mathf.Clamp(angle, _currentWeapon.Data.MinFireAngle, _currentWeapon.Data.MaxFireAngle);
 
-            // Recalculate direction based on the adjusted angle
             direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
 
-            // Adjust direction for flipped unit
             if (UnitRenderer.flipX)
             {
                 direction.x = -direction.x;
@@ -209,7 +207,6 @@ namespace Vehicles
 
             return direction * _currentWeapon.Data.ProjectileSpeed;
         }
-
 
         private void FireProjectile()
         {

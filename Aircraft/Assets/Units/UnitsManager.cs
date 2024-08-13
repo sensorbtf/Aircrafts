@@ -18,20 +18,22 @@ namespace Units
         [SerializeField] private VehiclesDatabase _vehiclesDatabase;
 
         [SerializeField] private CameraController _cameraController;
-        
+
         public List<Enemy> AllEnemies = new List<Enemy>();
         public List<Vehicle> AllVehicles = new List<Vehicle>();
         public List<Building> AllBuildings = new List<Building>();
 
         public VehicleController VehicleController;
         public Unit SelectedUnit;
+
         public Action<Unit> OnUnitCreated;
-        
+        public Action<Unit> OnUnitSelected;
+
         private void Start()
         {
             VehicleController = new VehicleController();
         }
-        
+
         public void CustomStart()
         {
             foreach (var enemy in _enemyDatabase.Enemies)
@@ -52,14 +54,14 @@ namespace Units
                 }
 
                 var unit = newEnemy.GetComponent<Unit>();
-                
+
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
-                
+
                 OnUnitCreated?.Invoke(unit);
             }
-            
+
             foreach (var vehicleSo in _vehiclesDatabase.Vehicles)
             {
                 var newVehicle = Instantiate(vehicleSo.Prefab, gameObject.transform, true);
@@ -89,21 +91,19 @@ namespace Units
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
-                
+
                 OnUnitCreated?.Invoke(unit);
             }
-            
+
             foreach (var building in AllBuildings)
             {
-                switch (building.BuildingData.Type)
-                {
-   
-                }
+                building.Initialize(building.BuildingData);
+
                 var unit = building.GetComponent<Unit>();
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
-                
+
                 OnUnitCreated?.Invoke(unit);
             }
         }
@@ -114,7 +114,7 @@ namespace Units
             {
                 enemy.HandleSpecialAction();
             }
-            
+
             if (VehicleController != null)
             {
                 VehicleController.Update();
@@ -127,7 +127,7 @@ namespace Units
             {
                 enemy.HandleMovement(GetNearestTransformOfPlayerUnit(enemy.transform));
             }
-            
+
             if (VehicleController != null)
             {
                 VehicleController.FixedUpdate();
@@ -159,26 +159,32 @@ namespace Units
                 }
             }
 
-            return closestTransform; 
+            return closestTransform;
         }
 
-        public void SelectUnit(Unit p_unit)
+        public void SelectUnit(Unit p_unit, bool p_invokeEvent = false)
         {
             if (SelectedUnit != null)
             {
+                // if (p_unit.IsSelected)
+                // {
+                //     _unitsManager.SelectUnit(_unitsManager.GetMainBase());
+                //     return;
+                // }
+                
                 SelectedUnit.UnSelectUnit();
+
+                if (VehicleController.CurrentVehicle != null)
+                {
+                    UnselectVehicle();
+                }
             }
+
             SelectedUnit = p_unit;
-            
-            if (VehicleController.CurrentVehicle != null)
-            {
-                UnselectVehicle();
-            }
-            
+
             if (p_unit is Vehicle vehicle)
             {
-                VehicleController.SetNewVehicle(vehicle);
-                VehicleController.CurrentVehicle.SelectUnit();
+                SelectVehicle(vehicle);
             }
             else if (p_unit is Enemy enemy)
             {
@@ -190,8 +196,13 @@ namespace Units
             {
                 Debug.LogError("What have I clicked? " + p_unit);
             }
-            
+
             _cameraController.UnitTransform = p_unit.transform;
+            
+            if (p_invokeEvent)
+            {
+                OnUnitSelected?.Invoke(p_unit);
+            }
         }
 
         private void UnitAttacked(Unit p_attacker, Unit p_defender)
@@ -209,13 +220,13 @@ namespace Units
                 building.ReceiveDamage(p_attacker.UnitData.AttackDamage);
             }
         }
-        
+
         private void UnitDied(Unit p_unit)
         {
             p_unit.GetComponent<Unit>().OnUnitClicked -= SelectUnit;
             p_unit.GetComponent<Unit>().OnUnitAttack -= UnitAttacked;
             p_unit.GetComponent<Unit>().OnUnitDied -= UnitDied;
-            
+
             if (p_unit is Vehicle vehicle)
             {
                 vehicle.DestroyHandler();
@@ -236,7 +247,7 @@ namespace Units
                 {
                     // Restart/menu
                 }
-                
+
                 building.DestroyHandler();
                 AllBuildings.Remove(building);
             }
@@ -245,7 +256,7 @@ namespace Units
                 Debug.LogError("What have I clicked? " + p_unit);
             }
         }
-        
+
         public Building GetMainBase()
         {
             return AllBuildings.FirstOrDefault(x => x.BuildingData.Type == BuildingType.Main_Base);
@@ -258,7 +269,7 @@ namespace Units
             _cameraController.UnitTransform = VehicleController.CurrentVehicle.transform;
             SelectedUnit = p_vehicle;
         }
-        
+
         private void UnselectVehicle()
         {
             VehicleController.CurrentVehicle.UnSelectUnit();

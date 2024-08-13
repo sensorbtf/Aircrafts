@@ -100,7 +100,7 @@ namespace Enemies
 
         public void OnPointerClick(PointerEventData p_eventData)
         {
-            OnUnitClicked?.Invoke(this);
+            OnUnitClicked?.Invoke(this, true);
         }
         
         public override void DestroyHandler()

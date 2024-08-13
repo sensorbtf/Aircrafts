@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Buildings;
 using Enemies;
 using TMPro;
@@ -29,11 +30,13 @@ namespace UI.HUD
         private void Awake()
         {
             _unitsManager.OnUnitCreated += HandleUnitIconCreation;
+            _unitsManager.OnUnitSelected += SelectUnit;
         }
 
         private void OnDestroy()
         {
             _unitsManager.OnUnitCreated -= HandleUnitIconCreation;
+            _unitsManager.OnUnitSelected -= SelectUnit;
         }
 
         private void Update()
@@ -59,13 +62,12 @@ namespace UI.HUD
                 refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
                 refs.Button.onClick.AddListener(delegate
                 {
-                    SelectUnit(vehicle);
+                    _unitsManager.SelectUnit(vehicle, true);
                 });
                 
                 _createdIcons.Add(p_unit, refs.transform);
             }
-
-            if (p_unit is Building building)
+            else if (p_unit is Building building)
             {
                 newGo = Instantiate(_iconPrefab, _buildings.transform);
                 refs = newGo.GetComponent<HudIconRefs>();
@@ -73,28 +75,27 @@ namespace UI.HUD
                 refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
                 refs.Button.onClick.AddListener(delegate
                 {
-                    SelectUnit(building);
+                    _unitsManager.SelectUnit(building, true);
                 });
                 
                 _createdIcons.Add(p_unit, refs.transform);
             }
-            
-            if (p_unit is Enemy enemy)
+            else if (p_unit is Enemy enemy)
             {
             }
             
-            p_unit.OnUnitDied += RefreshIcons;
-            p_unit.OnUnitClicked += SelectUnit;
+            p_unit.OnUnitDied += RefreshIcons;            
         }
 
         private void RefreshIcons(Unit p_units)
         {
-            foreach (var icons in _createdIcons)
+            foreach (var icons in _createdIcons.ToList())
             {
                 if (icons.Key != p_units)
                     continue;
                 
                 Destroy(icons.Value.gameObject);
+                _createdIcons.Remove(icons.Key);
             }
         }
 
@@ -102,12 +103,6 @@ namespace UI.HUD
         {
             if (p_unit == null)
                 return;
-
-            if (p_unit.IsSelected)
-            {
-                _unitsManager.SelectUnit(_unitsManager.GetMainBase());
-                return;
-            }
             
             if (p_unit is Building building)
             {
@@ -115,6 +110,7 @@ namespace UI.HUD
 
                 if (building.BuildingData.Type == BuildingType.Main_Base)
                 {
+                    _rightDownPanelController.OpenPanel(PanelType.Building, building);
                     // Open research window
                 }
                 else
@@ -141,7 +137,7 @@ namespace UI.HUD
         {
             if (_unitsManager.SelectedUnit != null)
             {
-                _unitsManager.SelectUnit(_unitsManager.GetMainBase());
+                _unitsManager.SelectUnit(_unitsManager.GetMainBase(), true);
             }
         }
     }

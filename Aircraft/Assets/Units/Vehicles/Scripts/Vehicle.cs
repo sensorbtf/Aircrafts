@@ -66,11 +66,12 @@ namespace Vehicles
 
         public virtual void HandleSpecialAction()
         {
+            
         }
 
         public void OnPointerClick(PointerEventData p_eventData)
         {
-            OnUnitClicked?.Invoke(this);
+            OnUnitClicked?.Invoke(this, true);
         }
 
         public override void ReceiveDamage(int p_damage)
