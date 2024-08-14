@@ -18,7 +18,7 @@ namespace UI.HUD
 
         private Dictionary<GameObject, WeaponPrefabRefs> _createdWeapons;
         private Vehicle _currentVehicle;
-
+        
         private void Start()
         {
             _createdWeapons = new Dictionary<GameObject, WeaponPrefabRefs>();
@@ -63,13 +63,22 @@ namespace UI.HUD
 
                 combatVehicle.OnFireShot += UpdateWeaponTab;
                 combatVehicle.OnWeaponSwitch += UpdateWeaponTab;
+                p_selectedVehicle.OnFuelChange += UpdateFuelSlider;
             }
 
             _vehicleHeader.text = p_selectedVehicle.VehicleData.Type.ToString();
             _currentVehicle = p_selectedVehicle;
             UpdateWeaponTab();
+            UpdateFuelSlider();
         }
-        
+
+        private void UpdateFuelSlider()
+        {
+            _fuelText.text = $"{_currentVehicle.CurrentFuel}/{_currentVehicle.VehicleData.MaxFuel}";
+            _fuelSlider.maxValue = _currentVehicle.VehicleData.MaxFuel;
+            _fuelSlider.value = _currentVehicle.CurrentFuel;
+        }
+
         public void ClosePanel()
         {
             gameObject.SetActive(false);

@@ -20,6 +20,8 @@ MonoBehaviour:
   _attackCooldown: 0
   _attackDamage: 5
   _type: 0
+  _maxFuel: 100
+  _literUsageInterval: 100
   _weapons:
   - Type: 1
     Icon: {fileID: 21300000, guid: 417ae11a755c231499e2f895facfee69, type: 3}
@@ -37,4 +39,3 @@ MonoBehaviour:
     ProjectileSpeed: 30
     MinFireAngle: -10
     MaxFireAngle: 40
-  _maxFuel: 100

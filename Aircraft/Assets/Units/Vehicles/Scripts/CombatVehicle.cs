@@ -56,6 +56,9 @@ namespace Vehicles
 
         public override void HandleMovement()
         {
+            if (CurrentFuel <= 0)
+                return;
+            
             var moveHorizontal = Input.GetAxis("Horizontal");
             var direction = Vector2.zero;
 
@@ -68,6 +71,7 @@ namespace Vehicles
             {
                 Vector2 newPosition = (Vector2)transform.position + direction * VehicleData.Speed * Time.deltaTime;
                 Rigidbody2D.MovePosition(newPosition);
+                HandleFuelUsage();
             }
 
             HandleTurretRotationAndFirePoint();
