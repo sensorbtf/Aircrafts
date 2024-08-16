@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Vehicles
+namespace Units.Vehicles
 {
     public class UndergroundVehicle : Vehicle
     {

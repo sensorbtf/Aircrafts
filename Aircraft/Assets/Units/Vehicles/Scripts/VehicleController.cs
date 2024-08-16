@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Vehicles
+namespace Units.Vehicles
 {
     public class VehicleController
     {

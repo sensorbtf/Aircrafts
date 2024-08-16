@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Vehicles
+namespace Units.Vehicles
 {
     public class CombatVehicle : Vehicle
     {
@@ -69,7 +69,7 @@ namespace Vehicles
 
             if (direction != Vector2.zero)
             {
-                Vector2 newPosition = (Vector2)transform.position + direction * VehicleData.Speed * Time.deltaTime;
+                var newPosition = (Vector2)transform.position + direction * VehicleData.Speed * Time.deltaTime;
                 Rigidbody2D.MovePosition(newPosition);
                 HandleFuelUsage();
             }

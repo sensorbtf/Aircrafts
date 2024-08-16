@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Buildings;
 using Enemies;
-using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Vehicles
+namespace Units.Vehicles
 {
     public abstract class Vehicle : Unit, IPointerClickHandler
     {
@@ -91,7 +88,7 @@ namespace Vehicles
         public override void ReceiveDamage(int p_damage)
         {
             CurrentHp -= p_damage;
-            HealthBar.value = CurrentHp;
+            CanvasInfo.HealthBar.value = CurrentHp;
 
             if (CurrentHp <= 0)
             {

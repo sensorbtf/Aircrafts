@@ -9,7 +9,7 @@ namespace UI
 
         public void CustomStart()
         {
-            //_hud.CustomStart();
+            _hud.CustomStart();
         }
     }
 }

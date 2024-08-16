@@ -90,7 +90,7 @@ namespace Enemies
         public override void ReceiveDamage(int p_damage)
         {
             CurrentHp -= p_damage;
-            HealthBar.value = CurrentHp;
+            CanvasInfo.HealthBar.value = CurrentHp;
 
             if (CurrentHp <= 0)
             {

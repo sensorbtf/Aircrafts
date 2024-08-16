@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Buildings;
 using Enemies;
+using Resources;
+using Resources.Scripts;
 using TMPro;
 using Units;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Vehicles;
+using Units.Vehicles;
+using UnityEngine.Serialization;
 
 namespace UI.HUD
 {
@@ -16,27 +19,40 @@ namespace UI.HUD
     {
         [Header("Panels")] [SerializeField] private RightDownPanelController _rightDownPanelController;
 
+        [FormerlySerializedAs("_inventoryManager")]
+        [Header("Managers")] 
+        [SerializeField] private InventoriesManager _inventoriesManager;
         [SerializeField] private UnitsManager _unitsManager;
+        [Header("Refs")] 
         [SerializeField] private Slider _fuelSlider;
         [SerializeField] private TextMeshProUGUI _fuelSliderText;
+        [SerializeField] private GameObject _resourcesTab;
         [SerializeField] private GameObject _combatVehicles;
         [SerializeField] private GameObject _utilityVehicles;
         [SerializeField] private GameObject _buildings;
-        [SerializeField] private Dictionary<Unit, Transform> _createdIcons = new Dictionary<Unit, Transform>();
+        
+        private Dictionary<Unit, Transform> _createdIcons = new Dictionary<Unit, Transform>();
+        private Dictionary<ResourceSO, HudIconRefs> _createdResources = new Dictionary<ResourceSO, HudIconRefs>();
 
-        [Header("Prefabs")] 
-        [SerializeField] private GameObject _iconPrefab;
+        [Header("Prefabs")] [SerializeField] private GameObject _iconPrefab;
+
+        public void CustomStart()
+        {
+            HandleResourcesCreation();
+        }
 
         private void Awake()
         {
             _unitsManager.OnUnitCreated += HandleUnitIconCreation;
             _unitsManager.OnUnitSelected += SelectUnit;
+            _inventoriesManager.OnGlobalResourceValueChanged += RefreshResourcesIcons;
         }
 
         private void OnDestroy()
         {
             _unitsManager.OnUnitCreated -= HandleUnitIconCreation;
             _unitsManager.OnUnitSelected -= SelectUnit;
+            _inventoriesManager.OnGlobalResourceValueChanged -= RefreshResourcesIcons;
         }
 
         private void Update()
@@ -54,17 +70,16 @@ namespace UI.HUD
 
             if (p_unit is Vehicle vehicle)
             {
-                newGo = Instantiate(_iconPrefab, vehicle.VehicleData.Type == VehicleType.Combat ? 
-                    _combatVehicles.transform : _utilityVehicles.transform);
+                newGo = Instantiate(_iconPrefab,
+                    vehicle.VehicleData.Type == VehicleType.Combat
+                        ? _combatVehicles.transform
+                        : _utilityVehicles.transform);
 
                 refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = vehicle.VehicleData.Icon;
                 refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
-                refs.Button.onClick.AddListener(delegate
-                {
-                    _unitsManager.SelectUnit(vehicle, true);
-                });
-                
+                refs.Button.onClick.AddListener(delegate { _unitsManager.SelectUnit(vehicle, true); });
+
                 _createdIcons.Add(p_unit, refs.transform);
             }
             else if (p_unit is Building building)
@@ -73,27 +88,50 @@ namespace UI.HUD
                 refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = building.BuildingData.Icon;
                 refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
-                refs.Button.onClick.AddListener(delegate
-                {
-                    _unitsManager.SelectUnit(building, true);
-                });
-                
+                refs.Button.onClick.AddListener(delegate { _unitsManager.SelectUnit(building, true); });
+
                 _createdIcons.Add(p_unit, refs.transform);
             }
             else if (p_unit is Enemy enemy)
             {
             }
-            
-            p_unit.OnUnitDied += RefreshIcons;            
+
+            p_unit.OnUnitDied += RefreshUnitsIcons;
         }
 
-        private void RefreshIcons(Unit p_units)
+        private void HandleResourcesCreation()
+        {
+            foreach (var resource in _inventoriesManager.ResourceDatabase.Resources)
+            {
+                var newGo = Instantiate(_iconPrefab, _resourcesTab.transform);
+
+                var refs = newGo.GetComponent<HudIconRefs>();
+                refs.Icon.sprite = resource.Icon;
+                refs.Text.text = resource.ToString();
+
+                _createdResources.Add(resource, refs);
+            }
+        }
+
+        private void RefreshResourcesIcons(ResourceSO p_resource)
+        {
+            foreach (var icon in _createdResources)
+            {
+                if (icon.Key == p_resource)
+                {
+                    icon.Value.Text.text = _inventoriesManager.GetResourceAmountFromMainInventory(p_resource).ToString();
+                    return;
+                }
+            }
+        }
+
+        private void RefreshUnitsIcons(Unit p_units)
         {
             foreach (var icons in _createdIcons.ToList())
             {
                 if (icons.Key != p_units)
                     continue;
-                
+
                 Destroy(icons.Value.gameObject);
                 _createdIcons.Remove(icons.Key);
             }
@@ -103,7 +141,7 @@ namespace UI.HUD
         {
             if (p_unit == null)
                 return;
-            
+
             if (p_unit is Building building)
             {
                 _unitsManager.SelectUnit(building);
@@ -129,7 +167,7 @@ namespace UI.HUD
 
                 _rightDownPanelController.OpenPanel(PanelType.Enemy, enemy);
             }
-            
+
             EventSystem.current.SetSelectedGameObject(null);
         }
 

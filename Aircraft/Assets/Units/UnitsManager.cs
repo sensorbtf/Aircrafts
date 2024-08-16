@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Buildings;
 using Enemies;
+using Resources;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Vehicles;
+using Units.Vehicles;
 
 namespace Units
 {
@@ -16,6 +18,7 @@ namespace Units
         [SerializeField] private EnemyDatabase _enemyDatabase;
         [SerializeField] private BuildingsDatabase _buildingsDatabase;
         [SerializeField] private VehiclesDatabase _vehiclesDatabase;
+        [SerializeField] private InventoriesManager _inventoriesManager;
 
         [SerializeField] private CameraController _cameraController;
 
@@ -59,6 +62,8 @@ namespace Units
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
 
+                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
+
                 OnUnitCreated?.Invoke(unit);
             }
 
@@ -91,6 +96,7 @@ namespace Units
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
+                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
 
                 OnUnitCreated?.Invoke(unit);
             }
@@ -103,6 +109,7 @@ namespace Units
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
+                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
 
                 OnUnitCreated?.Invoke(unit);
             }

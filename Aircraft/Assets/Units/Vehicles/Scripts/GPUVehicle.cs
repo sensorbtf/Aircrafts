@@ -1,4 +1,4 @@
-﻿namespace Vehicles
+﻿namespace Units.Vehicles
 {
     public class GPUVehicle: Vehicle
     {
