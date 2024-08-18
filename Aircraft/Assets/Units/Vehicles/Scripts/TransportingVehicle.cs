@@ -8,7 +8,7 @@ namespace Units.Vehicles
     {
         [SerializeField] private int _refuelAmount;
 
-        public override void HandleSpecialAction()
+        public override void SelectedUpdate()
         {
             HandleNearestUnits();
             

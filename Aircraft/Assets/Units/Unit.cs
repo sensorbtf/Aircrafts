@@ -187,6 +187,8 @@ namespace Units
 
         private void SetAction(Actions p_actionType, Unit p_giver, int p_index)
         {
+            CanvasInfo.Reorder(true);
+
             CanvasInfo.StateInfo[p_index].TextInfo.text = p_actionType.ToString();
 
             CanvasInfo.StateInfo[p_index].Button.interactable = true;
@@ -199,6 +201,8 @@ namespace Units
 
         public void ResetStateButtons()
         {
+            CanvasInfo.Reorder(false);
+            
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
                 CanvasInfo.StateInfo[i].Action = Actions.Noone;
