@@ -97,6 +97,11 @@ namespace Enemies
                 OnUnitDied?.Invoke(this);
             }
         }
+        
+        public override void CheckState()
+        {
+           // for attacking, states such as sleeping?
+        }
 
         public void OnPointerClick(PointerEventData p_eventData)
         {

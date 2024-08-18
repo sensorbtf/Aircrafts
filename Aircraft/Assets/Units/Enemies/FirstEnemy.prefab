@@ -34,7 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6660245239635009211}
-  - {fileID: 726925118178288060}
+  - {fileID: 3547263381495695656}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1343154126342771350
@@ -49,8 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64b2b411dc94aa8866092377620deba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnitData: {fileID: 0}
-  CanvasInfo: {fileID: 1012128494768061321}
+  CanvasInfo: {fileID: 3830076512131699485}
   CurrentHp: 0
   AttackPoint: {fileID: 6660245239635009211}
 --- !u!212 &3074705525528323962
@@ -261,7 +260,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &4651488609734645986
+--- !u!1001 &8908559822519824502
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -271,7 +270,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 754545956133396703, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_Name
-      value: HealthCanvas
+      value: InfoCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 3262470407204767229, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchorMax.x
@@ -295,19 +294,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_SizeDelta.x
@@ -315,7 +314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 10
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_LocalPosition.x
@@ -351,7 +350,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3.7
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -370,15 +369,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56079766273cde4409462447634b3e36, type: 3}
---- !u!224 &726925118178288060 stripped
+--- !u!224 &3547263381495695656 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
-  m_PrefabInstance: {fileID: 4651488609734645986}
+  m_PrefabInstance: {fileID: 8908559822519824502}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1012128494768061321 stripped
+--- !u!114 &3830076512131699485 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5658392217596797803, guid: 56079766273cde4409462447634b3e36, type: 3}
-  m_PrefabInstance: {fileID: 4651488609734645986}
+  m_PrefabInstance: {fileID: 8908559822519824502}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1

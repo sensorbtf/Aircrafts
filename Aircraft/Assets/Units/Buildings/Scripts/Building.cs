@@ -21,10 +21,22 @@ namespace Buildings
 
             base.Initialize(p_buildingData);
         }
-        
+
+        public override void Update()
+        {
+            base.Update();
+
+            CheckForNearbyVehicles();
+        }
+
         public void OnPointerClick(PointerEventData p_eventData)
         {
             OnUnitClicked?.Invoke(this, true);
+        }
+
+        public virtual void CheckForNearbyVehicles()
+        {
+            
         }
 
         public override void ReceiveDamage(int p_damage)
@@ -38,6 +50,29 @@ namespace Buildings
             }
         }
 
+        public override void CheckState()
+        {
+            if (CurrentHp < UnitData.MaxHp)
+            {
+                SetNewStateTexts(Actions.Repair);
+            }
+            else
+            {
+                ResetStateText(Actions.Repair);
+            }
+
+            // if (this is CombatVehicle combat)// combatbuilding?
+            // {
+            //     foreach (var weapon in combat.Weapons)
+            //     {
+            //         if (weapon.CurrentAmmo < weapon.Data.MaxAmmo && Inventory.GetResourceAmount(weapon.Data.AmmoType) > 0)
+            //         {
+            //             combat.SetNewStateTexts(Actions.Arm, this);
+            //         }
+            //     }
+            // }
+        }
+        
         public override void AttackTarget(GameObject p_target)
         {
             throw new NotImplementedException();

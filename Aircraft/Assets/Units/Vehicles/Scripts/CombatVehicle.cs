@@ -19,7 +19,6 @@ namespace Units.Vehicles
         private Weapon _currentWeapon;
         private List<Weapon> _weapons;
         private Camera _mainCamera;
-        private LayerMask _groundLayerMask;
         private Transform _currentFirePoint;
 
         // TODO: Mechanika paliwa i refuellingu (pojazdy lub baza)
@@ -31,7 +30,6 @@ namespace Units.Vehicles
         public override void Initialize(VehicleSO p_vehicleData)
         {
             _mainCamera = Camera.main;
-            _groundLayerMask = LayerMask.GetMask("Ground");
 
             _weapons = new List<Weapon>(p_vehicleData.Weapons.Length);
             foreach (var weaponData in p_vehicleData.Weapons)
@@ -43,7 +41,7 @@ namespace Units.Vehicles
             base.Initialize(p_vehicleData);
         }
 
-        private void Update()
+        public override void Update()
         {
             foreach (var weapon in _weapons)
             {
@@ -52,6 +50,8 @@ namespace Units.Vehicles
                     weapon.CurrentTimer += Time.deltaTime;
                 }
             }
+            
+            base.Update();
         }
 
         public override void HandleMovement()
@@ -174,7 +174,7 @@ namespace Units.Vehicles
                 Vector2 rayDirection = positions[i] - positions[i - 1];
                 var rayDistance = Vector2.Distance(positions[i - 1], positions[i]);
 
-                var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, _groundLayerMask);
+                var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, LayerManager.VehicleLayer);
 
                 if (hit.collider != null && hit.collider.CompareTag("Ground"))
                 {

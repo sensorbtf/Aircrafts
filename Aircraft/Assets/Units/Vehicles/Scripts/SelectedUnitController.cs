@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Units.Vehicles
 {
-    public class VehicleController
+    public class SelectedUnitController
     {
         private Vehicle _currentVehicle;
 

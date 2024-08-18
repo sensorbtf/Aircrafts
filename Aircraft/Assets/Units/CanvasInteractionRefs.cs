@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 
 public class CanvasInteractionRefs : MonoBehaviour
 {
+    public Actions Action;
     public Button Button;
     public Slider Slider;
     public TextMeshProUGUI TextInfo;
@@ -14,5 +15,5 @@ public class CanvasInteractionRefs : MonoBehaviour
 
 public enum Actions
 {
-    Refill, Arm, Repair
+    Noone, Refill, Arm, Repair
 }

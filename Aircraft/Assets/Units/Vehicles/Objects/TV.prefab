@@ -48,14 +48,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66d777a47dd04696bc3ba85ddc58e9c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnitData: {fileID: 0}
   CanvasInfo: {fileID: 1944141411121277282}
   CurrentHp: 0
-  _checkRange: 5
-  _vehicleLayerMask:
+  _refuelAmount: 50
+  _lyer:
     serializedVersion: 2
     m_Bits: 2048
-  _refuelAmount: 50
 --- !u!212 &56588586327154509
 SpriteRenderer:
   m_ObjectHideFlags: 0

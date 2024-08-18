@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 8567839004797921181, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
   _icon: {fileID: 21300000, guid: c30b44e6bd1b1764a92bcb4639635e74, type: 3}
+  _resources: 
   _maxHp: 100
   _speed: 0
   _attackRange: 0
   _attackCooldown: 0
   _attackDamage: 0
+  _checkingStateRange: 3
   _type: 1

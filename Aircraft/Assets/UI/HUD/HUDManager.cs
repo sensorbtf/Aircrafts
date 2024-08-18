@@ -107,7 +107,7 @@ namespace UI.HUD
 
                 var refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = resource.Icon;
-                refs.Text.text = resource.ToString();
+                refs.Text.text = _inventoriesManager.GetResourceAmountFromMainInventory(resource).ToString();
 
                 _createdResources.Add(resource, refs);
             }

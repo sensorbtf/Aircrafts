@@ -26,7 +26,7 @@ namespace Units
         public List<Vehicle> AllVehicles = new List<Vehicle>();
         public List<Building> AllBuildings = new List<Building>();
 
-        public VehicleController VehicleController;
+        private SelectedUnitController _selectedUnitController;
         private Unit _selectedUnit;
 
         public Unit SelectedUnit => _selectedUnit;
@@ -36,7 +36,7 @@ namespace Units
 
         private void Start()
         {
-            VehicleController = new VehicleController();
+            _selectedUnitController = new SelectedUnitController();
         }
 
         public void CustomStart()
@@ -124,10 +124,7 @@ namespace Units
                 enemy.HandleSpecialAction();
             }
 
-            if (VehicleController != null)
-            {
-                VehicleController.Update();
-            }
+            _selectedUnitController?.Update();
         }
 
         private void FixedUpdate()
@@ -137,10 +134,7 @@ namespace Units
                 enemy.HandleMovement(GetNearestTransformOfPlayerUnit(enemy.transform));
             }
 
-            if (VehicleController != null)
-            {
-                VehicleController.FixedUpdate();
-            }
+            _selectedUnitController?.FixedUpdate();
         }
 
         private Transform GetNearestTransformOfPlayerUnit(Transform p_enemyTransform)
@@ -175,15 +169,9 @@ namespace Units
         {
             if (_selectedUnit != null)
             {
-                // if (p_unit.IsSelected)
-                // {
-                //     _unitsManager.SelectUnit(_unitsManager.GetMainBase());
-                //     return;
-                // }
-                
                 _selectedUnit.UnSelectUnit();
 
-                if (VehicleController.CurrentVehicle != null)
+                if (_selectedUnitController.CurrentVehicle != null)
                 {
                     UnselectVehicle();
                 }
@@ -273,16 +261,16 @@ namespace Units
 
         public void SelectVehicle(Vehicle p_vehicle)
         {
-            VehicleController.SetNewVehicle(p_vehicle);
-            VehicleController.CurrentVehicle.SelectUnit();
-            _cameraController.UnitTransform = VehicleController.CurrentVehicle.transform;
+            _selectedUnitController.SetNewVehicle(p_vehicle);
+            _selectedUnitController.CurrentVehicle.SelectUnit();
+            _cameraController.UnitTransform = _selectedUnitController.CurrentVehicle.transform;
             _selectedUnit = p_vehicle;
         }
 
         private void UnselectVehicle()
         {
-            VehicleController.CurrentVehicle.UnSelectUnit();
-            VehicleController.SetNewVehicle(null);
+            _selectedUnitController.CurrentVehicle.UnSelectUnit();
+            _selectedUnitController.SetNewVehicle(null);
             _cameraController.UnitTransform = null;
         }
     }

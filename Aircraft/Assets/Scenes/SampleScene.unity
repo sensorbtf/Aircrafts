@@ -972,7 +972,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourcesDatabase: {fileID: 11400000, guid: 71d92a09661176c4b81a60060a3046e6, type: 2}
-  _mainInventory: {fileID: 0}
 --- !u!1 &695956790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1335,7 +1334,6 @@ MonoBehaviour:
   - {fileID: 1935620291}
   - {fileID: 2018607341}
   - {fileID: 1323956976}
-  SelectedUnit: {fileID: 0}
 --- !u!1 &987888483
 GameObject:
   m_ObjectHideFlags: 0
@@ -1988,18 +1986,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 844092128}
     m_Modifications:
-    - target: {fileID: 5504423802796594671, guid: 144075dc6027b1642bdba5761394196a, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5504423802796594671, guid: 144075dc6027b1642bdba5761394196a, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7086318671860293713, guid: 144075dc6027b1642bdba5761394196a, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 7259362167252639684, guid: 144075dc6027b1642bdba5761394196a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -21.4
@@ -3170,18 +3156,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 844092128}
     m_Modifications:
-    - target: {fileID: 1384966496102642364, guid: dbe210d005b9724449c9c8a37a20a2d9, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 4399012645904434946, guid: dbe210d005b9724449c9c8a37a20a2d9, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4399012645904434946, guid: dbe210d005b9724449c9c8a37a20a2d9, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7259362167252639684, guid: dbe210d005b9724449c9c8a37a20a2d9, type: 3}
       propertyPath: m_LocalPosition.x
       value: -29.9
@@ -3359,18 +3333,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 844092128}
     m_Modifications:
-    - target: {fileID: 2061623287126252750, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2061623287126252750, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3650262561083058544, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 7259362167252639684, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.27

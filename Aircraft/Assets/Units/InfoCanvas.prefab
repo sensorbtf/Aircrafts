@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf39f226b5c9fa46ad13aec144cd462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Action: 0
   Button: {fileID: 6730517880396236424}
   Slider: {fileID: 0}
   TextInfo: {fileID: 4929594769669170963}
@@ -91,8 +92,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284572005
-  m_fontColor: {r: 0.3962264, g: 0.37940547, b: 0.37940547, a: 1}
+    rgba: 4281385736
+  m_fontColor: {r: 0.032440357, g: 0.764151, b: 0.18638083, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -176,7 +177,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.7924528, g: 0.78123885, b: 0.78123885, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.4056604, g: 0.38461196, b: 0.38461196, a: 0.16470589}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -377,6 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf39f226b5c9fa46ad13aec144cd462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Action: 0
   Button: {fileID: 7402714468501206432}
   Slider: {fileID: 0}
   TextInfo: {fileID: 423866475943349871}
@@ -409,8 +411,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284572005
-  m_fontColor: {r: 0.3962264, g: 0.37940547, b: 0.37940547, a: 1}
+    rgba: 4281385736
+  m_fontColor: {r: 0.032440357, g: 0.764151, b: 0.18638083, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -494,7 +496,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.7924528, g: 0.78123885, b: 0.78123885, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.4056604, g: 0.38461196, b: 0.38461196, a: 0.16470589}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -647,6 +649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cf39f226b5c9fa46ad13aec144cd462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Action: 0
   Button: {fileID: 7975639640495622629}
   Slider: {fileID: 0}
   TextInfo: {fileID: 4747123220578256587}
@@ -679,8 +682,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284572005
-  m_fontColor: {r: 0.3962264, g: 0.37940547, b: 0.37940547, a: 1}
+    rgba: 4281385736
+  m_fontColor: {r: 0.032440357, g: 0.764151, b: 0.18638083, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -764,7 +767,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.7924528, g: 0.78123885, b: 0.78123885, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.4056604, g: 0.38461196, b: 0.38461196, a: 0.16470589}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:

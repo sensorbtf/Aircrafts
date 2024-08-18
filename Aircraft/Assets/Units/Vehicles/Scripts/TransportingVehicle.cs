@@ -1,51 +1,54 @@
-﻿using System.Linq;
+﻿using Buildings;
+using Resources.Scripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Units.Vehicles
 {
-    public class TransportingVehicle : Vehicle
+    public class TransportingVehicle: Vehicle
     {
-        [Header("Transporting Vehicle")] [SerializeField]
-        private float _checkRange;
-
-        [SerializeField] private LayerMask _vehicleLayerMask;
         [SerializeField] private int _refuelAmount;
 
-        private void CheckForNearbyVehicles()
+        public override void HandleSpecialAction()
         {
-            foreach (var vehicleCollider in Physics2D.OverlapCircleAll(transform.position, _checkRange,
-                         _vehicleLayerMask))
+            HandleNearestUnits();
+            
+            if (Input.GetKeyDown(KeyCode.R))
             {
-                var nearbyVehicle = vehicleCollider.GetComponent<Vehicle>();
+                HandleRefuel();
+            }
+        }
 
-                if (nearbyVehicle != null && nearbyVehicle != this)
+        private void HandleNearestUnits()
+        {
+            var nearbyUnits = GetNearbyUnits(new []{LayerManager.VehicleLayer, LayerManager.BuildingLayer}, UnitData.CheckingStateRange);
+            
+            foreach (var unit in nearbyUnits)
+            {
+                if (unit == null || unit == this) 
+                    continue;
+
+                if (unit is Vehicle vehicle)
                 {
-                    if (nearbyVehicle.CurrentFuel < nearbyVehicle.VehicleData.MaxFuel)
+                    if (Inventory.GetResourceAmount(Resource.Petroleum) > 0)
                     {
-                        nearbyVehicle.SetNewStateTexts(Actions.Refill, this);
+                        vehicle.TryToActivateStateButtons(Actions.Refill, this);
                     }
-
-                    if (nearbyVehicle is CombatVehicle combat)
+                    
+                    if (unit is CombatVehicle combat)
                     {
                         foreach (var weapon in combat.Weapons)
                         {
-                            if (weapon.CurrentAmmo < weapon.Data.MaxAmmo && Inventory.GetResourceAmount(weapon.Data.AmmoType) > 0)
+                            if (Inventory.GetResourceAmount(weapon.Data.AmmoType) > 0)
                             {
-                                nearbyVehicle.SetNewStateTexts(Actions.Arm, this);
+                                vehicle.TryToActivateStateButtons(Actions.Arm, this);
                             }
                         }
                     }
                 }
-            }
-        }
-
-        public override void HandleSpecialAction()
-        {
-            CheckForNearbyVehicles();
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                HandleRefuel();
+                else if (unit is Building building)
+                {
+                    
+                }
             }
         }
 

@@ -14,6 +14,7 @@ namespace Units
         [SerializeField] private int _attackRange;
         [SerializeField] private int _attackCooldown;
         [SerializeField] private int _attackDamage;
+        [SerializeField] private float _checkingStateRange;
     
         public GameObject Prefab => _prefab;
         public Sprite Icon => _icon;
@@ -24,5 +25,6 @@ namespace Units
         public int AttackCooldown => _attackCooldown;
         public int AttackDamage => _attackDamage;
         public int Speed => _speed;
+        public float CheckingStateRange => _checkingStateRange;
     }
 }

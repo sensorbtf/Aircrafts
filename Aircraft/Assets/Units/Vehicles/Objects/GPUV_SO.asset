@@ -20,7 +20,8 @@ MonoBehaviour:
   _attackRange: 0
   _attackCooldown: 0
   _attackDamage: 0
+  _checkingStateRange: 3
   _type: 1
-  _maxFuel: 0
-  _literUsageInterval: 0
+  _maxFuel: 100
+  _literUsageInterval: 50
   _weapons: []

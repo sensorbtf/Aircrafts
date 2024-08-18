@@ -1,25 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Resources;
 using Resources.Scripts;
 using Units.Vehicles;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace Units
 {
-    public abstract class Unit : MonoBehaviour
+    public abstract class Unit: MonoBehaviour
     {
-        [Header("Unit")] private Rigidbody2D _rigidbody2D;
+        [Header("Unit")] 
+        private Rigidbody2D _rigidbody2D;
         private SpriteRenderer _unitRenderer = null;
         private InventoryController _inventory;
-        private bool _isSelected;
-
-        private UnitSO _unitData;
+        
         public InfoCanvasRefs CanvasInfo;
 
+        private bool _isSelected;
+       
+        private List<Unit> _unitsInRange = new List<Unit>();
+        private UnitSO _unitData;
+        
         public Action<Unit, bool> OnUnitClicked;
         public Action<Unit> OnUnitDied;
         public Action<Unit, Unit> OnUnitAttack;
@@ -149,7 +151,7 @@ namespace Units
             }
         }
 
-        public void TryToActivateStateButtons(Actions p_actionType, Vehicle p_giver)
+        public void TryToActivateStateButtons(Actions p_actionType, Unit p_giver)
         {
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
@@ -234,6 +236,44 @@ namespace Units
                 case Actions.Repair:
                     break;
             }
+        }
+
+        protected List<Unit> GetNearbyUnits(LayerMask[] p_unitLayerMasks, float p_checkRange)
+        {
+            LayerMask combinedLayerMask = 0;
+            foreach (var layerMask in p_unitLayerMasks)
+            {
+                combinedLayerMask |= layerMask;
+            }
+
+            var nearbyUnits = new List<Unit>();
+            var colliders = Physics2D.OverlapCircleAll(transform.position, p_checkRange, combinedLayerMask);
+
+            foreach (var collider in colliders)
+            {
+                var nearbyUnit = collider.GetComponent<Unit>();
+
+                if (nearbyUnit != null && !Equals(nearbyUnit, this))
+                {
+                    nearbyUnits.Add(nearbyUnit);
+
+                    if (!_unitsInRange.Contains(nearbyUnit)) 
+                    {
+                        _unitsInRange.Add(nearbyUnit); 
+                    }
+                }
+            }
+
+            for (int i = _unitsInRange.Count - 1; i >= 0; i--)
+            {
+                if (!nearbyUnits.Contains(_unitsInRange[i]))
+                {
+                    _unitsInRange[i].ResetStateButtons();
+                    _unitsInRange.RemoveAt(i);
+                }
+            }
+
+            return nearbyUnits;
         }
 
         public abstract void AttackTarget(GameObject p_target);

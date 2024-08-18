@@ -20,6 +20,7 @@ MonoBehaviour:
   _attackRange: 0
   _attackCooldown: 0
   _attackDamage: 0
+  _checkingStateRange: 5
   _type: 2
   _maxFuel: 200
   _literUsageInterval: 50
