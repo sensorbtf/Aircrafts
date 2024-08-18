@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Resources.Scripts;
 using Units;
 using UnityEngine;
 
@@ -37,6 +38,7 @@ public enum WeaponType
 public struct WeaponData // tutaj lokalizacja samej broni przy finishu
 {
     public WeaponType Type;
+    public Resource AmmoType;
     public Sprite Icon;
     public int Damage;
     public float FireRate;

@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 935343325555934533, guid: ec66cc061408f9942bd110102683008d, type: 3}
   _icon: {fileID: 21300000, guid: 0eeba1f942330a240b8b1c6f3cd385c9, type: 3}
-  _type: 2
-  _weaponsType: []
+  _resources: 00000000030000000100000002000000
   _maxHp: 50
   _speed: 10
-  _maneuverability: 10
+  _attackRange: 0
+  _attackCooldown: 0
+  _attackDamage: 0
+  _type: 2
+  _maxFuel: 200
+  _literUsageInterval: 50
+  _weapons: []

@@ -27,8 +27,10 @@ namespace Units
         public List<Building> AllBuildings = new List<Building>();
 
         public VehicleController VehicleController;
-        public Unit SelectedUnit;
+        private Unit _selectedUnit;
 
+        public Unit SelectedUnit => _selectedUnit;
+        
         public Action<Unit> OnUnitCreated;
         public Action<Unit> OnUnitSelected;
 
@@ -144,7 +146,7 @@ namespace Units
         private Transform GetNearestTransformOfPlayerUnit(Transform p_enemyTransform)
         {
             Transform closestTransform = null;
-            float closestDistance = float.MaxValue; // Start with the maximum possible value
+            float closestDistance = float.MaxValue;
 
             foreach (var vehicle in AllVehicles)
             {
@@ -171,7 +173,7 @@ namespace Units
 
         public void SelectUnit(Unit p_unit, bool p_invokeEvent = false)
         {
-            if (SelectedUnit != null)
+            if (_selectedUnit != null)
             {
                 // if (p_unit.IsSelected)
                 // {
@@ -179,7 +181,7 @@ namespace Units
                 //     return;
                 // }
                 
-                SelectedUnit.UnSelectUnit();
+                _selectedUnit.UnSelectUnit();
 
                 if (VehicleController.CurrentVehicle != null)
                 {
@@ -187,7 +189,7 @@ namespace Units
                 }
             }
 
-            SelectedUnit = p_unit;
+            _selectedUnit = p_unit;
 
             if (p_unit is Vehicle vehicle)
             {
@@ -238,7 +240,7 @@ namespace Units
             {
                 vehicle.DestroyHandler();
                 AllVehicles.Remove(vehicle);
-                if (SelectedUnit == p_unit)
+                if (_selectedUnit == p_unit)
                 {
                     SelectUnit(GetMainBase());
                 }
@@ -274,7 +276,7 @@ namespace Units
             VehicleController.SetNewVehicle(p_vehicle);
             VehicleController.CurrentVehicle.SelectUnit();
             _cameraController.UnitTransform = VehicleController.CurrentVehicle.transform;
-            SelectedUnit = p_vehicle;
+            _selectedUnit = p_vehicle;
         }
 
         private void UnselectVehicle()

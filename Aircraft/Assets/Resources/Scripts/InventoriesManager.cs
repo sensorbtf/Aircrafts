@@ -35,19 +35,20 @@ namespace Resources
             return newController;
         }
         
-        public int GetResourceAmount(Unit p_unitInventory, Resource p_resource)
+        public int GetResourceAmount(Unit p_unit, Resource p_resource)
         {
-            return _inventories[p_unitInventory].CurrentResources[GetResourceSO(p_unitInventory, p_resource)];
+            var res = GetResourceSO(p_unit, p_resource);
+            return res != null ? _inventories[p_unit].CurrentResources[res] : 0;
         }        
         
         public int GetResourceAmountFromMainInventory(ResourceSO p_resource)
         {
-            return _mainInventory.CurrentResources[p_resource];
+            return _mainInventory.CurrentResources.GetValueOrDefault(p_resource, 0);
         }
-
-        public int GetResourceAmount(Unit p_unitInventory, ResourceSO p_resource)
+        
+        public int GetResourceAmount(Unit p_unit, ResourceSO p_resource)
         {
-            return _inventories[p_unitInventory].CurrentResources[p_resource];
+            return _inventories[p_unit].CurrentResources[p_resource];
         }
         
         public bool IsEnoughResources(Unit p_unitInventory, Resource p_resource, int p_amount)

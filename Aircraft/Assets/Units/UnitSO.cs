@@ -15,13 +15,14 @@ namespace Units
         [SerializeField] private int _attackCooldown;
         [SerializeField] private int _attackDamage;
     
-        public Sprite Icon => _icon;
         public GameObject Prefab => _prefab;
+        public Sprite Icon => _icon;
+        public ResourceType[] Resources => _resources;
+
         public int MaxHp => _maxHp;
         public int AttackRange => _attackRange;
         public int AttackCooldown => _attackCooldown;
         public int AttackDamage => _attackDamage;
         public int Speed => _speed;
-        public ResourceType[] Resources => _resources;
     }
 }

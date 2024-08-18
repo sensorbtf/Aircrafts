@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Buildings;
 using Enemies;
 using UnityEngine;
@@ -10,8 +11,8 @@ namespace Units.Vehicles
     {
         [Header("Vehicle")] private VehicleSO _vehicleData;
         private int _currentFuel;
-        internal int _fuelUsageInterval;
-        public float CurrentFuel => _currentFuel;
+        private int _fuelUsageInterval;
+        public int CurrentFuel => _currentFuel;
         public VehicleSO VehicleData => _vehicleData;
 
         public Action OnFuelChange;
@@ -24,7 +25,7 @@ namespace Units.Vehicles
             _fuelUsageInterval = 0;
             base.Initialize(p_vehicleData);
         }
-
+        
         public virtual void HandleMovement()
         {
             var moveHorizontal = Input.GetAxis("Horizontal");
@@ -60,7 +61,7 @@ namespace Units.Vehicles
 
             if (_fuelUsageInterval >= _vehicleData.LiterUsageInterval)
             {
-                _currentFuel--;
+                LowerFuel(1);
                 _fuelUsageInterval = 0;
                 OnFuelChange?.Invoke();
             }
@@ -99,6 +100,39 @@ namespace Units.Vehicles
         public override void DestroyHandler()
         {
             Destroy(gameObject);
+        }
+        
+        public override void CheckState()
+        {
+            if (CurrentFuel < VehicleData.MaxFuel)
+            {
+                SetNewStateTexts(Actions.Refill);
+            }
+            else
+            {
+                ResetStateText(Actions.Refill);
+            }
+
+            if (CurrentHp < UnitData.MaxHp)
+            {
+                SetNewStateTexts(Actions.Repair);
+            }
+            else
+            {
+                ResetStateText(Actions.Repair);
+            }
+
+            if (this is CombatVehicle combat)
+            {
+                if (combat.Weapons.Any(x=>x.CurrentAmmo < x.Data.MaxAmmo))
+                {
+                    combat.SetNewStateTexts(Actions.Arm);
+                }
+                else
+                {
+                    combat.ResetStateText(Actions.Arm);
+                }
+            }
         }
 
         public void LowerFuel(int p_amount)

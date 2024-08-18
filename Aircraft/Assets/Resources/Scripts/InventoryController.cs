@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Resources
 {
-    public class InventoryController : MonoBehaviour
+    public class InventoryController
     {
         private Dictionary<ResourceSO, int> _currentResources;
         
@@ -44,7 +44,7 @@ namespace Resources
         
         public void RemoveResource(Resource p_resource, int p_amount)
         {
-            _currentResources[GetResourceSO(p_resource)] += p_amount;
+            _currentResources[GetResourceSO(p_resource)] -= p_amount;
 
             if (GetResourceAmount(p_resource) < 0)
             {
@@ -53,20 +53,21 @@ namespace Resources
             
             OnResourceValueChanged?.Invoke(GetResourceSO(p_resource));
         }
-
-        public ResourceSO GetResourceSO(Resource p_resource)
-        {
-            return _currentResources.FirstOrDefault(x => x.Key.Resource == p_resource).Key;
-        }
         
         public int GetResourceAmount(Resource p_resource)
         {
-            return _currentResources[GetResourceSO(p_resource)];
+            var res = GetResourceSO(p_resource);
+            return res != null ? _currentResources[res] : 0;
         }
 
         public int GetResourceAmount(ResourceSO p_resource)
         {
             return _currentResources[p_resource];
+        }
+        
+        public ResourceSO GetResourceSO(Resource p_resource)
+        {
+            return _currentResources.FirstOrDefault(x => x.Key.Resource == p_resource).Key;
         }
     }
 }
