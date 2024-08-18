@@ -178,7 +178,7 @@ namespace Units.Vehicles
                 Vector2 rayDirection = positions[i] - positions[i - 1];
                 var rayDistance = Vector2.Distance(positions[i - 1], positions[i]);
 
-                var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, LayerManager.VehicleLayer);
+                var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, LayerManager.GroundLayer);
 
                 if (hit.collider != null && hit.collider.CompareTag("Ground"))
                 {

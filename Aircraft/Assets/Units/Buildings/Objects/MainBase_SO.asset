@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MainBase_SO
   m_EditorClassIdentifier: 
   _prefab: {fileID: 8567839004797921181, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
-  _icon: {fileID: 21300000, guid: 26e91fe76c4d48c499dd797269df7d1c, type: 3}
+  _icon: {fileID: 21300000, guid: 3f0d0229a6b453f47b80b79b67250a2a, type: 3}
   _resources: 00000000010000000200000003000000
   _maxHp: 2000
   _speed: 0

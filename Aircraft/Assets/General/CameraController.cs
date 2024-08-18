@@ -19,11 +19,11 @@ public class CameraController : MonoBehaviour
     {
         if (UnitTransform != null)
         {
-            transform.position = UnitTransform.position + offset;
+            transform.position = new Vector3(UnitTransform.position.x, 0, 0)+ offset;
         }
         else
         {
-            transform.position = _baseTransform.position + offset;
+            transform.position = new Vector3(_baseTransform.position.x, 0, 0)+ offset;
         }
     }
 }

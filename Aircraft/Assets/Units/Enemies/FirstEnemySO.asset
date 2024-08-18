@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: FirstEnemySO
   m_EditorClassIdentifier: 
   _prefab: {fileID: 3931662045494198967, guid: f81ab6106595f3c4bba9e645d04bd411, type: 3}
-  _icon: {fileID: 21300000, guid: 69e964041c59e594997f655c88827a00, type: 3}
-  _maxHp: 100
+  _icon: {fileID: 21300000, guid: 61a80dfc09f84d948b78d3983c37e6ad, type: 3}
+  _resources: 
+  _maxHp: 10
   _speed: 10
   _attackRange: 1
   _attackCooldown: 1
-  _attackDamage: 5
+  _attackDamage: 1
+  _checkingStateRange: 0
   _type: 0
