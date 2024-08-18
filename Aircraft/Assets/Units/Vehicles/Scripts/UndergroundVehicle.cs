@@ -8,8 +8,10 @@ namespace Units.Vehicles
         [SerializeField] private Transform _crushPoint;
         private SpriteRenderer _cellSprite;
 
-        public override void HandleMovement()
+        public override void SelectedFixedUpdate()
         {
+            base.SelectedFixedUpdate();
+            
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
 
@@ -43,8 +45,10 @@ namespace Units.Vehicles
             }
         }
 
-        public override void HandleSpecialAction()
+        public override void SelectedUpdate()
         {
+            base.SelectedUpdate();
+            
             var hitCollider = Physics2D.OverlapCircle(_crushPoint.position, 0.1f); 
             if (hitCollider != null && hitCollider.CompareTag("CrushableCell"))
             {

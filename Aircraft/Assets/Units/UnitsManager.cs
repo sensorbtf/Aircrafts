@@ -171,7 +171,7 @@ namespace Units
             {
                 _selectedUnit.UnSelectUnit();
 
-                if (_selectedUnitController.CurrentVehicle != null)
+                if (_selectedUnitController.CurrentUnit != null)
                 {
                     UnselectVehicle();
                 }
@@ -181,7 +181,7 @@ namespace Units
 
             if (p_unit is Vehicle vehicle)
             {
-                SelectVehicle(vehicle);
+                SelectUnit(vehicle);
             }
             else if (p_unit is Enemy enemy)
             {
@@ -259,18 +259,18 @@ namespace Units
             return AllBuildings.FirstOrDefault(x => x.BuildingData.Type == BuildingType.Main_Base);
         }
 
-        public void SelectVehicle(Vehicle p_vehicle)
+        public void SelectUnit(Unit p_unit)
         {
-            _selectedUnitController.SetNewVehicle(p_vehicle);
-            _selectedUnitController.CurrentVehicle.SelectUnit();
-            _cameraController.UnitTransform = _selectedUnitController.CurrentVehicle.transform;
-            _selectedUnit = p_vehicle;
+            _selectedUnitController.SetNewUnit(p_unit);
+            _selectedUnitController.CurrentUnit.SelectUnit();
+            _cameraController.UnitTransform = _selectedUnitController.CurrentUnit.transform;
+            _selectedUnit = p_unit;
         }
 
         private void UnselectVehicle()
         {
-            _selectedUnitController.CurrentVehicle.UnSelectUnit();
-            _selectedUnitController.SetNewVehicle(null);
+            _selectedUnitController.CurrentUnit.UnSelectUnit();
+            _selectedUnitController.SetNewUnit(null);
             _cameraController.UnitTransform = null;
         }
     }

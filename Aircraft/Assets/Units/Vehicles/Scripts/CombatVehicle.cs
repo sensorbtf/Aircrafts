@@ -43,6 +43,8 @@ namespace Units.Vehicles
 
         public override void Update()
         {
+            base.Update();
+            
             foreach (var weapon in _weapons)
             {
                 if (weapon.CurrentTimer < weapon.Data.FireRate && weapon.CurrentAmmo > 0)
@@ -50,12 +52,12 @@ namespace Units.Vehicles
                     weapon.CurrentTimer += Time.deltaTime;
                 }
             }
-            
-            base.Update();
         }
 
-        public override void HandleMovement()
+        public override void SelectedFixedUpdate()
         {
+            base.Update();
+            
             if (CurrentFuel <= 0)
                 return;
             
@@ -77,9 +79,11 @@ namespace Units.Vehicles
             HandleTurretRotationAndFirePoint();
             DrawTrajectory(_currentFirePoint.localPosition, Time.fixedDeltaTime);
         }
-        
-        public override void HandleSpecialAction()
+
+        public override void SelectedUpdate()
         {
+            base.SelectedUpdate();
+            
             if (Input.GetKey(KeyCode.Space))
             {
                 if (_currentWeapon.CurrentTimer >= _currentWeapon.Data.FireRate)
@@ -93,7 +97,7 @@ namespace Units.Vehicles
                 CycleThroughWeapon();
             }
         }
-        
+
         public override void SelectUnit()
         {
             base.SelectUnit();

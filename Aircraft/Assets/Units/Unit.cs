@@ -5,23 +5,23 @@ using Resources;
 using Resources.Scripts;
 using Units.Vehicles;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Units
 {
-    public abstract class Unit: MonoBehaviour
+    public abstract class Unit : MonoBehaviour
     {
-        [Header("Unit")] 
-        private Rigidbody2D _rigidbody2D;
+        [Header("Unit")] private Rigidbody2D _rigidbody2D;
         private SpriteRenderer _unitRenderer = null;
         private InventoryController _inventory;
-        
+
         public InfoCanvasRefs CanvasInfo;
 
         private bool _isSelected;
-       
+
         private List<Unit> _unitsInRange = new List<Unit>();
         private UnitSO _unitData;
-        
+
         public Action<Unit, bool> OnUnitClicked;
         public Action<Unit> OnUnitDied;
         public Action<Unit, Unit> OnUnitAttack;
@@ -41,7 +41,7 @@ namespace Units
         internal Action OnFireShot;
         internal Action OnWeaponSwitch;
 
-        public virtual void Initialize(UnitSO p_data)
+        public void Initialize(UnitSO p_data)
         {
             CurrentHp = p_data.MaxHp;
 
@@ -61,14 +61,26 @@ namespace Units
             // Rigidbody2D.angularDrag = EnemyData.AngularDrag;  // Control rotational drag
         }
 
-        public virtual void PostInitialize(InventoryController p_newInventory)
+        public void PostInitialize(InventoryController p_newInventory)
         {
             _inventory = p_newInventory;
         }
 
-        public virtual void Update()
+        public virtual void Update() // used for things needed to check constantly
         {
             CheckState();
+        }
+
+        public virtual void SelectedFixedUpdate()
+        {
+            if (!_isSelected)
+                return;
+        }
+
+        public virtual void SelectedUpdate()
+        {
+            if (!_isSelected)
+                return;
         }
 
         public virtual void SelectUnit()
@@ -79,12 +91,20 @@ namespace Units
         public virtual void UnSelectUnit()
         {
             _isSelected = false;
+            
+            foreach (var unit in _unitsInRange)
+            {
+                unit.ResetStateButtons();
+            }
+
             // make AI logic
         }
 
+        #region Actions
+
         protected void CompactStateInfo()
         {
-            int targetIndex = 0; 
+            int targetIndex = 0;
 
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
@@ -108,7 +128,7 @@ namespace Units
                         CanvasInfo.StateInfo[i].Button.onClick.RemoveAllListeners();
                     }
 
-                    targetIndex++; 
+                    targetIndex++;
                 }
             }
         }
@@ -145,7 +165,7 @@ namespace Units
                     CanvasInfo.StateInfo[i].TextInfo.text = "";
                     CanvasInfo.StateInfo[i].Button.interactable = false;
                     CanvasInfo.StateInfo[i].Action = Actions.Noone;
-                    CompactStateInfo(); 
+                    CompactStateInfo();
                     return;
                 }
             }
@@ -158,7 +178,7 @@ namespace Units
                 if (CanvasInfo.StateInfo[i].Action == p_actionType)
                 {
                     SetAction(p_actionType, p_giver, i);
-                    CompactStateInfo(); 
+                    CompactStateInfo();
                     return;
                 }
             }
@@ -257,9 +277,9 @@ namespace Units
                 {
                     nearbyUnits.Add(nearbyUnit);
 
-                    if (!_unitsInRange.Contains(nearbyUnit)) 
+                    if (!_unitsInRange.Contains(nearbyUnit))
                     {
-                        _unitsInRange.Add(nearbyUnit); 
+                        _unitsInRange.Add(nearbyUnit);
                     }
                 }
             }
@@ -276,9 +296,16 @@ namespace Units
             return nearbyUnits;
         }
 
+        #endregion
+
+        #region Abstracs
+
         public abstract void AttackTarget(GameObject p_target);
         public abstract void ReceiveDamage(int p_damage);
         public abstract void DestroyHandler();
         public abstract void CheckState();
+        public abstract void OnPointerClick(PointerEventData p_eventData);
+
+        #endregion
     }
 }

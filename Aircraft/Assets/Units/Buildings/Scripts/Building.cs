@@ -25,18 +25,21 @@ namespace Buildings
         public override void Update()
         {
             base.Update();
-
-            CheckForNearbyVehicles();
         }
 
-        public void OnPointerClick(PointerEventData p_eventData)
+        public override void SelectedFixedUpdate()
+        {
+            base.SelectedFixedUpdate();
+        }
+        
+        public override void SelectedUpdate()
+        {
+            base.SelectedUpdate();
+        }
+
+        public override void OnPointerClick(PointerEventData p_eventData)
         {
             OnUnitClicked?.Invoke(this, true);
-        }
-
-        public virtual void CheckForNearbyVehicles()
-        {
-            
         }
 
         public override void ReceiveDamage(int p_damage)

@@ -25,8 +25,15 @@ namespace Units.Vehicles
             base.Initialize(p_vehicleData);
         }
         
-        public virtual void HandleMovement()
+        public override void Update()
         {
+            base.Update();
+        }
+        
+        public override void SelectedFixedUpdate()
+        {
+            base.SelectedFixedUpdate();
+            
             var moveHorizontal = Input.GetAxis("Horizontal");
             var force = Vector2.zero;
 
@@ -53,7 +60,7 @@ namespace Units.Vehicles
                 Rigidbody2D.velocity = Rigidbody2D.velocity.normalized * maxSpeed;
             }
         }
-
+        
         public virtual void HandleFuelUsage()
         {
             _fuelUsageInterval++;
@@ -75,12 +82,8 @@ namespace Units.Vehicles
                 potentialEnemy.ReceiveDamage(_vehicleData.AttackDamage);
             }
         }
-
-        public virtual void HandleSpecialAction()
-        {
-        }
-
-        public void OnPointerClick(PointerEventData p_eventData)
+        
+        public override void OnPointerClick(PointerEventData p_eventData)
         {
             OnUnitClicked?.Invoke(this, true);
         }

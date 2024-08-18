@@ -7,16 +7,14 @@ namespace Buildings
 {
     public class AdministrativeBuilding: Building
     {
-        public override void Update()
+        public override void SelectedUpdate()
         {
-            base.Update();
-            
-            //andleNearestUnits();
+            HandleNearestUnits();
         }
-
+        
         private void HandleNearestUnits()
         {
-            var nearbyUnits = GetNearbyUnits(new []{ LayerManager.BuildingLayer}, UnitData.CheckingStateRange);
+            var nearbyUnits = GetNearbyUnits(new []{ LayerManager.VehicleLayer}, UnitData.CheckingStateRange);
 
             foreach (var unit in nearbyUnits)
             {

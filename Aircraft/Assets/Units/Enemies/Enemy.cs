@@ -49,13 +49,6 @@ namespace Enemies
             Rigidbody2D.velocity = Vector2.zero;
         }
 
-        private void RotateTowards(Vector3 p_position)
-        {
-            var direction = (Vector2)p_position - (Vector2)AttackPoint.position;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        }
-
         private void HandleAttackCooldown()
         {
             _attackCooldown -= Time.deltaTime;
@@ -103,7 +96,7 @@ namespace Enemies
            // for attacking, states such as sleeping?
         }
 
-        public void OnPointerClick(PointerEventData p_eventData)
+        public override void OnPointerClick(PointerEventData p_eventData)
         {
             OnUnitClicked?.Invoke(this, true);
         }

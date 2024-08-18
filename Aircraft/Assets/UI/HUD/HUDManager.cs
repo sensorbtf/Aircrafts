@@ -158,7 +158,7 @@ namespace UI.HUD
             }
             else if (p_unit is Vehicle vehicle)
             {
-                _unitsManager.SelectVehicle(vehicle);
+                _unitsManager.SelectUnit(vehicle);
                 _rightDownPanelController.OpenPanel(PanelType.Vehicle, vehicle);
             }
             else if (p_unit is Enemy enemy)

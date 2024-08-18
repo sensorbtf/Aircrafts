@@ -1,34 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
+using Buildings;
 using UnityEngine;
 
 namespace Units.Vehicles
 {
     public class SelectedUnitController
     {
-        private Vehicle _currentVehicle;
+        private Unit _currentUnit;
 
-        public Vehicle CurrentVehicle => _currentVehicle;
+        public Unit CurrentUnit => _currentUnit;
 
         public void FixedUpdate()
         {
-            if (_currentVehicle != null)
+            if (_currentUnit != null)
             {
-                _currentVehicle.HandleMovement();
+                _currentUnit.SelectedFixedUpdate();
             }
         }
 
         public void Update()
         {
-            if (_currentVehicle != null)
+            if (_currentUnit != null)
             {
-                _currentVehicle.HandleSpecialAction();
+                _currentUnit.SelectedUpdate();
             }
         }
 
-        public void SetNewVehicle(Vehicle p_newlySelectedVehicle)
+        public void SetNewUnit(Unit p_unit)
         {
-            _currentVehicle = p_newlySelectedVehicle;
+            _currentUnit = p_unit;
         }
     }
 }
