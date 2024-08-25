@@ -8,19 +8,18 @@ namespace Buildings
     public abstract class Building: Unit
     {
         [SerializeField] private BuildingSO _buildingData;
-
-        private bool _isBroken;
+        [SerializeField] private bool _isBroken;
+        
         private bool _isFunctioning;
         
         public BuildingSO BuildingData => _buildingData;
         public bool IsBroken => _isBroken;
         public bool IsFunctioning => _isFunctioning;
         
-        public void Initialize(BuildingSO p_buildingData)
+        public virtual void Initialize(BuildingSO p_buildingData)
         {
             _buildingData = p_buildingData;
             UnitData = p_buildingData;
-
             base.Initialize(p_buildingData);
         }
 

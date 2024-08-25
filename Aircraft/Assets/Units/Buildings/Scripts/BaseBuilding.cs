@@ -7,9 +7,14 @@ namespace Buildings
 {
     public class BaseBuilding: Building
     {
-        private List<Vehicle> _vehicles = new ();
-        public List<Vehicle> Vehicles => _vehicles;
-        
+        private List<Vehicle> _vehiclesInBase = new ();
+        public List<Vehicle> VehiclesInBase => _vehiclesInBase;
+
+        public override void Initialize(BuildingSO p_buildingData)
+        {
+            base.Initialize(p_buildingData);
+        }
+
         public override void SelectedUpdate()
         {
             HandleNearestUnits();
@@ -47,13 +52,13 @@ namespace Buildings
 
         public void TryToAddVehicleToBase(Vehicle p_vehicle)
         {
-            _vehicles.Add(p_vehicle);
+            _vehiclesInBase.Add(p_vehicle);
             p_vehicle.AddVehicleToBase(UnitCollider);
         }
         
         public void RemoveVehicle(Vehicle p_vehicle)
         {
-            _vehicles.Remove(p_vehicle);
+            _vehiclesInBase.Remove(p_vehicle);
         }
     }
 }

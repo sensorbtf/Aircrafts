@@ -12,17 +12,14 @@ public class InfoCanvasRefs : MonoBehaviour
     public Slider HealthBar => _healthBar;
     public CanvasInteractionRefs[] StateInfo => _stateInfo;
 
-    public void Reorder(bool p_hide)
+    public void Reorder(bool p_show)
     {
-        if (p_hide)
+        if (p_show)
         {
             GetComponent<Canvas>().sortingOrder = 2;
-
-            //gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -0.5f);
         }
         else
         {
-            // gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, 0);
             GetComponent<Canvas>().sortingOrder = 1;
         }
     }

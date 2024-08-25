@@ -89,11 +89,13 @@ namespace Units
         public virtual void SelectUnit()
         {
             _isSelected = true;
+            Reorder(true);
         }
 
         public virtual void UnSelectUnit()
         {
             _isSelected = false;
+            Reorder(false);
             
             foreach (var unit in _unitsInRange)
             {
@@ -101,6 +103,18 @@ namespace Units
             }
 
             // make AI logic
+        }
+        
+        private void Reorder(bool p_hide)
+        {
+            if (p_hide)
+            {
+                UnitRenderer.sortingOrder = 2;
+            }
+            else
+            {
+                UnitRenderer.sortingOrder = 1;
+            }
         }
 
         #region Actions

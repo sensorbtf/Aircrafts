@@ -72,6 +72,26 @@ namespace Units
             {
                 building.Initialize(building.BuildingData);
 
+                switch (building.BuildingData.Type)
+                {
+                    case BuildingType.Base:
+                        building.GetComponent<BaseBuilding>().Initialize(building.BuildingData);
+                        break;
+                    case BuildingType.Oil_Rig:
+                        building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData, ProductionType.Oil);
+                        break;
+                    case BuildingType.Solar_Installation:
+                        building.GetComponent<PhotovoltaicFarmBuilding>().Initialize(building.BuildingData);
+                        break;
+                    case BuildingType.Sand_Collector:
+                        building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData, ProductionType.Sand);
+                        break;
+                    case BuildingType.Workshop:
+                        building.GetComponent<WorkshopBuilding>().Initialize(building.BuildingData);
+                        break;
+                }
+                
+                
                 var unit = building.GetComponent<Unit>();
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
@@ -261,7 +281,7 @@ namespace Units
         public BaseBuilding GetBaseOfVehicle(Vehicle p_vehicle)
         {
             return AllBuildings.Where(x => x.BuildingData.Type == BuildingType.Base)
-                .OfType<BaseBuilding>().FirstOrDefault(x=>x.Vehicles.Contains(p_vehicle)); 
+                .OfType<BaseBuilding>().FirstOrDefault(x=>x.VehiclesInBase.Contains(p_vehicle)); 
         }
 
         public void SelectUnit(Unit p_unit)
