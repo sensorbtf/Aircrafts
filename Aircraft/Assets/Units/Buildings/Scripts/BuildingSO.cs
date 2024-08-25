@@ -11,8 +11,9 @@ public class BuildingSO: UnitSO
 
 public enum BuildingType
 {
-    Main_Base = 0,
+    Base = 0,
     Oil_Rig = 1,
     Solar_Installation = 2,
     Sand_Collector = 3,
+    Workshop = 4,
 }

@@ -5,8 +5,11 @@ using UnityEngine;
 
 namespace Buildings
 {
-    public class AdministrativeBuilding: Building
+    public class BaseBuilding: Building
     {
+        private List<Vehicle> _vehicles = new ();
+        public List<Vehicle> Vehicles => _vehicles;
+        
         public override void SelectedUpdate()
         {
             HandleNearestUnits();
@@ -39,11 +42,18 @@ namespace Buildings
                         }
                     }
                 }
-                else if (unit is Building building)
-                {
-                    
-                }
             }
+        }
+
+        public void TryToAddVehicleToBase(Vehicle p_vehicle)
+        {
+            _vehicles.Add(p_vehicle);
+            p_vehicle.AddVehicleToBase(UnitCollider);
+        }
+        
+        public void RemoveVehicle(Vehicle p_vehicle)
+        {
+            _vehicles.Remove(p_vehicle);
         }
     }
 }

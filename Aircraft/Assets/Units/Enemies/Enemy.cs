@@ -8,7 +8,7 @@ using Vehicles;
 
 namespace Enemies
 {
-    public abstract class Enemy : Unit, IPointerClickHandler
+    public abstract class Enemy: Unit
     {
         public EnemySO EnemyData { get; private set; }
         public Transform AttackPoint;

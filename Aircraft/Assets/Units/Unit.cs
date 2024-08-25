@@ -9,10 +9,11 @@ using UnityEngine.EventSystems;
 
 namespace Units
 {
-    public abstract class Unit : MonoBehaviour
+    public abstract class Unit : MonoBehaviour, IPointerClickHandler
     {
         [Header("Unit")] private Rigidbody2D _rigidbody2D;
-        private SpriteRenderer _unitRenderer = null;
+        private SpriteRenderer _unitRenderer;
+        private Collider2D _unitCollider;
         private InventoryController _inventory;
 
         public InfoCanvasRefs CanvasInfo;
@@ -30,6 +31,7 @@ namespace Units
         public bool IsSelected => _isSelected;
         public SpriteRenderer UnitRenderer => _unitRenderer;
         public Rigidbody2D Rigidbody2D => _rigidbody2D;
+        public Collider2D UnitCollider => _unitCollider;
         public InventoryController Inventory => _inventory;
 
         public UnitSO UnitData
@@ -56,6 +58,7 @@ namespace Units
 
             _rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
             _unitRenderer = gameObject.GetComponent<SpriteRenderer>();
+            _unitCollider = gameObject.GetComponent<Collider2D>();
 
             // Rigidbody2D.drag = EnemyData.Drag;  // Adjust drag to control sliding
             // Rigidbody2D.angularDrag = EnemyData.AngularDrag;  // Control rotational drag

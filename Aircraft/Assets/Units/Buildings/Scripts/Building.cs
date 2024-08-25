@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Buildings
 {
-    public abstract class Building: Unit, IPointerClickHandler
+    public abstract class Building: Unit
     {
         [SerializeField] private BuildingSO _buildingData;
 
@@ -13,6 +13,8 @@ namespace Buildings
         private bool _isFunctioning;
         
         public BuildingSO BuildingData => _buildingData;
+        public bool IsBroken => _isBroken;
+        public bool IsFunctioning => _isFunctioning;
         
         public void Initialize(BuildingSO p_buildingData)
         {

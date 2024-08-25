@@ -11,7 +11,7 @@ using Units.Vehicles;
 
 namespace Units
 {
-    public class UnitsManager : MonoBehaviour
+    public class UnitsManager: MonoBehaviour
     {
         [SerializeField] private Transform _enemySpawnPoint;
         [SerializeField] private EnemyDatabase _enemyDatabase;
@@ -68,6 +68,19 @@ namespace Units
                 OnUnitCreated?.Invoke(unit);
             }
 
+            foreach (var building in AllBuildings)
+            {
+                building.Initialize(building.BuildingData);
+
+                var unit = building.GetComponent<Unit>();
+                unit.OnUnitClicked += SelectUnit;
+                unit.OnUnitAttack += UnitAttacked;
+                unit.OnUnitDied += UnitDied;
+                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
+
+                OnUnitCreated?.Invoke(unit);
+            }
+            
             foreach (var vehicleSo in _vehiclesDatabase.Vehicles)
             {
                 var newVehicle = Instantiate(vehicleSo.Prefab, gameObject.transform, true);
@@ -98,20 +111,7 @@ namespace Units
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
                 unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
-
-                OnUnitCreated?.Invoke(unit);
-            }
-
-            foreach (var building in AllBuildings)
-            {
-                building.Initialize(building.BuildingData);
-
-                var unit = building.GetComponent<Unit>();
-                unit.OnUnitClicked += SelectUnit;
-                unit.OnUnitAttack += UnitAttacked;
-                unit.OnUnitDied += UnitDied;
-                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
-
+                GetMainBase().TryToAddVehicleToBase(unit as Vehicle);
                 OnUnitCreated?.Invoke(unit);
             }
         }
@@ -239,7 +239,7 @@ namespace Units
             }
             else if (p_unit is Building building)
             {
-                if (building.BuildingData.Type == BuildingType.Main_Base)
+                if (building.BuildingData.Type == BuildingType.Base)
                 {
                     // Restart/menu
                 }
@@ -253,9 +253,15 @@ namespace Units
             }
         }
 
-        public Building GetMainBase()
+        public BaseBuilding GetMainBase()
         {
-            return AllBuildings.FirstOrDefault(x => x.BuildingData.Type == BuildingType.Main_Base);
+            return AllBuildings.FirstOrDefault(x => x.BuildingData.Type == BuildingType.Base) as BaseBuilding;
+        }
+        
+        public BaseBuilding GetBaseOfVehicle(Vehicle p_vehicle)
+        {
+            return AllBuildings.Where(x => x.BuildingData.Type == BuildingType.Base)
+                .OfType<BaseBuilding>().FirstOrDefault(x=>x.Vehicles.Contains(p_vehicle)); 
         }
 
         public void SelectUnit(Unit p_unit)

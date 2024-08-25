@@ -26,7 +26,7 @@ namespace Resources
             var newController = new InventoryController(_resourcesDatabase.Resources
                 .Where(x => p_unit.UnitData.Resources.Contains(x.Type)).ToArray());
             
-            if (p_unit is Building building && building.BuildingData.Type == BuildingType.Main_Base) // Main + others?
+            if (p_unit is Building building && building.BuildingData.Type == BuildingType.Base) // Main + others?
             {
                 _mainInventory = newController;
             }

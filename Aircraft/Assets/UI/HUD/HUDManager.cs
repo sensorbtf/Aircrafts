@@ -27,14 +27,13 @@ namespace UI.HUD
         [SerializeField] private Slider _fuelSlider;
         [SerializeField] private TextMeshProUGUI _fuelSliderText;
         [SerializeField] private GameObject _resourcesTab;
-        [SerializeField] private GameObject _combatVehicles;
-        [SerializeField] private GameObject _utilityVehicles;
-        [SerializeField] private GameObject _buildings;
+        [SerializeField] private GameObject _bases;
         
-        private Dictionary<Unit, Transform> _createdIcons = new Dictionary<Unit, Transform>();
+        private Dictionary<BaseBuilding, BaseUiRefs> _createdBaseIcons = new Dictionary<BaseBuilding, BaseUiRefs>();
         private Dictionary<ResourceSO, HudIconRefs> _createdResources = new Dictionary<ResourceSO, HudIconRefs>();
 
         [Header("Prefabs")] [SerializeField] private GameObject _iconPrefab;
+        [SerializeField] private GameObject _basePrefab;
 
         public void CustomStart()
         {
@@ -61,39 +60,62 @@ namespace UI.HUD
             {
                 DeselectUnit();
             }
+
+            foreach (var refs in _createdBaseIcons)
+            {
+                foreach (var vehicle in refs.Value.Vehicles)
+                {
+                    if (vehicle.Vehicle.IsInBase)
+                    {
+                        vehicle.Icon.color = Color.gray;
+                    }
+                    else
+                    {
+                        vehicle.Icon.color = Color.white;
+                    }
+                }
+            }
         }
 
         private void HandleUnitIconCreation(Unit p_unit)
         {
-            GameObject newGo = null;
-            HudIconRefs refs = null;
-
             if (p_unit is Vehicle vehicle)
             {
-                newGo = Instantiate(_iconPrefab,
-                    vehicle.VehicleData.Type == VehicleType.Combat
-                        ? _combatVehicles.transform
-                        : _utilityVehicles.transform);
+                var specificBase = _unitsManager.GetBaseOfVehicle(vehicle);
 
-                refs = newGo.GetComponent<HudIconRefs>();
-                refs.Icon.sprite = vehicle.VehicleData.Icon;
-                refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
-                refs.Button.onClick.AddListener(delegate { _unitsManager.SelectUnit(vehicle, true); });
-
-                _createdIcons.Add(p_unit, refs.transform);
+                foreach (var baseIcon in _createdBaseIcons)
+                {
+                    if (baseIcon.Key != specificBase) 
+                        continue;
+                    
+                    foreach (var vehicleUI in baseIcon.Value.Vehicles)
+                    {
+                        if (vehicleUI.Vehicle != null)
+                            continue;
+                        
+                        vehicleUI.Vehicle = vehicle;
+                        vehicleUI.Icon.sprite = vehicle.VehicleData.Icon;
+                        vehicleUI.Button.navigation = new Navigation { mode = Navigation.Mode.None };
+                        vehicleUI.Button.onClick.RemoveAllListeners();
+                        vehicleUI.Button.onClick.AddListener(delegate { _unitsManager.SelectUnit(vehicle, true); });
+                        break;
+                    }
+                }
+                
             }
             else if (p_unit is Building building)
             {
-                newGo = Instantiate(_iconPrefab, _buildings.transform);
-                refs = newGo.GetComponent<HudIconRefs>();
-                refs.Icon.sprite = building.BuildingData.Icon;
-                refs.Button.navigation = new Navigation { mode = Navigation.Mode.None };
-                refs.Button.onClick.AddListener(delegate { _unitsManager.SelectUnit(building, true); });
-
-                _createdIcons.Add(p_unit, refs.transform);
+                if (building is BaseBuilding newBase)
+                {
+                    var newGo = Instantiate(_basePrefab, _bases.transform);
+                    var baseRefs = newGo.GetComponent<BaseUiRefs>();
+                    baseRefs.BaseIcon.sprite = newBase.BuildingData.Icon;
+                    _createdBaseIcons.Add(newBase, baseRefs);
+                }
             }
-            else if (p_unit is Enemy enemy)
+            else if (p_unit is Enemy)
             {
+                return; // or map
             }
 
             p_unit.OnUnitDied += RefreshUnitsIcons;
@@ -125,15 +147,45 @@ namespace UI.HUD
             }
         }
 
-        private void RefreshUnitsIcons(Unit p_units)
+        private void RefreshUnitsIcons(Unit p_unit)
         {
-            foreach (var icons in _createdIcons.ToList())
+            if (p_unit is Vehicle vehicle)
             {
-                if (icons.Key != p_units)
-                    continue;
+                foreach (var baseIcon in _createdBaseIcons)
+                {
+                    if (baseIcon.Key != _unitsManager.GetBaseOfVehicle(vehicle)) 
+                        continue;
+                    
+                    foreach (var vehicleUI in baseIcon.Value.Vehicles)
+                    {
+                        if (vehicleUI.Vehicle != vehicle)
+                            continue;
+                        
+                        vehicleUI.Icon.sprite = null;
+                        vehicleUI.Vehicle = null;
+                        vehicleUI.Button.navigation = new Navigation { mode = Navigation.Mode.None };
+                        vehicleUI.Button.onClick.RemoveAllListeners();
+                    }
+                }  
+            }
+            else if (p_unit is BaseBuilding baseBuilding)
+            {
+                foreach (var baseIcon in _createdBaseIcons.ToList())
+                {
+                    if (baseIcon.Key != baseBuilding) 
+                        continue;
+                    
+                    foreach (var vehicleUI in baseIcon.Value.Vehicles)
+                    {
+                        if (vehicleUI.Vehicle == null)
+                            continue;
+                        
+                        vehicleUI.Vehicle.OnBaseExit();
+                    }
 
-                Destroy(icons.Value.gameObject);
-                _createdIcons.Remove(icons.Key);
+                    Destroy(baseIcon.Value.gameObject);
+                    _createdBaseIcons.Remove(baseBuilding);
+                }  
             }
         }
 
@@ -146,7 +198,7 @@ namespace UI.HUD
             {
                 _unitsManager.SelectUnit(building);
 
-                if (building.BuildingData.Type == BuildingType.Main_Base)
+                if (building.BuildingData.Type == BuildingType.Base)
                 {
                     _rightDownPanelController.OpenPanel(PanelType.Building, building);
                     // Open research window

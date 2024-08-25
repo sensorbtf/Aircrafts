@@ -6,12 +6,16 @@ using UnityEngine.EventSystems;
 
 namespace Units.Vehicles
 {
-    public abstract class Vehicle : Unit, IPointerClickHandler
+    public abstract class Vehicle: Unit
     {
         [Header("Vehicle")] private VehicleSO _vehicleData;
         private int _currentFuel;
+        private bool _isInBase;
         private int _fuelUsageInterval;
+        private Collider2D _baseArea;
+
         public int CurrentFuel => _currentFuel;
+        public bool IsInBase => _isInBase;
         public VehicleSO VehicleData => _vehicleData;
 
         public Action OnFuelChange;
@@ -22,6 +26,7 @@ namespace Units.Vehicles
             UnitData = p_vehicleData;
             _currentFuel = p_vehicleData.MaxFuel;
             _fuelUsageInterval = 0;
+            
             base.Initialize(p_vehicleData);
         }
         
@@ -106,6 +111,9 @@ namespace Units.Vehicles
         
         public override void CheckState()
         {
+            if (_isInBase)
+                return;
+
             if (CurrentFuel < VehicleData.MaxFuel)
             {
                 SetNewStateTexts(Actions.Refill);
@@ -145,6 +153,51 @@ namespace Units.Vehicles
         public void RiseFuel(int p_amount)
         {
             _currentFuel += p_amount;
+        }
+        
+        public override void SelectUnit()
+        {
+            base.SelectUnit();
+
+            OnBaseExit();
+        }
+
+        public override void UnSelectUnit()
+        {
+            base.UnSelectUnit();
+
+            if (_baseArea != null && _baseArea.OverlapPoint(transform.position))
+            {
+                if (!_isInBase)
+                {
+                    OnBaseEntry();
+                }
+            }
+            else
+            {
+                if (_isInBase)
+                {
+                    OnBaseExit();
+                }
+            }
+        }
+
+        public void AddVehicleToBase(Collider2D p_baseArea)
+        {
+            _baseArea = p_baseArea;
+            OnBaseEntry();
+        }
+        
+        public void OnBaseEntry()
+        {
+            _isInBase = true;
+            gameObject.SetActive(false);
+        }
+        
+        public void OnBaseExit()
+        {
+            _isInBase = false;
+            gameObject.SetActive(true);
         }
     }
 }
