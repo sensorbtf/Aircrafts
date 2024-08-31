@@ -1,4 +1,6 @@
-﻿using Resources.Scripts;
+﻿using System;
+using Resources;
+using Resources.Scripts;
 using UnityEngine;
 
 namespace Units
@@ -8,7 +10,7 @@ namespace Units
         [Header("UnitSO")]
         [SerializeField] private GameObject _prefab;
         [SerializeField] private Sprite _icon;
-        [SerializeField] private ResourceType[] _resources;
+        [SerializeField] private ResourceInUnit[] _resources;
         [SerializeField] private int _maxHp;
         [SerializeField] private int _speed;
         [SerializeField] private int _attackRange;
@@ -18,7 +20,7 @@ namespace Units
     
         public GameObject Prefab => _prefab;
         public Sprite Icon => _icon;
-        public ResourceType[] Resources => _resources;
+        public ResourceInUnit[] Resources => _resources;
 
         public int MaxHp => _maxHp;
         public int AttackRange => _attackRange;

@@ -78,19 +78,18 @@ namespace Units
                         building.GetComponent<BaseBuilding>().Initialize(building.BuildingData);
                         break;
                     case BuildingType.Oil_Rig:
-                        building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData, ProductionType.Oil);
+                        building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData);
                         break;
                     case BuildingType.Solar_Installation:
                         building.GetComponent<PhotovoltaicFarmBuilding>().Initialize(building.BuildingData);
                         break;
                     case BuildingType.Sand_Collector:
-                        building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData, ProductionType.Sand);
+                        building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData);
                         break;
                     case BuildingType.Workshop:
                         building.GetComponent<WorkshopBuilding>().Initialize(building.BuildingData);
                         break;
                 }
-                
                 
                 var unit = building.GetComponent<Unit>();
                 unit.OnUnitClicked += SelectUnit;

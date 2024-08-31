@@ -1,4 +1,5 @@
-﻿using Resources.Scripts;
+﻿using Resources;
+using Resources.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,22 +8,19 @@ namespace Buildings
     public class ProductionBuilding: Building// oil/ sand 
     {
         [SerializeField] private int _timeToComplete;
-        [FormerlySerializedAs("_productionIco")] [SerializeField] private ResourceSO _outputProduction;
+        [SerializeField] private ResourceSO _outputProduction;
         
-        private ProductionType _productionType;
         private float _currentProductionTime;
         private bool _isPaused;
         private float _timer;
 
-        public ProductionType ProductionType => _productionType;
         public ResourceSO OutputProduction => _outputProduction;
         public float CurrentProductionTime => _currentProductionTime;
         public int TimeToComplete => _timeToComplete;
         public bool IsPaused => _isPaused;
 
-        public void Initialize(BuildingSO p_buildingData, ProductionType p_oil)
+        public override void Initialize(BuildingSO p_buildingData)
         {
-            _productionType = p_oil;
             base.Initialize(p_buildingData);
             _currentProductionTime = 0;
         }
@@ -41,13 +39,15 @@ namespace Buildings
                 
                 if (_currentProductionTime >= _timeToComplete)
                 {
-                    Inventory.AddResource(Resource.Sand, 1);
+                    Inventory.AddResource(_outputProduction, 1);
                     _currentProductionTime = 0;
+                    
+                    SetNewStateTexts(Actions.Collect);
                 }
             }
         }
     }
-
+    
     public enum ProductionType
     {
         Oil,

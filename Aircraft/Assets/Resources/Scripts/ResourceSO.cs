@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Resources.Scripts
 {
@@ -6,24 +7,14 @@ namespace Resources.Scripts
     public class ResourceSO: ScriptableObject
     {
         [SerializeField] private Sprite _icon;
-        [SerializeField] private ResourceType _type;
-        [SerializeField] private Resource _resource;
+        [SerializeField] private Resource type;
         [SerializeField] private int _initialValue;
         
         public Sprite Icon => _icon;
-        public ResourceType Type => _type;
-        public Resource Resource => _resource;
+        public Resource Type => type;
         public int InitialValue => _initialValue;
     }
 
-    public enum ResourceType
-    {
-        Fuel = 0,
-        RawMaterial = 1,
-        AdvancedMaterial = 2,
-        Ammunition = 3
-    }
-    
     public enum Resource
     {
         Petroleum = 0,

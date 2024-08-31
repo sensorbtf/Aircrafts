@@ -23,15 +23,13 @@ namespace UI.HUD
             if (p_building is BaseBuilding baseBuilding)
             {
                 _mainBaseSubPanel.gameObject.SetActive(true);
-                _productionSubpanel.gameObject.SetActive(false);
+                _productionSubpanel.OnPanelClose();
 
                 _mainBaseSubPanel.CustomStart(baseBuilding);
             }
             else if (p_building is ProductionBuilding productionBuilding)
             {
-                _productionSubpanel.gameObject.SetActive(true);
-                _mainBaseSubPanel.gameObject.SetActive(false);
-                
+                _mainBaseSubPanel.OnPanelClose();
                 _productionSubpanel.CustomStart(productionBuilding);
             }
         }
@@ -39,6 +37,8 @@ namespace UI.HUD
         public void ClosePanel()
         {
             gameObject.SetActive(false);
+            _mainBaseSubPanel.OnPanelClose();
+            _productionSubpanel.OnPanelClose();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Resources;
 using Resources.Scripts;
 using TMPro;
 using UnityEngine;
@@ -85,10 +86,10 @@ namespace UI.HUD
                     var newGo = Instantiate(_resourcesPrefab, _resourcesGrid.transform);
                     var refs = newGo.GetComponent<HudIconRefs>();
 
-                    refs.Icon.sprite = resource.Key.Icon;
-                    refs.Text.text = $"{resource.Value}";
+                    refs.Icon.sprite = resource.Data.Icon;
+                    refs.Text.text = $"{resource.CurrentAmount}";
 
-                    _createdResources.Add(resource.Key, refs);
+                    _createdResources.Add(resource.Data, refs);
                 }
 
                 p_selectedVehicle.Inventory.OnResourceValueChanged += RefreshResources;
@@ -157,7 +158,7 @@ namespace UI.HUD
             }
         }
         
-        private void RefreshResources(ResourceSO p_resourceSo)
+        private void RefreshResources(ResourceInUnit p_resourceInUnit)
         {
             if (_currentVehicle is CombatVehicle vehicle)
             {
@@ -167,9 +168,9 @@ namespace UI.HUD
             {
                 foreach (var resource in _createdResources)
                 {
-                    if (resource.Key == p_resourceSo)
+                    if (resource.Key == p_resourceInUnit.Data)
                     {
-                        resource.Value.Text.text = _currentVehicle.Inventory.GetResourceAmount(resource.Key).ToString();
+                        resource.Value.Text.text = _currentVehicle.Inventory.GetResourceAmount(resource.Key.Type).ToString();
                     }
                 }
             }

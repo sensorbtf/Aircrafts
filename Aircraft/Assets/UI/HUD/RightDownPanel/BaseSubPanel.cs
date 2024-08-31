@@ -29,10 +29,13 @@ public class BaseSubPanel : MonoBehaviour
             vehicleUi.Button.onClick.RemoveAllListeners();
             vehicleUi.Button.onClick.AddListener(delegate { _unitsManager.SelectUnit(vehicle, true); });
         }
+        
+        gameObject.SetActive(true);
     }
     
     public void OnPanelClose()
     {
         _baseBuilding = null;
+        gameObject.SetActive(false);
     }
 }

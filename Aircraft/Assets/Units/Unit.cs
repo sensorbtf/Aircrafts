@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Buildings;
 using Resources;
 using Resources.Scripts;
 using Units.Vehicles;
@@ -96,7 +97,7 @@ namespace Units
         {
             _isSelected = false;
             Reorder(false);
-            
+
             foreach (var unit in _unitsInRange)
             {
                 unit.ResetStateButtons();
@@ -104,7 +105,7 @@ namespace Units
 
             // make AI logic
         }
-        
+
         private void Reorder(bool p_hide)
         {
             if (p_hide)
@@ -118,37 +119,6 @@ namespace Units
         }
 
         #region Actions
-
-        protected void CompactStateInfo()
-        {
-            int targetIndex = 0;
-
-            for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
-            {
-                if (!string.IsNullOrEmpty(CanvasInfo.StateInfo[i].TextInfo.text))
-                {
-                    if (targetIndex != i)
-                    {
-                        CanvasInfo.StateInfo[targetIndex].TextInfo.text = CanvasInfo.StateInfo[i].TextInfo.text;
-                        CanvasInfo.StateInfo[targetIndex].Action = CanvasInfo.StateInfo[i].Action;
-                        CanvasInfo.StateInfo[targetIndex].Button.interactable =
-                            CanvasInfo.StateInfo[i].Button.interactable;
-                        CanvasInfo.StateInfo[targetIndex].Button.onClick.RemoveAllListeners();
-                        CanvasInfo.StateInfo[targetIndex].Button.onClick.AddListener(() =>
-                        {
-                            MakeAction(CanvasInfo.StateInfo[i].Action, this, this);
-                        });
-
-                        CanvasInfo.StateInfo[i].TextInfo.text = "";
-                        CanvasInfo.StateInfo[i].Action = Actions.Noone;
-                        CanvasInfo.StateInfo[i].Button.interactable = false;
-                        CanvasInfo.StateInfo[i].Button.onClick.RemoveAllListeners();
-                    }
-
-                    targetIndex++;
-                }
-            }
-        }
 
         protected void SetNewStateTexts(Actions p_actionType)
         {
@@ -201,8 +171,20 @@ namespace Units
             }
         }
 
+        public void TryToActivateStateButtons(Actions p_actionType, Unit p_giver, Unit p_receiver)
+        {
+            for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
+            {
+                if (CanvasInfo.StateInfo[i].Action == p_actionType)
+                {
+                    SetAction(p_actionType, p_giver, i, p_receiver);
+                    CompactStateInfo();
+                    return;
+                }
+            }
+        }
 
-        private void SetAction(Actions p_actionType, Unit p_giver, int p_index)
+        private void SetAction(Actions p_actionType, Unit p_giver, int p_index, Unit p_receiver = null)
         {
             CanvasInfo.Reorder(true);
 
@@ -212,14 +194,57 @@ namespace Units
             CanvasInfo.StateInfo[p_index].Button.onClick.RemoveAllListeners();
             CanvasInfo.StateInfo[p_index].Button.onClick.AddListener(delegate
             {
-                MakeAction(p_actionType, p_giver, this);
+                if (p_receiver == null)
+                {
+                    MakeAction(p_actionType, p_giver, this);
+                }
+                else
+                {
+                    MakeAction(p_actionType, p_giver, p_receiver);
+                }
             });
+        }
+
+        private void CompactStateInfo()
+        {
+            int targetIndex = 0;
+
+            for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(CanvasInfo.StateInfo[i].TextInfo.text))
+                {
+                    if (targetIndex != i)
+                    {
+                        // Copy text and action to the target index
+                        CanvasInfo.StateInfo[targetIndex].TextInfo.text = CanvasInfo.StateInfo[i].TextInfo.text;
+                        CanvasInfo.StateInfo[targetIndex].Action = CanvasInfo.StateInfo[i].Action;
+                        CanvasInfo.StateInfo[targetIndex].Button.interactable =
+                            CanvasInfo.StateInfo[i].Button.interactable;
+
+                        // Capture the current index in a local variable
+                        int capturedIndex = i;
+                        CanvasInfo.StateInfo[targetIndex].Button.onClick.RemoveAllListeners();
+                        CanvasInfo.StateInfo[targetIndex].Button.onClick.AddListener(() =>
+                        {
+                            MakeAction(CanvasInfo.StateInfo[capturedIndex].Action, this, this);
+                        });
+
+                        // Clear the original state
+                        CanvasInfo.StateInfo[i].TextInfo.text = "";
+                        CanvasInfo.StateInfo[i].Action = Actions.Noone;
+                        CanvasInfo.StateInfo[i].Button.interactable = false;
+                        CanvasInfo.StateInfo[i].Button.onClick.RemoveAllListeners();
+                    }
+
+                    targetIndex++;
+                }
+            }
         }
 
         public void ResetStateButtons()
         {
             CanvasInfo.Reorder(false);
-            
+
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
                 CanvasInfo.StateInfo[i].Action = Actions.Noone;
@@ -231,11 +256,14 @@ namespace Units
 
         private void MakeAction(Actions p_actionType, Unit p_giver, Unit p_receiver)
         {
+            Vehicle vehicle = null;
+
             switch (p_actionType)
             {
                 case Actions.Refill:
-                    if (p_receiver is Vehicle vehicle)
+                    if (p_receiver is Vehicle receiver)
                     {
+                        vehicle = receiver;
                         var availableFuel = p_giver.Inventory.GetResourceAmount(Resource.Petroleum);
                         var neededFuel = vehicle.VehicleData.MaxFuel - vehicle.CurrentFuel;
 
@@ -275,6 +303,29 @@ namespace Units
 
                     break;
                 case Actions.Repair:
+                    break;
+
+                case Actions.Collect:
+                    if (p_receiver is Vehicle collector)
+                    {
+                        if (p_giver is ProductionBuilding prodB)
+                        {
+                            var producedResource = p_giver.Inventory.GetResourceAmount(prodB.OutputProduction.Type);
+                            var spaceLeft = collector.Inventory.GetFreeSpace(prodB.OutputProduction.Type);
+
+                            if (producedResource >= spaceLeft)
+                            {
+                                p_giver.Inventory.RemoveResource(prodB.OutputProduction.Type, spaceLeft);
+                                p_receiver.Inventory.AddResource(prodB.OutputProduction.Type, spaceLeft);
+                            }
+                            else
+                            {
+                                p_giver.Inventory.RemoveResource(prodB.OutputProduction.Type, producedResource);
+                                p_receiver.Inventory.AddResource(prodB.OutputProduction.Type, producedResource);
+                            }
+                        }
+                    }
+
                     break;
             }
         }
@@ -328,5 +379,6 @@ namespace Units
         public abstract void OnPointerClick(PointerEventData p_eventData);
 
         #endregion
+
     }
 }

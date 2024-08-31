@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Ammo35mm
   m_EditorClassIdentifier: 
   _icon: {fileID: 21300000, guid: 4834d4b9d4192d24d941fdb032e869b4, type: 3}
-  _type: 3
-  _resource: 3
-  _initialValue: 999
+  type: 3
+  _initialValue: 30
+  _maxAmount: 999

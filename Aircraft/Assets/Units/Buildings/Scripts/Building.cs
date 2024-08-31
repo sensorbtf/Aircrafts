@@ -64,6 +64,18 @@ namespace Buildings
             {
                 ResetStateText(Actions.Repair);
             }
+            
+            if (this is ProductionBuilding prod)
+            {
+                if (Inventory.GetResourceAmount(prod.OutputProduction.Type) > 0)
+                {
+                    SetNewStateTexts(Actions.Collect);
+                }
+                else
+                {
+                    ResetStateText(Actions.Collect);
+                }
+            }
 
             // if (this is CombatVehicle combat)// combatbuilding?
             // {

@@ -38,20 +38,21 @@ namespace UI.HUD
         public void CustomStart()
         {
             HandleResourcesCreation();
+            
+            _inventoriesManager.MainInventory.OnResourceValueChanged += RefreshResourcesIcons;
         }
 
         private void Awake()
         {
             _unitsManager.OnUnitCreated += HandleUnitIconCreation;
             _unitsManager.OnUnitSelected += SelectUnit;
-            _inventoriesManager.OnGlobalResourceValueChanged += RefreshResourcesIcons;
         }
 
         private void OnDestroy()
         {
             _unitsManager.OnUnitCreated -= HandleUnitIconCreation;
             _unitsManager.OnUnitSelected -= SelectUnit;
-            _inventoriesManager.OnGlobalResourceValueChanged -= RefreshResourcesIcons;
+            _inventoriesManager.MainInventory.OnResourceValueChanged -= RefreshResourcesIcons;
         }
 
         private void Update()
@@ -65,6 +66,9 @@ namespace UI.HUD
             {
                 foreach (var vehicle in refs.Value.Vehicles)
                 {
+                    if (vehicle.Vehicle == null)
+                        continue;
+
                     if (vehicle.Vehicle.IsInBase)
                     {
                         vehicle.Icon.color = Color.gray;
@@ -129,20 +133,23 @@ namespace UI.HUD
 
                 var refs = newGo.GetComponent<HudIconRefs>();
                 refs.Icon.sprite = resource.Icon;
-                refs.Text.text = _inventoriesManager.GetResourceAmountFromMainInventory(resource).ToString();
+                refs.Text.text = _inventoriesManager.MainInventory.GetResourceAmount(resource.Type).ToString();
 
                 _createdResources.Add(resource, refs);
             }
         }
 
-        private void RefreshResourcesIcons(ResourceSO p_resource)
+        private void RefreshResourcesIcons(ResourceInUnit p_resourceInUnit)
         {
-            foreach (var icon in _createdResources)
+            if (p_resourceInUnit.IsGlobalInventory)
             {
-                if (icon.Key == p_resource)
+                foreach (var icon in _createdResources)
                 {
-                    icon.Value.Text.text = _inventoriesManager.GetResourceAmountFromMainInventory(p_resource).ToString();
-                    return;
+                    if (icon.Key == p_resourceInUnit.Data)
+                    {
+                        icon.Value.Text.text = _inventoriesManager.MainInventory.GetResourceAmount(p_resourceInUnit.Data.Type).ToString();
+                        return;
+                    }
                 }
             }
         }

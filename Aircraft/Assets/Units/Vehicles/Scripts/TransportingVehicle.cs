@@ -47,7 +47,10 @@ namespace Units.Vehicles
                 }
                 else if (unit is Building building)
                 {
-                    
+                    if (building is ProductionBuilding prodBuilding)
+                    {
+                        prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this);
+                    }
                 }
             }
         }

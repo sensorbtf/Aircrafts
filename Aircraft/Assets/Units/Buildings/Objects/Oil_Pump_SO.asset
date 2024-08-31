@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 067ab5fea13548178c04c205458750c2, type: 3}
   m_Name: Oil_Pump_SO
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 8567839004797921181, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
+  _prefab: {fileID: 8567839004797921181, guid: dbe210d005b9724449c9c8a37a20a2d9, type: 3}
   _icon: {fileID: 21300000, guid: 6f4544b670c59f14c811cb28bf458f91, type: 3}
-  _resources: 
+  _resources:
+  - Data: {fileID: 11400000, guid: f5a4aa46b9fbb7649aa10ad022c0bdf8, type: 2}
+    CurrentAmount: 0
+    MaxAmount: 50
+    IsGlobalInventory: 0
   _maxHp: 100
   _speed: 0
   _attackRange: 0

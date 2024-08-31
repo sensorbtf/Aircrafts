@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Buildings;
+using Resources;
 using Resources.Scripts;
 using TMPro;
 using UnityEngine;
@@ -41,19 +42,26 @@ public class ProductionSubpanel : MonoBehaviour
             _stateImage.sprite = _currentProductionBuilding.IsPaused ? _pausedSprite : _workingSprite;
         }
 
-        p_currentProductionBuilding.Inventory.OnResourceValueChanged += RefreshCurrentAmount;
-        RefreshCurrentAmount(_currentProductionBuilding.OutputProduction);
+        _currentProductionBuilding.Inventory.OnResourceValueChanged += RefreshCurrentAmount;
+        _stateAmount.text = _currentProductionBuilding.Inventory.GetResourceAmount(_currentProductionBuilding.OutputProduction).ToString();
+        
+        gameObject.SetActive(true);
     }
     
     public void OnPanelClose()
     {
-        _currentProductionBuilding.Inventory.OnResourceValueChanged -= RefreshCurrentAmount;
-        _currentProductionBuilding = null;
+        if (_currentProductionBuilding != null)
+        {
+            _currentProductionBuilding.Inventory.OnResourceValueChanged -= RefreshCurrentAmount;
+            _currentProductionBuilding = null;
+        }
+        
+        gameObject.SetActive(false);
     }
 
-    private void RefreshCurrentAmount(ResourceSO p_resource)
+    private void RefreshCurrentAmount(ResourceInUnit p_resourceInUnit)
     {
-        _stateAmount.text = _currentProductionBuilding.Inventory.GetResourceAmount(p_resource).ToString();
+        _stateAmount.text = p_resourceInUnit.CurrentAmount.ToString();
     }
 
     private void Update()

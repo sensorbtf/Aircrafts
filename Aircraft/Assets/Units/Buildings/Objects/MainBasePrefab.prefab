@@ -102,6 +102,7 @@ MonoBehaviour:
   CanvasInfo: {fileID: 131202079388234345}
   CurrentHp: 0
   _buildingData: {fileID: 11400000, guid: 0d0d0847f5c7654419c967ac63f1310d, type: 2}
+  _isBroken: 0
 --- !u!61 &7489115797151710489
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -145,7 +146,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.12, y: 5.12}
+  m_Size: {x: 7.97, y: 7.16}
   m_EdgeRadius: 0
 --- !u!1001 &5716398501660414210
 PrefabInstance:

@@ -9,65 +9,83 @@ namespace Resources
 {
     public class InventoryController
     {
-        private Dictionary<ResourceSO, int> _currentResources;
+        private List<ResourceInUnit> _currentResources;
         
-        public Dictionary<ResourceSO, int> CurrentResources => _currentResources;
+        public List<ResourceInUnit> CurrentResources => _currentResources;
 
-        public Action<ResourceSO> OnResourceValueChanged;
+        public Action<ResourceInUnit> OnResourceValueChanged;
 
-        public InventoryController(ResourceSO[] p_specificResources)
+        public InventoryController(List<ResourceSO> p_specificResources, bool p_isMain)
         {
-            _currentResources = new Dictionary<ResourceSO, int>();
+            _currentResources = new List<ResourceInUnit>();
             
             foreach (var resource in p_specificResources)
             {
-                _currentResources.Add(resource, resource.InitialValue);
+                _currentResources.Add(new ResourceInUnit(resource, p_isMain));
             } 
         }
 
-        public bool IsEnoughResources(Resource p_resource, int p_amount)
-        {
-            return GetResourceAmount(p_resource) >= p_amount;
-        }
-        
         public void AddResource(Resource p_resource, int p_amount)
         {
-            _currentResources[GetResourceSO(p_resource)] += p_amount;
+            var so = GetSpecificResource(p_resource);
+            so.CurrentAmount += p_amount;
 
-            if (GetResourceAmount(p_resource) > 999)
+            if (so.CurrentAmount > so.MaxAmount)
             {
-                _currentResources[GetResourceSO(p_resource)] = 999;
+                so.CurrentAmount = so.MaxAmount;
             }
             
-            OnResourceValueChanged?.Invoke(GetResourceSO(p_resource));
+            OnResourceValueChanged?.Invoke(so);
+        }
+        
+        public void AddResource(ResourceSO p_resource, int p_amount)
+        {
+            var so = GetSpecificResource(p_resource.Type);
+            so.CurrentAmount += p_amount;
+
+            if (so.CurrentAmount > so.MaxAmount)
+            {
+                so.CurrentAmount = so.MaxAmount;
+            }
+            
+            OnResourceValueChanged?.Invoke(so);
         }
         
         public void RemoveResource(Resource p_resource, int p_amount)
         {
-            _currentResources[GetResourceSO(p_resource)] -= p_amount;
+            var so = GetSpecificResource(p_resource);
 
-            if (GetResourceAmount(p_resource) < 0)
+            so.CurrentAmount -= p_amount;
+
+            if (so.CurrentAmount < 0)
             {
-                _currentResources[GetResourceSO(p_resource)] = 0;
+                so.CurrentAmount = 0;
             }
             
-            OnResourceValueChanged?.Invoke(GetResourceSO(p_resource));
+            OnResourceValueChanged?.Invoke(so);
         }
         
         public int GetResourceAmount(Resource p_resource)
         {
-            var res = GetResourceSO(p_resource);
-            return res != null ? _currentResources[res] : 0;
-        }
-
-        public int GetResourceAmount(ResourceSO p_resource)
-        {
-            return _currentResources[p_resource];
+            var res = GetSpecificResource(p_resource);
+            return res?.CurrentAmount ?? 0;
         }
         
-        public ResourceSO GetResourceSO(Resource p_resource)
+        public int GetResourceAmount(ResourceSO p_resource)
         {
-            return _currentResources.FirstOrDefault(x => x.Key.Resource == p_resource).Key;
+            var res = GetSpecificResource(p_resource.Type);
+            return res?.CurrentAmount ?? 0;
+        }
+        
+        public int GetFreeSpace(Resource p_resource)
+        {
+            var res = GetSpecificResource(p_resource);
+            return res.MaxAmount - res.CurrentAmount;
+        }
+        
+        public ResourceInUnit GetSpecificResource(Resource p_resource)
+        {
+            return _currentResources.FirstOrDefault(x => x.Data.Type == p_resource);
         }
     }
 }

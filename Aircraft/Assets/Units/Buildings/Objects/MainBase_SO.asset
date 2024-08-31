@@ -14,7 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 8567839004797921181, guid: 51b1761765b9eb848800c65777c0469d, type: 3}
   _icon: {fileID: 21300000, guid: 3f0d0229a6b453f47b80b79b67250a2a, type: 3}
-  _resources: 00000000010000000200000003000000
+  _resources:
+  - Data: {fileID: 11400000, guid: fdb73c18dbaa40649ac54b1c6a370d67, type: 2}
+    CurrentAmount: 0
+    MaxAmount: 999
+    IsGlobalInventory: 0
+  - Data: {fileID: 11400000, guid: 13ac81bfd861af94ba0a634f928fdeda, type: 2}
+    CurrentAmount: 0
+    MaxAmount: 999
+    IsGlobalInventory: 0
+  - Data: {fileID: 11400000, guid: 13ac81bfd861af94ba0a634f928fdeda, type: 2}
+    CurrentAmount: 0
+    MaxAmount: 999
+    IsGlobalInventory: 0
+  - Data: {fileID: 11400000, guid: f5a4aa46b9fbb7649aa10ad022c0bdf8, type: 2}
+    CurrentAmount: 0
+    MaxAmount: 999
+    IsGlobalInventory: 0
   _maxHp: 2000
   _speed: 0
   _attackRange: 0
