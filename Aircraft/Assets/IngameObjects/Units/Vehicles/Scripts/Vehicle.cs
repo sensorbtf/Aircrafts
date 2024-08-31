@@ -4,7 +4,7 @@ using Enemies;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Units.Vehicles
+namespace Objects.Vehicles
 {
     public abstract class Vehicle: Unit
     {
@@ -155,16 +155,16 @@ namespace Units.Vehicles
             _currentFuel += p_amount;
         }
         
-        public override void SelectUnit()
+        public override void SelectObject()
         {
-            base.SelectUnit();
+            base.SelectObject();
 
             OnBaseExit();
         }
 
-        public override void UnSelectUnit()
+        public override void UnSelectObject()
         {
-            base.UnSelectUnit();
+            base.UnSelectObject();
 
             if (_baseArea != null && _baseArea.OverlapPoint(transform.position))
             {

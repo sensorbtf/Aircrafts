@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Units.Vehicles
+namespace Objects.Vehicles
 {
     public class CombatVehicle : Vehicle
     {
@@ -27,6 +27,9 @@ namespace Units.Vehicles
         public Weapon CurrentWeapon => _currentWeapon;
         public List<Weapon> Weapons => _weapons;
 
+        internal Action OnFireShot;
+        internal Action OnWeaponSwitch;
+        
         public override void Initialize(VehicleSO p_vehicleData)
         {
             _mainCamera = Camera.main;
@@ -98,17 +101,17 @@ namespace Units.Vehicles
             }
         }
 
-        public override void SelectUnit()
+        public override void SelectObject()
         {
-            base.SelectUnit();
+            base.SelectObject();
             _lineRenderer.enabled = true;
 
             CycleThroughWeapon();
         }
 
-        public override void UnSelectUnit()
+        public override void UnSelectObject()
         {
-            base.UnSelectUnit();
+            base.UnSelectObject();
             _lineRenderer.enabled = false;
         }
 

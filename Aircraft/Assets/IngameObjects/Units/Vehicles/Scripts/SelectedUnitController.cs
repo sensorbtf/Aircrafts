@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Buildings;
 using UnityEngine;
 
-namespace Units.Vehicles
+namespace Objects.Vehicles
 {
     public class SelectedUnitController
     {

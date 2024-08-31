@@ -1,4 +1,4 @@
-using Units;
+using Objects;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BuildingSO", menuName = "Buildings/Data", order = 2)]

@@ -3,7 +3,7 @@ using Resources;
 using Resources.Scripts;
 using UnityEngine;
 
-namespace Units
+namespace Objects
 {
     public abstract class UnitSO: ScriptableObject
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Resources.Scripts;
-using Units;
+using Objects;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "VehicleSO", menuName = "Vehicle/Data", order = 2)]

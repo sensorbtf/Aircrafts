@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Buildings;
 using Enemies;
+using Objects.Vehicles;
 using Resources;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Vehicles;
-using Units.Vehicles;
 
-namespace Units
+namespace Objects
 {
     public class UnitsManager: MonoBehaviour
     {
@@ -187,7 +187,7 @@ namespace Units
         {
             if (_selectedUnit != null)
             {
-                _selectedUnit.UnSelectUnit();
+                _selectedUnit.UnSelectObject();
 
                 if (_selectedUnitController.CurrentUnit != null)
                 {
@@ -286,14 +286,14 @@ namespace Units
         public void SelectUnit(Unit p_unit)
         {
             _selectedUnitController.SetNewUnit(p_unit);
-            _selectedUnitController.CurrentUnit.SelectUnit();
+            _selectedUnitController.CurrentUnit.SelectObject();
             _cameraController.UnitTransform = _selectedUnitController.CurrentUnit.transform;
             _selectedUnit = p_unit;
         }
 
         private void UnselectVehicle()
         {
-            _selectedUnitController.CurrentUnit.UnSelectUnit();
+            _selectedUnitController.CurrentUnit.UnSelectObject();
             _selectedUnitController.SetNewUnit(null);
             _cameraController.UnitTransform = null;
         }

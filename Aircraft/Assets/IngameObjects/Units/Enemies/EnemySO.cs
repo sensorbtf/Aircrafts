@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Units;
+using Objects;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EnemySO", menuName = "Enemies/Data", order = 2)]

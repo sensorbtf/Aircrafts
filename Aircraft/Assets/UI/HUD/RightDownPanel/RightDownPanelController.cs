@@ -1,7 +1,7 @@
 ﻿using Buildings;
 using Enemies;
 using UnityEngine;
-using Units.Vehicles;
+using Objects.Vehicles;
 
 namespace UI.HUD
 {

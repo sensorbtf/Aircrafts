@@ -6,11 +6,11 @@ using Enemies;
 using Resources;
 using Resources.Scripts;
 using TMPro;
-using Units;
+using Objects;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Units.Vehicles;
+using Objects.Vehicles;
 using UnityEngine.Serialization;
 
 namespace UI.HUD

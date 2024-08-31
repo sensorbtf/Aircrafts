@@ -6,7 +6,7 @@ using Resources.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Units.Vehicles;
+using Objects.Vehicles;
 
 namespace UI.HUD
 {
@@ -23,7 +23,7 @@ namespace UI.HUD
         private Dictionary<GameObject, WeaponPrefabRefs> _createdWeapons;
         private Dictionary<ResourceSO, HudIconRefs> _createdResources;
         private Vehicle _currentVehicle;
-        
+
         private void Start()
         {
             _createdWeapons = new Dictionary<GameObject, WeaponPrefabRefs>();
@@ -41,7 +41,9 @@ namespace UI.HUD
                 foreach (var refs in _createdWeapons)
                 {
                     var weapon = vehicle.Weapons.FirstOrDefault(x => x.Data.Type == refs.Value.Weapon);
-                    var targetValue = weapon.CurrentTimer >= weapon.Data.FireRate ? 0 : 1 - (weapon.CurrentTimer / weapon.Data.FireRate);
+                    var targetValue = weapon.CurrentTimer >= weapon.Data.FireRate
+                        ? 0
+                        : 1 - (weapon.CurrentTimer / weapon.Data.FireRate);
 
                     refs.Value.Timer.value = Mathf.Lerp(refs.Value.Timer.value, targetValue, Time.deltaTime * 10f);
                 }
@@ -55,12 +57,12 @@ namespace UI.HUD
 
             _vehicleHeader.text = p_selectedVehicle.VehicleData.Type.ToString();
             _currentVehicle = p_selectedVehicle;
-            
+
             if (p_selectedVehicle is CombatVehicle combatVehicle)
             {
                 _resourcesGrid.SetActive(false);
                 _weaponsGrid.SetActive(true);
-                
+
                 foreach (var weapon in p_selectedVehicle.VehicleData.Weapons)
                 {
                     var newGo = Instantiate(_weaponPrefab, _weaponsGrid.transform);
@@ -94,7 +96,7 @@ namespace UI.HUD
 
                 p_selectedVehicle.Inventory.OnResourceValueChanged += RefreshResources;
             }
-            
+
             p_selectedVehicle.OnFuelChange += UpdateFuelSlider;
 
             UpdateWeaponTab();
@@ -117,18 +119,22 @@ namespace UI.HUD
             }
 
             _createdWeapons.Clear();
-            
+
             foreach (var weapon in _createdResources)
             {
                 Destroy(weapon.Value.gameObject);
             }
-            
+
             _createdResources.Clear();
-            
+
             if (_currentVehicle != null)
             {
-                _currentVehicle.OnFireShot -= UpdateWeaponTab;
-                _currentVehicle.OnWeaponSwitch -= UpdateWeaponTab;
+                if (_currentVehicle is CombatVehicle combatVehicle)
+                {
+                    combatVehicle.OnFireShot -= UpdateWeaponTab;
+                    combatVehicle.OnWeaponSwitch -= UpdateWeaponTab;
+                }
+
                 _currentVehicle.OnFuelChange -= UpdateFuelSlider;
                 _currentVehicle.Inventory.OnResourceValueChanged -= RefreshResources;
                 _currentVehicle = null;
@@ -142,10 +148,12 @@ namespace UI.HUD
                 foreach (var refs in _createdWeapons)
                 {
                     var weapon = combatVehicle.Weapons.FirstOrDefault(x => x.Data.Type == refs.Value.Weapon);
-                    
+
                     if (combatVehicle.CurrentWeapon != null && weapon.CurrentAmmo > 0)
                     {
-                        refs.Value.Background.color = refs.Value.Weapon == combatVehicle.CurrentWeapon.Data.Type ? Color.cyan : new Color(0, 0, 0, 0);
+                        refs.Value.Background.color = refs.Value.Weapon == combatVehicle.CurrentWeapon.Data.Type
+                            ? Color.cyan
+                            : new Color(0, 0, 0, 0);
                         refs.Value.WeaponAmmo.text = $"Ammo: {weapon.CurrentAmmo}";
                     }
                     else
@@ -157,12 +165,12 @@ namespace UI.HUD
                 }
             }
         }
-        
+
         private void RefreshResources(ResourceInUnit p_resourceInUnit)
         {
             if (_currentVehicle is CombatVehicle vehicle)
             {
-                
+
             }
             else
             {
@@ -170,7 +178,8 @@ namespace UI.HUD
                 {
                     if (resource.Key == p_resourceInUnit.Data)
                     {
-                        resource.Value.Text.text = _currentVehicle.Inventory.GetResourceAmount(resource.Key.Type).ToString();
+                        resource.Value.Text.text =
+                            _currentVehicle.Inventory.GetResourceAmount(resource.Key.Type).ToString();
                     }
                 }
             }

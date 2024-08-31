@@ -1,29 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using Buildings;
 using Resources.Scripts;
-using Units.Vehicles;
 using UnityEngine;
 
-namespace Buildings
+namespace Objects.Vehicles
 {
-    public class BaseBuilding: Building
+    public class TransportingVehicle: Vehicle
     {
-        private List<Vehicle> _vehiclesInBase = new ();
-        public List<Vehicle> VehiclesInBase => _vehiclesInBase;
-
-        public override void Initialize(BuildingSO p_buildingData)
-        {
-            base.Initialize(p_buildingData);
-        }
+        [SerializeField] private int _refuelAmount;
 
         public override void SelectedUpdate()
         {
             HandleNearestUnits();
+            
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                HandleRefuel();
+            }
         }
-        
+
         private void HandleNearestUnits()
         {
-            var nearbyUnits = GetNearbyUnits(new []{ LayerManager.VehicleLayer}, UnitData.CheckingStateRange);
-
+            var nearbyUnits = GetNearbyUnits(new []{LayerManager.VehicleLayer, LayerManager.BuildingLayer}, UnitData.CheckingStateRange);
+            
             foreach (var unit in nearbyUnits)
             {
                 if (unit == null || unit == this) 
@@ -47,18 +45,28 @@ namespace Buildings
                         }
                     }
                 }
+                else if (unit is Building building)
+                {
+                    if (building is ProductionBuilding prodBuilding)
+                    {
+                        prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this);
+                    }
+                }
             }
         }
 
-        public void TryToAddVehicleToBase(Vehicle p_vehicle)
+        private void HandleRefuel()
         {
-            _vehiclesInBase.Add(p_vehicle);
-            p_vehicle.AddVehicleToBase(UnitCollider);
-        }
-        
-        public void RemoveVehicle(Vehicle p_vehicle)
-        {
-            _vehiclesInBase.Remove(p_vehicle);
+            if (CurrentFuel < VehicleData.MaxFuel)
+            {
+                RiseFuel(_refuelAmount);
+                OnFuelChange?.Invoke();
+                Debug.Log("Vehicle refueled. Current fuel: " + CurrentFuel);
+            }
+            else
+            {
+                Debug.Log("Fuel is already full.");
+            }
         }
     }
 }

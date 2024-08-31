@@ -1,27 +1,29 @@
-﻿using Buildings;
+﻿using System.Collections.Generic;
 using Resources.Scripts;
+using Objects.Vehicles;
 using UnityEngine;
 
-namespace Units.Vehicles
+namespace Buildings
 {
-    public class TransportingVehicle: Vehicle
+    public class BaseBuilding: Building
     {
-        [SerializeField] private int _refuelAmount;
+        private List<Vehicle> _vehiclesInBase = new ();
+        public List<Vehicle> VehiclesInBase => _vehiclesInBase;
+
+        public override void Initialize(BuildingSO p_buildingData)
+        {
+            base.Initialize(p_buildingData);
+        }
 
         public override void SelectedUpdate()
         {
             HandleNearestUnits();
-            
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                HandleRefuel();
-            }
         }
-
+        
         private void HandleNearestUnits()
         {
-            var nearbyUnits = GetNearbyUnits(new []{LayerManager.VehicleLayer, LayerManager.BuildingLayer}, UnitData.CheckingStateRange);
-            
+            var nearbyUnits = GetNearbyUnits(new []{ LayerManager.VehicleLayer}, UnitData.CheckingStateRange);
+
             foreach (var unit in nearbyUnits)
             {
                 if (unit == null || unit == this) 
@@ -45,28 +47,18 @@ namespace Units.Vehicles
                         }
                     }
                 }
-                else if (unit is Building building)
-                {
-                    if (building is ProductionBuilding prodBuilding)
-                    {
-                        prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this);
-                    }
-                }
             }
         }
 
-        private void HandleRefuel()
+        public void TryToAddVehicleToBase(Vehicle p_vehicle)
         {
-            if (CurrentFuel < VehicleData.MaxFuel)
-            {
-                RiseFuel(_refuelAmount);
-                OnFuelChange?.Invoke();
-                Debug.Log("Vehicle refueled. Current fuel: " + CurrentFuel);
-            }
-            else
-            {
-                Debug.Log("Fuel is already full.");
-            }
+            _vehiclesInBase.Add(p_vehicle);
+            p_vehicle.AddVehicleToBase(UnitCollider);
+        }
+        
+        public void RemoveVehicle(Vehicle p_vehicle)
+        {
+            _vehiclesInBase.Remove(p_vehicle);
         }
     }
 }
