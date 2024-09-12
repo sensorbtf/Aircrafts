@@ -46,6 +46,7 @@ public struct WeaponData // tutaj lokalizacja samej broni przy finishu
     public float ProjectileSpeed;
     public float MinFireAngle;
     public float MaxFireAngle;
+    public float RecoilForce;
 }
 
 [Serializable]

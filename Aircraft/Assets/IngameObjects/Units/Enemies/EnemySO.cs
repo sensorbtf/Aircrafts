@@ -18,4 +18,5 @@ public enum EnemyType
     GroundRange = 1,
     Flying = 2,
     Underground = 3,
+    Base = 4,
 }

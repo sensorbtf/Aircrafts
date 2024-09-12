@@ -8,9 +8,9 @@ namespace Objects.Vehicles
 {
     public class CombatVehicle : Vehicle
     {
-        [Header("Combat Vehicle")] [SerializeField]
-        private Transform _rightfirePoint;
+        [Header("Combat Vehicle")] 
 
+        [SerializeField] private Transform _rightfirePoint;
         [SerializeField] private Transform _leftfirePoint;
         [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private LineRenderer _lineRenderer;
@@ -227,10 +227,19 @@ namespace Objects.Vehicles
             var projectile = Instantiate(_projectilePrefab, _currentFirePoint.position, Quaternion.identity);
             projectile.GetComponent<Projectile>().Initialize(GetInitialVelocity(), _currentWeapon.Data.Damage);
 
+            ApplyRecoil(GetInitialVelocity());
+
             _currentWeapon.CurrentAmmo--;
             _currentWeapon.CurrentTimer = 0f;
 
             OnFireShot?.Invoke();
+        }
+
+        private void ApplyRecoil(Vector2 projectileVelocity)
+        {
+            Vector2 recoilDirection = -projectileVelocity.normalized;
+            float recoilForce = _currentWeapon.Data.RecoilForce; 
+            Rigidbody2D.AddForce(recoilDirection * recoilForce, ForceMode2D.Impulse);
         }
     }
 }

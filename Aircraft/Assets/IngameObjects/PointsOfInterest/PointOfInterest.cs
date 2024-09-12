@@ -18,7 +18,7 @@ namespace Objects
 
         public void Initialize()
         {
-            base.Initialize();
+            //base.Initialize();
             CanvasInfo.HealthBar.gameObject.SetActive(false);
         }
     }

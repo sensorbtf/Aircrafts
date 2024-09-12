@@ -10,55 +10,18 @@ namespace Enemies
 {
     public abstract class Enemy: Unit
     {
-        public EnemySO EnemyData { get; private set; }
-        public Transform AttackPoint;
+        [SerializeField] private EnemySO _enemyData;
 
-        private Transform _currentTarget;
-        private float _attackCooldown;
+        public EnemySO EnemyData => _enemyData;
+        public Transform AttackPoint;
 
         public void Initialize(EnemySO p_enemyData)
         {
-            EnemyData = p_enemyData;
+            _enemyData = p_enemyData;
             UnitData = p_enemyData;
     
             base.Initialize(p_enemyData);
-        }
-
-        public virtual void HandleMovement(Transform p_playerBase)
-        {
-            if (_currentTarget == null)
-            {
-                Vector2 direction = (p_playerBase.position - transform.position).normalized;
-                MoveTowards(direction);
-            }
-            else
-            {
-                StopMovement();
-                HandleAttackCooldown();
-            }
-        }
-
-        private void MoveTowards(Vector2 direction)
-        {
-            Rigidbody2D.AddForce(direction * EnemyData.Speed, ForceMode2D.Force);
-        }
-
-        private void StopMovement()
-        {
-            // Stop the enemy's movement by setting the velocity to zero
-            Rigidbody2D.velocity = Vector2.zero;
-        }
-
-        private void HandleAttackCooldown()
-        {
-            _attackCooldown -= Time.deltaTime;
-
-            if (_attackCooldown <= 0f && _currentTarget != null)
-            {
-                AttackTarget(_currentTarget.gameObject);
-                _attackCooldown = EnemyData.AttackCooldown;
-            }
-        }
+        }       
 
         public override void AttackTarget(GameObject p_target)
         {
@@ -66,18 +29,14 @@ namespace Enemies
             OnUnitAttack?.Invoke(this, p_target.GetComponent<Unit>());
         }
 
+        public virtual void HandleMovement(Transform p_playerBase)
+        {
+
+        }
+
         public virtual void HandleSpecialAction()
         {
-            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, 0.1f);
-            if (hitCollider != null && (hitCollider.gameObject.CompareTag("Building") ||
-                                        hitCollider.gameObject.CompareTag("Vehicle")))
-            {
-                _currentTarget = hitCollider.transform;
-            }
-            else
-            {
-                _currentTarget = null;
-            }
+
         }
 
         public override void ReceiveDamage(int p_damage)

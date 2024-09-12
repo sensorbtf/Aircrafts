@@ -12,7 +12,7 @@ namespace Objects
 {
     public abstract class Unit: IngameObject
     {
-        [Header("Unit")] private Rigidbody2D _rigidbody2D;
+        [Header("Unit"), SerializeField] private Rigidbody2D _rigidbody2D;
 
         private UnitSO _unitData;
 
@@ -40,12 +40,9 @@ namespace Objects
             CanvasInfo.HealthBar.minValue = 0;
             CanvasInfo.HealthBar.value = CurrentHp;
 
-            _rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-
             // Rigidbody2D.drag = EnemyData.Drag;  // Adjust drag to control sliding
             // Rigidbody2D.angularDrag = EnemyData.AngularDrag;  // Control rotational drag
         }
-
         
         // Rozbić na podklasy
         public override void MakeAction(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver)

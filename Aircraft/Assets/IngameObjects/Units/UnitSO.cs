@@ -10,6 +10,9 @@ namespace Objects
         [Header("UnitSO")]
         [SerializeField] private GameObject _prefab;
         [SerializeField] private Sprite _icon;
+        [SerializeField] private SpriteRenderer _renderer;
+        [SerializeField] private Rigidbody2D _rb;
+        [SerializeField] private Collider2D _collider;
         [SerializeField] private ResourceInUnit[] _resources;
         [SerializeField] private int _maxHp;
         [SerializeField] private int _speed;
@@ -21,6 +24,9 @@ namespace Objects
         public GameObject Prefab => _prefab;
         public Sprite Icon => _icon;
         public ResourceInUnit[] Resources => _resources;
+        public SpriteRenderer Renderer => _renderer;
+        public Rigidbody2D Rb => _rb;
+        public Collider2D Collider => _collider;
 
         public int MaxHp => _maxHp;
         public int AttackRange => _attackRange;

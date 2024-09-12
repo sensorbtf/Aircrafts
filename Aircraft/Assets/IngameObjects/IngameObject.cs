@@ -10,10 +10,10 @@ using UnityEngine.EventSystems;
 
 namespace Objects
 {
-    public abstract class IngameObject : MonoBehaviour, IPointerClickHandler
+    public abstract class IngameObject: MonoBehaviour, IPointerClickHandler
     {
-        private SpriteRenderer _unitRenderer;
-        private Collider2D _unitCollider;
+        [SerializeField] private SpriteRenderer _unitRenderer;
+        [SerializeField] private Collider2D _unitCollider;
         private InventoryController _inventory;
         public InfoCanvasRefs CanvasInfo;
 
@@ -31,12 +31,6 @@ namespace Objects
             {
                 CanvasInfo.StateInfo[i].TextInfo.text = "";
             }
-
-            _unitRenderer = gameObject.GetComponent<SpriteRenderer>();
-            _unitCollider = gameObject.GetComponent<Collider2D>();
-
-            // Rigidbody2D.drag = EnemyData.Drag;  // Adjust drag to control sliding
-            // Rigidbody2D.angularDrag = EnemyData.AngularDrag;  // Control rotational drag
         }
 
         public void PostInitialize(InventoryController p_newInventory)

@@ -40,29 +40,18 @@ namespace Objects
 
         public void CustomStart()
         {
-            foreach (var enemy in _enemyDatabase.Enemies)
+            foreach (var enemy in AllEnemies)
             {
-                var newEnemy = Instantiate(enemy.Prefab, gameObject.transform);
-                newEnemy.transform.position = _enemySpawnPoint.localPosition;
+                enemy.Initialize(enemy.EnemyData);
+                var enemyBase = enemy.GetComponent<EnemyBase>();
 
-                switch (enemy.Type)
-                {
-                    case EnemyType.GroundMelee:
-                        AllEnemies.Add(newEnemy.GetComponent<GroundEnemy>());
-                        newEnemy.GetComponent<GroundEnemy>().Initialize(enemy);
-                        break;
-                    case EnemyType.GroundRange:
-                        break;
-                    case EnemyType.Flying:
-                        break;
-                }
+                enemyBase.Initialize(enemy.EnemyData);
+                enemyBase.OnEnemySpawn += SpawnEnemy;
 
-                var unit = newEnemy.GetComponent<Unit>();
-
+                var unit = enemy.GetComponent<Unit>();
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
-
                 unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
 
                 OnUnitCreated?.Invoke(unit);
@@ -137,7 +126,7 @@ namespace Objects
 
         private void Update()
         {
-            foreach (var enemy in AllEnemies)
+            foreach (var enemy in AllEnemies.ToList())
             {
                 enemy.HandleSpecialAction();
             }
@@ -147,7 +136,7 @@ namespace Objects
 
         private void FixedUpdate()
         {
-            foreach (var enemy in AllEnemies)
+            foreach (var enemy in AllEnemies.ToList())
             {
                 enemy.HandleMovement(GetNearestTransformOfPlayerUnit(enemy.transform));
             }
@@ -236,6 +225,32 @@ namespace Objects
             }
         }
 
+        private void SpawnEnemy(EnemySO p_enemy)
+        {
+            var newEnemy = Instantiate(p_enemy.Prefab, gameObject.transform);
+            newEnemy.transform.position = _enemySpawnPoint.localPosition;
+
+            switch (p_enemy.Type)
+            {
+                case EnemyType.GroundMelee:
+                    AllEnemies.Add(newEnemy.GetComponent<GroundEnemy>());
+                    newEnemy.GetComponent<GroundEnemy>().Initialize(p_enemy);
+                    break;
+                case EnemyType.Base:
+                    break;
+            }
+
+            var unit = newEnemy.GetComponent<Unit>();
+
+            unit.OnUnitClicked += SelectUnit;
+            unit.OnUnitAttack += UnitAttacked;
+            unit.OnUnitDied += UnitDied;
+
+            unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
+
+            OnUnitCreated?.Invoke(unit);
+        }
+
         private void UnitDied(Unit p_unit)
         {
             p_unit.GetComponent<Unit>().OnUnitClicked -= SelectUnit;
@@ -253,6 +268,11 @@ namespace Objects
             }
             else if (p_unit is Enemy enemy)
             {
+                if (enemy is EnemyBase baseOfEnemies)
+                {
+                    baseOfEnemies.OnEnemySpawn -= SpawnEnemy;
+
+                }
                 enemy.DestroyHandler();
                 AllEnemies.Remove(enemy);
             }
