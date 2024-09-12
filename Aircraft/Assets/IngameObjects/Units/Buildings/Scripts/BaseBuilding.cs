@@ -22,7 +22,7 @@ namespace Buildings
         
         private void HandleNearestUnits()
         {
-            var nearbyUnits = GetNearbyUnits(new []{ LayerManager.VehicleLayer}, UnitData.CheckingStateRange);
+            var nearbyUnits = GetNearbyObjects(new []{ LayerManager.VehicleLayer}, UnitData.CheckingStateRange);
 
             foreach (var unit in nearbyUnits)
             {
@@ -53,7 +53,7 @@ namespace Buildings
         public void TryToAddVehicleToBase(Vehicle p_vehicle)
         {
             _vehiclesInBase.Add(p_vehicle);
-            p_vehicle.AddVehicleToBase(UnitCollider);
+            p_vehicle.AddVehicleToBase(ObjectCollider);
         }
         
         public void RemoveVehicle(Vehicle p_vehicle)

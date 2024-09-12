@@ -17,12 +17,12 @@ namespace Objects
         private InventoryController _inventory;
         public InfoCanvasRefs CanvasInfo;
 
-        protected List<Unit> _unitsInRange = new List<Unit>();
+        protected List<IngameObject> _unitsInRange = new List<IngameObject>();
         private bool _isSelected;
 
         public bool IsSelected => _isSelected;
-        public SpriteRenderer UnitRenderer => _unitRenderer;
-        public Collider2D UnitCollider => _unitCollider;
+        public SpriteRenderer ObjectRenderer => _unitRenderer;
+        public Collider2D ObjectCollider => _unitCollider;
         public InventoryController Inventory => _inventory;
 
         public void Initialize()
@@ -78,17 +78,17 @@ namespace Objects
         {
             if (p_hide)
             {
-                UnitRenderer.sortingOrder = 2;
+                ObjectRenderer.sortingOrder = 2;
             }
             else
             {
-                UnitRenderer.sortingOrder = 1;
+                ObjectRenderer.sortingOrder = 1;
             }
         }
 
         #region Actions
 
-        public void TryToActivateStateButtons(Actions p_actionType, Unit p_giver)
+        public void TryToActivateStateButtons(Actions p_actionType, IngameObject p_giver)
         {
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
@@ -101,7 +101,7 @@ namespace Objects
             }
         }
 
-        public void TryToActivateStateButtons(Actions p_actionType, Unit p_giver, Unit p_receiver)
+        public void TryToActivateStateButtons(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver)
         {
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
@@ -114,7 +114,7 @@ namespace Objects
             }
         }
 
-        private void SetAction(Actions p_actionType, Unit p_giver, int p_index, Unit p_receiver = null)
+        private void SetAction(Actions p_actionType, IngameObject p_giver, int p_index, IngameObject p_receiver = null)
         {
             CanvasInfo.Reorder(true);
 
@@ -140,7 +140,7 @@ namespace Objects
 
         }
 
-        protected List<Unit> GetNearbyUnits(LayerMask[] p_unitLayerMasks, float p_checkRange)
+        protected List<IngameObject> GetNearbyObjects(LayerMask[] p_unitLayerMasks, float p_checkRange)
         {
             LayerMask combinedLayerMask = 0;
             foreach (var layerMask in p_unitLayerMasks)
@@ -148,20 +148,20 @@ namespace Objects
                 combinedLayerMask |= layerMask;
             }
 
-            var nearbyUnits = new List<Unit>();
+            var nearbyUnits = new List<IngameObject>();
             var colliders = Physics2D.OverlapCircleAll(transform.position, p_checkRange, combinedLayerMask);
 
             foreach (var collider in colliders)
             {
-                var nearbyUnit = collider.GetComponent<Unit>();
+                var nearbyIngameUnit = collider.GetComponent<IngameObject>();
 
-                if (nearbyUnit != null && !Equals(nearbyUnit, this))
+                if (nearbyIngameUnit != null && !Equals(nearbyIngameUnit, this))
                 {
-                    nearbyUnits.Add(nearbyUnit);
+                    nearbyUnits.Add(nearbyIngameUnit);
 
-                    if (!_unitsInRange.Contains(nearbyUnit))
+                    if (!_unitsInRange.Contains(nearbyIngameUnit))
                     {
-                        _unitsInRange.Add(nearbyUnit);
+                        _unitsInRange.Add(nearbyIngameUnit);
                     }
                 }
             }

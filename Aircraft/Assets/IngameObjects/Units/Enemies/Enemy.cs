@@ -62,6 +62,8 @@ namespace Enemies
         
         public override void DestroyHandler()
         {
+            Inventory.CreateItemsOnDestroy(transform);
+
             Destroy(gameObject);
         }
     }

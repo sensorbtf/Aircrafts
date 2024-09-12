@@ -45,12 +45,12 @@ namespace Objects.Vehicles
             if (moveHorizontal > 0)
             {
                 force = Vector2.right * _vehicleData.Speed;
-                UnitRenderer.flipX = false;
+                ObjectRenderer.flipX = false;
             }
             else if (moveHorizontal < 0)
             {
                 force = Vector2.left * _vehicleData.Speed;
-                UnitRenderer.flipX = true;
+                ObjectRenderer.flipX = true;
             }
 
             if (force != Vector2.zero)

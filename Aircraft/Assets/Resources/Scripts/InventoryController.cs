@@ -2,21 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Objects;
 using Resources.Scripts;
 using UnityEngine;
 
 namespace Resources
 {
-    public class InventoryController
+    public class InventoryController: MonoBehaviour
     {
+        private GameObject _itemOnGround;
         private List<ResourceInUnit> _currentResources;
         
         public List<ResourceInUnit> CurrentResources => _currentResources;
 
         public Action<ResourceInUnit> OnResourceValueChanged;
 
-        public InventoryController(List<ResourceSO> p_specificResources, bool p_isMain)
+        public InventoryController(List<ResourceSO> p_specificResources, GameObject p_itemOnGround, bool p_isMain)
         {
+            _itemOnGround = p_itemOnGround;
+
             _currentResources = new List<ResourceInUnit>();
             
             foreach (var resource in p_specificResources)
@@ -86,6 +90,17 @@ namespace Resources
         public ResourceInUnit GetSpecificResource(Resource p_resource)
         {
             return _currentResources.FirstOrDefault(x => x.Data.Type == p_resource);
+        }
+
+        internal void CreateItemsOnDestroy(Transform p_transform)
+        {
+            foreach (var item in CurrentResources)
+            {
+                var itemOnGround = Instantiate(_itemOnGround);
+                itemOnGround.transform.position = p_transform.position;
+                var refs = itemOnGround.GetComponent<ItemOnGround>();
+                refs.Initialize(item);
+            }
         }
     }
 }

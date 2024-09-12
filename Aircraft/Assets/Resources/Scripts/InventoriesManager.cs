@@ -15,6 +15,7 @@ namespace Resources
         [SerializeField] private Dictionary<Unit, InventoryController> _inventories = new Dictionary<Unit, InventoryController>();
         [SerializeField] private ResourceDatabase _resourcesDatabase;
         [SerializeField] private InventoryController _mainInventory;
+        [SerializeField] private GameObject _itemOnGround;
         
         public Dictionary<Unit, InventoryController> Inventories => _inventories;
         public ResourceDatabase ResourceDatabase => _resourcesDatabase;
@@ -26,11 +27,12 @@ namespace Resources
                 
             if (p_unit is Building building && building.BuildingData.Type == BuildingType.Base) // Main + others?
             {
-                _mainInventory = newController = new InventoryController(p_unit.UnitData.Resources.Select(x => x.Data).ToList(), true);
+                _mainInventory = newController = new InventoryController(p_unit.UnitData.Resources
+                    .Select(x => x.Data).ToList(), _itemOnGround, true);
             }
             else
             {
-                newController = new InventoryController(p_unit.UnitData.Resources.Select(x => x.Data).ToList(), false);
+                newController = new InventoryController(p_unit.UnitData.Resources.Select(x => x.Data).ToList(), _itemOnGround, false);
             }
             
             _inventories.Add(p_unit, newController);

@@ -1220,6 +1220,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourcesDatabase: {fileID: 11400000, guid: 71d92a09661176c4b81a60060a3046e6, type: 2}
+  _mainInventory: {fileID: 0}
+  _itemOnGround: {fileID: 5923344695790737437, guid: 946cae5a1c329d147bbac841a2407f2c, type: 3}
 --- !u!1 &695956790
 GameObject:
   m_ObjectHideFlags: 0

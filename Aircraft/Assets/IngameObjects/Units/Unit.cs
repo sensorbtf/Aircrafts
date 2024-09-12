@@ -126,6 +126,5 @@ namespace Objects
         public abstract void DestroyHandler();
 
         #endregion
-
     }
 }

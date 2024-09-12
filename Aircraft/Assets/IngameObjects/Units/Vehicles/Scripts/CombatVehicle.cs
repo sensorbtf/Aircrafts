@@ -123,18 +123,18 @@ namespace Objects.Vehicles
             if (mousePosition.x >= transform.position.x)
             {
                 _currentFirePoint = _rightfirePoint;
-                UnitRenderer.flipX = false;
+                ObjectRenderer.flipX = false;
             }
             else
             {
                 _currentFirePoint = _leftfirePoint;
-                UnitRenderer.flipX = true;
+                ObjectRenderer.flipX = true;
             }
 
             Vector2 directionToMouse = (mousePosition - _currentFirePoint.position).normalized;
             var angle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
 
-            if (UnitRenderer.flipX)
+            if (ObjectRenderer.flipX)
             {
                 angle = 180f - angle;
             }
@@ -202,7 +202,7 @@ namespace Objects.Vehicles
             Vector2 direction = (mousePosition - _currentFirePoint.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            if (UnitRenderer.flipX)
+            if (ObjectRenderer.flipX)
             {
                 angle = Mathf.Atan2(direction.y, -direction.x) * Mathf.Rad2Deg;
             }
@@ -211,7 +211,7 @@ namespace Objects.Vehicles
 
             direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
 
-            if (UnitRenderer.flipX)
+            if (ObjectRenderer.flipX)
             {
                 direction.x = -direction.x;
             }

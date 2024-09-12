@@ -16,10 +16,10 @@ namespace Objects
 
         public Action<PointOfInterest, bool> OnPoIClicked;
 
-        public void Initialize()
+
+        public override void OnPointerClick(PointerEventData p_eventData)
         {
-            //base.Initialize();
-            CanvasInfo.HealthBar.gameObject.SetActive(false);
+
         }
     }
 }

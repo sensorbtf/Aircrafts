@@ -261,6 +261,7 @@ namespace Objects
             {
                 vehicle.DestroyHandler();
                 AllVehicles.Remove(vehicle);
+
                 if (_selectedUnit == p_unit)
                 {
                     SelectUnit(GetMainBase());
@@ -273,6 +274,7 @@ namespace Objects
                     baseOfEnemies.OnEnemySpawn -= SpawnEnemy;
 
                 }
+
                 enemy.DestroyHandler();
                 AllEnemies.Remove(enemy);
             }

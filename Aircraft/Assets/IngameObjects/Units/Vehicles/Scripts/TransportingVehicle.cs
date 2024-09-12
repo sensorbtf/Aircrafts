@@ -20,21 +20,21 @@ namespace Objects.Vehicles
 
         private void HandleNearestUnits()
         {
-            var nearbyUnits = GetNearbyUnits(new []{LayerManager.VehicleLayer, LayerManager.BuildingLayer}, UnitData.CheckingStateRange);
+            var nearbyUnits = GetNearbyObjects(new []{LayerManager.VehicleLayer, LayerManager.BuildingLayer, LayerManager.ItemsLayer}, UnitData.CheckingStateRange);
             
-            foreach (var unit in nearbyUnits)
+            foreach (var ingameObject in nearbyUnits)
             {
-                if (unit == null || unit == this) 
+                if (ingameObject == null || ingameObject == this) 
                     continue;
 
-                if (unit is Vehicle vehicle)
+                if (ingameObject is Vehicle vehicle)
                 {
                     if (Inventory.GetResourceAmount(Resource.Petroleum) > 0)
                     {
                         vehicle.TryToActivateStateButtons(Actions.Refill, this);
                     }
                     
-                    if (unit is CombatVehicle combat)
+                    if (ingameObject is CombatVehicle combat)
                     {
                         foreach (var weapon in combat.Weapons)
                         {
@@ -45,12 +45,16 @@ namespace Objects.Vehicles
                         }
                     }
                 }
-                else if (unit is Building building)
+                else if (ingameObject is Building building)
                 {
                     if (building is ProductionBuilding prodBuilding)
                     {
                         prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this);
                     }
+                }
+                else if (ingameObject is ItemOnGround item)
+                {
+                    item.TryToActivateStateButtons(Actions.Collect, item, this);
                 }
             }
         }
