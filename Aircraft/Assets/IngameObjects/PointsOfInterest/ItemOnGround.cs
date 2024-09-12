@@ -1,26 +1,26 @@
-﻿using Resources;
+﻿using Buildings;
+using Objects.Vehicles;
+using Resources;
 using Resources.Scripts;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Progress;
 
 namespace Objects
 {
-    public class ItemOnGround: IngameObject
+    public class ItemOnGround : IngameObject
     {
-        private int _currentAmount;
-        private Transform _transform;
-
+        private ResourceInUnit _item;
 
         internal void Initialize(ResourceInUnit p_item)
         {
             ObjectRenderer.sprite = p_item.Data.Icon;
 
-            _currentAmount = p_item.CurrentAmount;
+            _item = p_item;
 
             Initialize();
             CanvasInfo.HealthBar.gameObject.SetActive(false);
-            SetNewStateTexts(Actions.Collect);
         }
 
         public override void OnPointerClick(PointerEventData p_eventData)
@@ -30,7 +30,38 @@ namespace Objects
 
         public override void CheckState()
         {
+            SetNewStateTexts(Actions.Collect);
+        }
 
+        public override void MakeAction(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver)
+        {
+            switch (p_actionType)
+            {
+                case Actions.Collect:
+                    if (p_receiver is Vehicle collector)
+                    {
+                        var resourceToGive = _item.CurrentAmount;
+                        var spaceLeft = collector.Inventory.GetFreeSpace(_item.Data.Type);
+
+                        if (resourceToGive >= spaceLeft)
+                        {
+                            _item.CurrentAmount -= spaceLeft;
+                            p_receiver.Inventory.AddResource(_item.Data.Type, spaceLeft);
+                        }
+                        else
+                        {
+                            _item.CurrentAmount -= resourceToGive;
+                            p_receiver.Inventory.AddResource(_item.Data.Type, resourceToGive);
+                        }
+                    }
+
+                    break;
+            }
+
+            if (_item.CurrentAmount <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -51,6 +51,10 @@ namespace Objects.Vehicles
                     {
                         prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this);
                     }
+                    else if (building is BaseBuilding baseBuilding)
+                    {
+                        baseBuilding.TryToActivateStateButtons(Actions.Deposit, this, baseBuilding);
+                    }
                 }
                 else if (ingameObject is ItemOnGround item)
                 {

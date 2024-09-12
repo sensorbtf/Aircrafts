@@ -5,11 +5,11 @@ using UnityEngine.Serialization;
 
 namespace Buildings
 {
-    public class ProductionBuilding: Building// oil/ sand 
+    public class ProductionBuilding : Building// oil/ sand 
     {
         [SerializeField] private int _timeToComplete;
         [SerializeField] private ResourceSO _outputProduction;
-        
+
         private float _currentProductionTime;
         private bool _isPaused;
         private float _timer;
@@ -31,23 +31,26 @@ namespace Buildings
 
             _timer += Time.deltaTime;
 
+            if (Inventory.GetResourceAmount(_outputProduction) > 0)
+            { 
+                SetNewStateTexts(Actions.Collect);
+            }
+
             if (_timer >= 1f)
             {
                 _currentProductionTime++;
 
                 _timer = 0f;
-                
+
                 if (_currentProductionTime >= _timeToComplete)
                 {
                     Inventory.AddResource(_outputProduction, 1);
                     _currentProductionTime = 0;
-                    
-                    SetNewStateTexts(Actions.Collect);
                 }
             }
         }
     }
-    
+
     public enum ProductionType
     {
         Oil,

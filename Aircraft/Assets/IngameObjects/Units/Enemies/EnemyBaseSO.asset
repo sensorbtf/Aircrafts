@@ -19,7 +19,7 @@ MonoBehaviour:
     CurrentAmount: 0
     MaxAmount: 1
     IsGlobalInventory: 0
-  _maxHp: 200
+  _maxHp: 45
   _speed: 10
   _attackRange: 1
   _attackCooldown: 1

@@ -116,6 +116,11 @@ namespace Objects
                     }
 
                     break;
+
+                case Actions.Deposit:
+                    Debug.Log("trying to depo" + p_receiver + "gover:" + p_giver);
+
+                    break;
             }
         }
 

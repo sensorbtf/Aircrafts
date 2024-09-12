@@ -135,11 +135,6 @@ namespace Objects
             });
         }
 
-        public virtual void MakeAction(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver)
-        {
-
-        }
-
         protected List<IngameObject> GetNearbyObjects(LayerMask[] p_unitLayerMasks, float p_checkRange)
         {
             LayerMask combinedLayerMask = 0;
@@ -266,5 +261,6 @@ namespace Objects
 
         public abstract void CheckState();
         public abstract void OnPointerClick(PointerEventData p_eventData);
+        public abstract void MakeAction(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver);
     }
 }

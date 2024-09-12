@@ -27,12 +27,11 @@ namespace Resources
                 
             if (p_unit is Building building && building.BuildingData.Type == BuildingType.Base) // Main + others?
             {
-                _mainInventory = newController = new InventoryController(p_unit.UnitData.Resources
-                    .Select(x => x.Data).ToList(), _itemOnGround, true);
+                _mainInventory = newController = new InventoryController(p_unit.UnitData.Resources, _itemOnGround, true);
             }
             else
             {
-                newController = new InventoryController(p_unit.UnitData.Resources.Select(x => x.Data).ToList(), _itemOnGround, false);
+                newController = new InventoryController(p_unit.UnitData.Resources, _itemOnGround, false);
             }
             
             _inventories.Add(p_unit, newController);
@@ -48,10 +47,11 @@ namespace Resources
         public int MaxAmount;
         [HideInInspector] public bool IsGlobalInventory;
 
-        public ResourceInUnit(ResourceSO p_data, bool p_isGlobalInventory = false)
+        public ResourceInUnit(ResourceSO p_data, int p_maxAmount, bool p_isGlobalInventory = false)
         {
             Data = p_data;
             CurrentAmount = p_data.InitialValue;
+            MaxAmount = p_maxAmount;
             IsGlobalInventory = p_isGlobalInventory;
         }
     }
