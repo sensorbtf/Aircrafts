@@ -173,7 +173,7 @@ namespace Objects
             return nearbyUnits;
         }
 
-        protected void SetNewStateTexts(Actions p_actionType)
+        public void SetNewStateTexts(Actions p_actionType)
         {
             CompactStateInfo();
 

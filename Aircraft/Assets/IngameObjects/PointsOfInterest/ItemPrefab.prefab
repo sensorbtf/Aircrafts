@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 11aa7859e5f512f46a5c5da688ecc267, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -215,9 +215,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1002133401959310588}
     m_Modifications:
+    - target: {fileID: 623730746252959203, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 754545956133396703, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_Name
       value: InfoCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 754545956133396703, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2906095154683959442, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 3132786389629617236, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 3262470407204767229, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchorMax.x
@@ -318,6 +334,22 @@ PrefabInstance:
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126259929099923571, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6496495504570289765, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6638122262974406872, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887617116261789767, guid: 56079766273cde4409462447634b3e36, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

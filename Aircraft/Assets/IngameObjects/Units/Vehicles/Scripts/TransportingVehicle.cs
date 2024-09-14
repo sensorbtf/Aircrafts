@@ -53,6 +53,7 @@ namespace Objects.Vehicles
                     }
                     else if (building is BaseBuilding baseBuilding)
                     {
+                        baseBuilding.SetNewStateTexts(Actions.Deposit);
                         baseBuilding.TryToActivateStateButtons(Actions.Deposit, this, baseBuilding);
                     }
                 }

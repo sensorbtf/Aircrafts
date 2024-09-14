@@ -119,7 +119,7 @@ namespace Objects
 
                 case Actions.Deposit:
                     Debug.Log("trying to depo" + p_receiver + "gover:" + p_giver);
-
+                    //przemyśleć depositing i collection z transporting vehicles i jak czołgi można dozbrajać
                     break;
             }
         }
