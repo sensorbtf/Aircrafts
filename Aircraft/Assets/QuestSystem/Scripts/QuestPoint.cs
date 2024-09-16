@@ -26,14 +26,14 @@ public class QuestPoint : MonoBehaviour
 
     private void OnEnable()
     {
-        MainGameEventsManager.Instance.questEvents.OnQuestStateChange += QuestStateChange;
-        MainGameEventsManager.Instance.inputEvents.OnSubmitPressed += SubmitPressed;
+        EventsManager.Instance.questEvents.OnQuestStateChange += QuestStateChange;
+        EventsManager.Instance.inputEvents.OnSubmitPressed += SubmitPressed;
     }
 
     private void OnDisable()
     {
-        MainGameEventsManager.Instance.questEvents.OnQuestStateChange -= QuestStateChange;
-        MainGameEventsManager.Instance.inputEvents.OnSubmitPressed -= SubmitPressed;
+        EventsManager.Instance.questEvents.OnQuestStateChange -= QuestStateChange;
+        EventsManager.Instance.inputEvents.OnSubmitPressed -= SubmitPressed;
     }
 
     private void SubmitPressed()
@@ -46,11 +46,11 @@ public class QuestPoint : MonoBehaviour
         // start or finish a quest
         if (currentQuestState.Equals(QuestState.CAN_START) && startPoint)
         {
-            MainGameEventsManager.Instance.questEvents.StartQuest(questId);
+            EventsManager.Instance.questEvents.StartQuest(questId);
         }
         else if (currentQuestState.Equals(QuestState.CAN_FINISH) && finishPoint)
         {
-            MainGameEventsManager.Instance.questEvents.FinishQuest(questId);
+            EventsManager.Instance.questEvents.FinishQuest(questId);
         }
     }
 
@@ -66,7 +66,7 @@ public class QuestPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D otherCollider)
     {
-        if (otherCollider.CompareTag("Player"))
+        if (otherCollider.CompareTag("Vehicle"))
         {
             playerIsNear = true;
         }
@@ -74,7 +74,7 @@ public class QuestPoint : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D otherCollider)
     {
-        if (otherCollider.CompareTag("Player"))
+        if (otherCollider.CompareTag("Vehicle"))
         {
             playerIsNear = false;
         }

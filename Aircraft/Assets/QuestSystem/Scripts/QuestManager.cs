@@ -7,41 +7,41 @@ public class QuestManager : MonoBehaviour
     [Header("Config")]
     [SerializeField] private bool loadQuestState = true;
 
-    private Dictionary<string, Quest> questMap;
+    private Dictionary<string, Quest> _questMap;
 
     // quest start requirements
     private int currentPlayerLevel;
 
     private void Awake()
     {
-        questMap = CreateQuestMap();
+        _questMap = CreateQuestMap();
     }
 
     private void OnEnable()
     {
-        MainGameEventsManager.Instance.questEvents.OnStartQuest += StartQuest;
-        MainGameEventsManager.Instance.questEvents.OnAdvanceQuest += AdvanceQuest;
-        MainGameEventsManager.Instance.questEvents.OnFinishQuest += FinishQuest;
+        EventsManager.Instance.questEvents.OnStartQuest += StartQuest;
+        EventsManager.Instance.questEvents.OnAdvanceQuest += AdvanceQuest;
+        EventsManager.Instance.questEvents.OnFinishQuest += FinishQuest;
 
-        MainGameEventsManager.Instance.questEvents.onQuestStepStateChange += QuestStepStateChange;
+        EventsManager.Instance.questEvents.onQuestStepStateChange += QuestStepStateChange;
 
-        MainGameEventsManager.Instance.playerEvents.OnPlayerLevelChange += PlayerLevelChange;
+        EventsManager.Instance.playerEvents.OnPlayerLevelChange += PlayerLevelChange;
     }
 
     private void OnDisable()
     {
-        MainGameEventsManager.Instance.questEvents.OnStartQuest -= StartQuest;
-        MainGameEventsManager.Instance.questEvents.OnAdvanceQuest -= AdvanceQuest;
-        MainGameEventsManager.Instance.questEvents.OnFinishQuest -= FinishQuest;
+        EventsManager.Instance.questEvents.OnStartQuest -= StartQuest;
+        EventsManager.Instance.questEvents.OnAdvanceQuest -= AdvanceQuest;
+        EventsManager.Instance.questEvents.OnFinishQuest -= FinishQuest;
 
-        MainGameEventsManager.Instance.questEvents.onQuestStepStateChange -= QuestStepStateChange;
+        EventsManager.Instance.questEvents.onQuestStepStateChange -= QuestStepStateChange;
 
-        MainGameEventsManager.Instance.playerEvents.OnPlayerLevelChange -= PlayerLevelChange;
+        EventsManager.Instance.playerEvents.OnPlayerLevelChange -= PlayerLevelChange;
     }
 
     private void Start()
     {
-        foreach (Quest quest in questMap.Values)
+        foreach (Quest quest in _questMap.Values)
         {
             // initialize any loaded quest steps
             if (quest.CurrentState == QuestState.IN_PROGRESS)
@@ -49,7 +49,7 @@ public class QuestManager : MonoBehaviour
                 quest.InstantiateCurrentQuestStep(this.transform);
             }
             // broadcast the initial state of all quests on startup
-            MainGameEventsManager.Instance.questEvents.QuestStateChange(quest);
+            EventsManager.Instance.questEvents.QuestStateChange(quest);
         }
     }
 
@@ -57,7 +57,7 @@ public class QuestManager : MonoBehaviour
     {
         Quest quest = GetQuestById(id);
         quest.CurrentState = state;
-        MainGameEventsManager.Instance.questEvents.QuestStateChange(quest);
+        EventsManager.Instance.questEvents.QuestStateChange(quest);
     }
 
     private void PlayerLevelChange(int level)
@@ -82,6 +82,7 @@ public class QuestManager : MonoBehaviour
             if (GetQuestById(prerequisiteQuestInfo.id).CurrentState != QuestState.FINISHED)
             {
                 meetsRequirements = false;
+                break;
             }
         }
 
@@ -91,7 +92,7 @@ public class QuestManager : MonoBehaviour
     private void Update()
     {
         // loop through ALL quests
-        foreach (Quest quest in questMap.Values)
+        foreach (Quest quest in _questMap.Values)
         {
             // if we're now meeting the requirements, switch over to the CAN_START state
             if (quest.CurrentState == QuestState.REQUIREMENTS_NOT_MET && CheckRequirementsMet(quest))
@@ -136,8 +137,8 @@ public class QuestManager : MonoBehaviour
 
     private void ClaimRewards(Quest quest)
     {
-        MainGameEventsManager.Instance.goldEvents.GoldGained(quest.Info.goldReward);
-        MainGameEventsManager.Instance.playerEvents.ExperienceGained(quest.Info.experienceReward);
+        EventsManager.Instance.goldEvents.GoldGained(quest.Info.goldReward);
+        EventsManager.Instance.playerEvents.ExperienceGained(quest.Info.experienceReward);
     }
 
     private void QuestStepStateChange(string id, int stepIndex, QuestStepState questStepState)
@@ -166,7 +167,7 @@ public class QuestManager : MonoBehaviour
 
     private Quest GetQuestById(string id)
     {
-        Quest quest = questMap[id];
+        Quest quest = _questMap[id];
 
         if (quest == null)
         {
@@ -178,7 +179,7 @@ public class QuestManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        foreach (Quest quest in questMap.Values)
+        foreach (Quest quest in _questMap.Values)
         {
             SaveQuest(quest);
         }

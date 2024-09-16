@@ -31,15 +31,17 @@ namespace Resources
 
         public void AddResource(Resource p_resource, int p_amount)
         {
-            var so = GetSpecificResource(p_resource);
-            so.CurrentAmount += p_amount;
+            var resInUnit = GetSpecificResource(p_resource);
+            resInUnit.CurrentAmount += p_amount;
 
-            if (so.CurrentAmount > so.MaxAmount)
+            if (resInUnit.CurrentAmount > resInUnit.MaxAmount)
             {
-                so.CurrentAmount = so.MaxAmount;
+                resInUnit.CurrentAmount = resInUnit.MaxAmount;
             }
 
-            OnResourceValueChanged?.Invoke(so);
+            EventsManager.Instance.miscEvents.ResourceCollected(resInUnit);
+
+            OnResourceValueChanged?.Invoke(resInUnit);
         }
 
         public void AddResource(ResourceSO p_resource, int p_amount)

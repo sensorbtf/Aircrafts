@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public class MainGameEventsManager : MonoBehaviour
+public class EventsManager : MonoBehaviour
 {
-    public static MainGameEventsManager Instance { get; private set; }
+    public static EventsManager Instance { get; private set; }
 
     public InputEvents inputEvents;
     public PlayerEvents playerEvents;
@@ -32,6 +32,11 @@ public class MainGameEventsManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             inputEvents.QuestLogTogglePressed();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            inputEvents.SubmitPressed();
         }
     }
 }

@@ -10,12 +10,12 @@ public class GoldUI : MonoBehaviour
 
     private void OnEnable() 
     {
-        MainGameEventsManager.Instance.goldEvents.OnGoldChange += GoldChange;
+        EventsManager.Instance.goldEvents.OnGoldChange += GoldChange;
     }
 
     private void OnDisable() 
     {
-        MainGameEventsManager.Instance.goldEvents.OnGoldChange -= GoldChange;
+        EventsManager.Instance.goldEvents.OnGoldChange -= GoldChange;
     }
 
     private void GoldChange(int gold) 
