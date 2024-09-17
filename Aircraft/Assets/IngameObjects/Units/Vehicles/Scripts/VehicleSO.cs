@@ -11,12 +11,14 @@ public class VehicleSO : UnitSO
     [Header("VehicleSO")]
     [SerializeField] private VehicleType _type;
     [SerializeField] private int _maxFuel;
+    [SerializeField] private int _maxSpeed;
     [SerializeField] private int _literUsageInterval;
     [SerializeField] private WeaponData[] _weapons;
 
     public VehicleType Type => _type;
     public WeaponData[] Weapons => _weapons;
     public int MaxFuel => _maxFuel;
+    public int MaxSpeed => _maxSpeed;
     public int LiterUsageInterval => _literUsageInterval;
 }
 

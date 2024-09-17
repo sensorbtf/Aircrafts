@@ -68,9 +68,9 @@ namespace Objects.Vehicles
             }
         }
         
-        public virtual void HandleFuelUsage()
+        public virtual void HandleFuelUsage(int p_usageAmount = 1)
         {
-            _fuelUsageInterval++;
+            _fuelUsageInterval += p_usageAmount;
 
             if (_fuelUsageInterval >= _vehicleData.LiterUsageInterval)
             {

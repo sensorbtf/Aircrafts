@@ -65,7 +65,7 @@ MonoBehaviour:
   _thrustForce: 8
   _maxThrustSpeed: 10
   _gravityModifier: 1
-  _maxHeight: 15
+  _maxHeight: 10
   _fallSpeedMultiplier: 5
   _fallDamageThreshold: 5
   _fallDamageMultiplier: 3
@@ -83,9 +83,9 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 588ba857ed7024c49bbb249d19f13807, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -105,7 +105,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 935343325555934533}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 588ba857ed7024c49bbb249d19f13807, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

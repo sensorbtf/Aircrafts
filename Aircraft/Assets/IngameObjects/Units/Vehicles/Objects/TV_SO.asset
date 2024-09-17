@@ -39,5 +39,6 @@ MonoBehaviour:
   _checkingStateRange: 1
   _type: 2
   _maxFuel: 200
+  _maxSpeed: 10
   _literUsageInterval: 50
   _weapons: []

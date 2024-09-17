@@ -158,18 +158,36 @@ namespace Objects.Vehicles
         {
             var moveHorizontal = Input.GetAxis("Horizontal");
 
-            Rigidbody2D.velocity = new Vector2(moveHorizontal * VehicleData.Speed, Rigidbody2D.velocity.y);
-            HandleFuelUsage();
+            if (moveHorizontal != 0)
+            {
+                float currentVelocityX = Rigidbody2D.velocity.x;
+
+                if (_isGrounded)
+                {
+                    currentVelocityX += moveHorizontal * VehicleData.Speed * Time.deltaTime;
+                }
+                else
+                {
+                    currentVelocityX += moveHorizontal * (VehicleData.Speed / 2) * Time.deltaTime;
+                }
+
+                currentVelocityX = Mathf.Clamp(currentVelocityX, -VehicleData.MaxSpeed, VehicleData.MaxSpeed);
+
+                Rigidbody2D.velocity = new Vector2(currentVelocityX, Rigidbody2D.velocity.y);
+
+                HandleFuelUsage();
+            }
         }
+
 
         private void CheckGrounded()
         {
             float leftRightRayDistance = 1f;
             float centerRayDistance = 0.6f;
 
-            Vector2 downLeft = new Vector2(-1.4f, -1).normalized; 
+            Vector2 downLeft = new Vector2(-1.4f, -1).normalized;
             Vector2 down = Vector2.down;
-            Vector2 downRight = new Vector2(1.4f, -1).normalized; 
+            Vector2 downRight = new Vector2(1.4f, -1).normalized;
 
             RaycastHit2D leftHit = Physics2D.Raycast(transform.position, downLeft, leftRightRayDistance, LayerManager.GroundLayer);
             RaycastHit2D centerHit = Physics2D.Raycast(transform.position, down, centerRayDistance, LayerManager.GroundLayer);
@@ -339,12 +357,24 @@ namespace Objects.Vehicles
             OnFireShot?.Invoke();
         }
 
-        private void ApplyRecoil(Vector2 projectileVelocity)
+        private void ApplyRecoil(Vector2 p_projectileVelocity)
         {
-            Vector2 recoilDirection = -projectileVelocity.normalized;
+            Vector2 recoilDirection = -new Vector2(p_projectileVelocity.normalized.x, 0);
+
             float recoilForce = _currentWeapon.Data.RecoilForce;
-            Rigidbody2D.AddForce(recoilDirection * recoilForce, ForceMode2D.Impulse);
+
+            if (_isGrounded)
+            {
+                Rigidbody2D.AddForce(recoilDirection * (recoilForce / 2), ForceMode2D.Impulse);
+            }
+            else
+            {
+                Rigidbody2D.AddForce(recoilDirection * recoilForce, ForceMode2D.Impulse);
+            }
+
+            Debug.Log("Recoil applied: " + recoilDirection * recoilForce);
         }
+
 
         private void Jump()
         {
@@ -353,6 +383,7 @@ namespace Objects.Vehicles
                 Rigidbody2D.velocity = new Vector2(Rigidbody2D.velocity.x, _jumpForce);
                 _isGrounded = false;
                 _lastFallSpeed = 0;
+                HandleFuelUsage(5);
             }
         }
 
@@ -360,10 +391,13 @@ namespace Objects.Vehicles
         {
             if (!_isGrounded && Input.GetKey(KeyCode.W) && transform.position.y < _maxHeight)
             {
+                float heightRatio = transform.position.y / _maxHeight;
+                float scaledThrustForce = Mathf.Lerp(_thrustForce, 0, heightRatio);
+
                 if (Rigidbody2D.velocity.y < _maxThrustSpeed)
                 {
-                    Rigidbody2D.AddForce(Vector2.up * _thrustForce, ForceMode2D.Force);
-                    HandleFuelUsage();
+                    Rigidbody2D.AddForce(Vector2.up * scaledThrustForce, ForceMode2D.Force);
+                    HandleFuelUsage(2);
                 }
             }
         }
@@ -385,7 +419,7 @@ namespace Objects.Vehicles
             if (_isGrounded)
             {
                 if (p_collision.gameObject.layer == LayerManager.GroundLayerIndex)
-                { 
+                {
                     _lastFallSpeed = 0;
                 }
             }
@@ -427,9 +461,9 @@ namespace Objects.Vehicles
 
             Gizmos.color = Color.green;
 
-            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(downLeft * leftRightRayDistance));  
-            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(down * centerRayDistance));         
-            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(downRight * leftRightRayDistance)); 
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(downLeft * leftRightRayDistance));
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(down * centerRayDistance));
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(downRight * leftRightRayDistance));
         }
     }
 }
