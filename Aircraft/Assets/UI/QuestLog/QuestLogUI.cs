@@ -22,14 +22,14 @@ public class QuestLogUI : MonoBehaviour
 
     private void Start()
     {
-        EventsManager.Instance.inputEvents.OnQuestLogTogglePressed += QuestLogTogglePressed;
-        EventsManager.Instance.questEvents.OnQuestStateChange += QuestStateChange;
+        EventsManager.Instance.InputEvents.OnQuestLogTogglePressed += QuestLogTogglePressed;
+        EventsManager.Instance.QuestEvents.OnQuestStateChange += QuestStateChange;
     }
 
     private void OnDisable()
     {
-        EventsManager.Instance.inputEvents.OnQuestLogTogglePressed -= QuestLogTogglePressed;
-        EventsManager.Instance.questEvents.OnQuestStateChange -= QuestStateChange;
+        EventsManager.Instance.InputEvents.OnQuestLogTogglePressed -= QuestLogTogglePressed;
+        EventsManager.Instance.QuestEvents.OnQuestStateChange -= QuestStateChange;
     }
 
     private void QuestLogTogglePressed()
@@ -47,7 +47,7 @@ public class QuestLogUI : MonoBehaviour
     private void ShowUI()
     {
         contentParent.SetActive(true);
-        EventsManager.Instance.playerEvents.DisablePlayerMovement();
+        EventsManager.Instance.PlayerEvents.DisablePlayerMovement();
         // note - this needs to happen after the content parent is set active,
         // or else the onSelectAction won't work as expected
         if (firstSelectedButton != null)
@@ -59,7 +59,7 @@ public class QuestLogUI : MonoBehaviour
     private void HideUI()
     {
         contentParent.SetActive(false);
-        EventsManager.Instance.playerEvents.EnablePlayerMovement();
+        EventsManager.Instance.PlayerEvents.EnablePlayerMovement();
         EventSystem.current.SetSelectedGameObject(null);
     }
 

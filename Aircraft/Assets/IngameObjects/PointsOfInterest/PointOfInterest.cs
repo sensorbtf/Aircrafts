@@ -1,25 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Buildings;
-using Resources;
-using Resources.Scripts;
 using Objects.Vehicles;
+using Resources;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Objects
 {
-    public abstract class PointOfInterest: IngameObject
+    public class PointOfInterest: IngameObject
     {
-        [Header("PointOfInterest")] 
+        [Header("PointOfInterest")]
+        private QuestPoint _quest;
 
         public Action<PointOfInterest, bool> OnPoIClicked;
 
-
-        public override void OnPointerClick(PointerEventData p_eventData)
+        internal void OnEnable()
         {
+            Initialize();
+            CanvasInfo.HealthBar.gameObject.SetActive(false);
+            _quest = GetComponent<QuestPoint>();
+        }
 
+        public override void CheckState()
+        {
+            if (_quest != null && _quest.CurrentQuestState == QuestState.CAN_START)
+                SetNewStateTexts(Actions.AcceptQuest);
+            else
+                ResetStateText(Actions.AcceptQuest);
+        }
+
+        public override void MakeAction(Actions p_actionType, IngameObject p_requester, IngameObject p_receiver)
+        {
+            switch (p_actionType)
+            {
+                case Actions.AcceptQuest:
+                    if (p_requester is Vehicle collector)
+                    {
+                        _quest.SubmitPressed();
+                    }
+                    break;
+            }
         }
     }
 }

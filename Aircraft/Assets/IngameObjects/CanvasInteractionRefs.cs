@@ -16,5 +16,5 @@ public class CanvasInteractionRefs : MonoBehaviour
 public enum Actions
 {
     Noone, Refill, Arm, Repair, Collect,
-    Deposit
+    Deposit, AcceptQuest
 }

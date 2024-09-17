@@ -7,6 +7,7 @@ public static class LayerManager
     public static LayerMask ItemsLayer { get; private set; }
     public static LayerMask EnemyLayer { get; private set; } 
     public static LayerMask GroundLayer { get; private set; }
+    public static LayerMask PointOfInterest { get; private set; }
 
     static LayerManager()
     {
@@ -14,6 +15,7 @@ public static class LayerManager
         BuildingLayer = LayerMask.GetMask("Buildings");
         EnemyLayer = LayerMask.GetMask("Enemies"); 
         GroundLayer = LayerMask.GetMask("Ground");
-        ItemsLayer = LayerMask.GetMask("Items"); 
+        ItemsLayer = LayerMask.GetMask("Items");
+        PointOfInterest = LayerMask.GetMask("PoI"); 
     }
 }

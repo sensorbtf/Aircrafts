@@ -5,14 +5,14 @@ using Vehicles;
 
 namespace Enemies
 {
-    public class EnemyBase : Enemy
+    public class EnemyBase: Enemy
     {
         [SerializeField] private EnemySO[] _enemiesToSpawn;
         [SerializeField] private float _spawnCooldown; 
 
         private float _currentSpawnCooldown; 
 
-        public Action<EnemySO> OnEnemySpawn;
+        public Action<EnemySO, Transform> OnEnemySpawn;
 
         public override void HandleSpecialAction()
         {
@@ -25,7 +25,7 @@ namespace Enemies
             {
                 foreach (var enemyData in _enemiesToSpawn)
                 {
-                    OnEnemySpawn?.Invoke(enemyData);
+                    OnEnemySpawn?.Invoke(enemyData, gameObject.transform);
                 }
 
                 _currentSpawnCooldown = _spawnCooldown;

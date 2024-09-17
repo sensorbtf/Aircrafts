@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using Buildings;
 using Enemies;
+using Resources.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -114,6 +116,19 @@ namespace Objects.Vehicles
             if (_isInBase)
                 return;
 
+            var nearbyUnits = GetNearbyObjects(new[] { LayerManager.PointOfInterest }, UnitData.CheckingStateRange);
+
+            foreach (var ingameObject in nearbyUnits)
+            {
+                if (ingameObject == null || ingameObject == this)
+                    continue;
+
+                if (ingameObject is PointOfInterest poi)
+                {
+                    poi.TryToActivateStateButtons(Actions.AcceptQuest, this);
+                }
+            }
+
             if (CurrentFuel < VehicleData.MaxFuel)
             {
                 SetNewStateTexts(Actions.Refill);
@@ -130,18 +145,6 @@ namespace Objects.Vehicles
             else
             {
                 ResetStateText(Actions.Repair);
-            }
-
-            if (this is CombatVehicle combat)
-            {
-                if (combat.Weapons.Any(x=>x.CurrentAmmo < x.Data.MaxAmmo))
-                {
-                    combat.SetNewStateTexts(Actions.Arm);
-                }
-                else
-                {
-                    combat.ResetStateText(Actions.Arm);
-                }
             }
         }
 

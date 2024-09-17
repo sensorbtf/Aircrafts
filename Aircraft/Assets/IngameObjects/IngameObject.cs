@@ -90,6 +90,9 @@ namespace Objects
 
         public void TryToActivateStateButtons(Actions p_actionType, IngameObject p_giver)
         {
+            if (!p_giver.IsSelected)
+                return;
+
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
                 if (CanvasInfo.StateInfo[i].Action == p_actionType)
@@ -101,8 +104,19 @@ namespace Objects
             }
         }
 
-        public void TryToActivateStateButtons(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver)
+        public void TryToActivateStateButtons(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver, bool p_checkReciever)
         {
+            if (p_checkReciever)
+            {
+                if (!p_receiver.IsSelected)
+                    return;
+            }
+            else
+            {
+                if (!p_giver.IsSelected)
+                    return;
+            }
+
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
                 if (CanvasInfo.StateInfo[i].Action == p_actionType)
@@ -163,7 +177,7 @@ namespace Objects
 
             for (int i = _unitsInRange.Count - 1; i >= 0; i--)
             {
-                if (!nearbyUnits.Contains(_unitsInRange[i]))
+                if (!nearbyUnits.Contains(_unitsInRange[i]) && (combinedLayerMask == (combinedLayerMask | (1 << _unitsInRange[i].gameObject.layer))))
                 {
                     _unitsInRange[i].ResetStateButtons();
                     _unitsInRange.RemoveAt(i);
@@ -256,11 +270,11 @@ namespace Objects
                 CanvasInfo.StateInfo[i].TextInfo.text = "";
             }
         }
+        public virtual void OnPointerClick(PointerEventData p_eventData) { }
 
         #endregion
 
         public abstract void CheckState();
-        public abstract void OnPointerClick(PointerEventData p_eventData);
         public abstract void MakeAction(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver);
     }
 }

@@ -13,7 +13,6 @@ namespace Objects
 {
     public class UnitsManager: MonoBehaviour
     {
-        [SerializeField] private Transform _enemySpawnPoint;
         [SerializeField] private EnemyDatabase _enemyDatabase;
         [SerializeField] private BuildingsDatabase _buildingsDatabase;
         [SerializeField] private VehiclesDatabase _vehiclesDatabase;
@@ -225,10 +224,10 @@ namespace Objects
             }
         }
 
-        private void SpawnEnemy(EnemySO p_enemy)
+        private void SpawnEnemy(EnemySO p_enemy, Transform p_trans)
         {
             var newEnemy = Instantiate(p_enemy.Prefab, gameObject.transform);
-            newEnemy.transform.position = _enemySpawnPoint.localPosition;
+            newEnemy.transform.position = p_trans.position;
 
             switch (p_enemy.Type)
             {

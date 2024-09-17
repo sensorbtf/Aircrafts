@@ -39,7 +39,7 @@ namespace Resources
                 resInUnit.CurrentAmount = resInUnit.MaxAmount;
             }
 
-            EventsManager.Instance.miscEvents.ResourceCollected(resInUnit);
+            EventsManager.Instance.MiscEvents.ResourceCollected(resInUnit);
 
             OnResourceValueChanged?.Invoke(resInUnit);
         }

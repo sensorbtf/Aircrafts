@@ -5,11 +5,11 @@ public class EventsManager : MonoBehaviour
 {
     public static EventsManager Instance { get; private set; }
 
-    public InputEvents inputEvents;
-    public PlayerEvents playerEvents;
-    public GoldEvents goldEvents;
-    public MiscEvents miscEvents;
-    public QuestEvents questEvents;
+    public InputEvents InputEvents;
+    public PlayerEvents PlayerEvents;
+    public GoldEvents GoldEvents;
+    public MiscEvents MiscEvents;
+    public QuestEvents QuestEvents;
 
     private void Awake()
     {
@@ -20,23 +20,18 @@ public class EventsManager : MonoBehaviour
         Instance = this;
 
         // initialize all events
-        inputEvents = new InputEvents();
-        playerEvents = new PlayerEvents();
-        goldEvents = new GoldEvents();
-        miscEvents = new MiscEvents();
-        questEvents = new QuestEvents();
+        InputEvents = new InputEvents();
+        PlayerEvents = new PlayerEvents();
+        GoldEvents = new GoldEvents();
+        MiscEvents = new MiscEvents();
+        QuestEvents = new QuestEvents();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            inputEvents.QuestLogTogglePressed();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            inputEvents.SubmitPressed();
+            InputEvents.QuestLogTogglePressed();
         }
     }
 }

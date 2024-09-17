@@ -11,12 +11,12 @@ public class CollectJunkQuest : QuestStep
 
     private void OnEnable()
     {
-        EventsManager.Instance.miscEvents.OnResourceCollected += CollectJunk;
+        EventsManager.Instance.MiscEvents.OnResourceCollected += CollectJunk;
     }
 
     private void OnDisable()
     {
-        EventsManager.Instance.miscEvents.OnResourceCollected -= CollectJunk;
+        EventsManager.Instance.MiscEvents.OnResourceCollected -= CollectJunk;
     }
 
     private void CollectJunk(ResourceInUnit p_res)

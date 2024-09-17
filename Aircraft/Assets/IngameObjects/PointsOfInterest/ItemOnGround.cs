@@ -23,11 +23,6 @@ namespace Objects
             CanvasInfo.HealthBar.gameObject.SetActive(false);
         }
 
-        public override void OnPointerClick(PointerEventData p_eventData)
-        {
-
-        }
-
         public override void CheckState()
         {
             SetNewStateTexts(Actions.Collect);

@@ -10,21 +10,20 @@ namespace Objects.Vehicles
 
         public override void SelectedUpdate()
         {
-            HandleNearestUnits();
-            
             if (Input.GetKeyDown(KeyCode.R))
             {
                 HandleRefuel();
             }
         }
 
-        private void HandleNearestUnits()
+        public override void CheckState()
         {
-            var nearbyUnits = GetNearbyObjects(new []{LayerManager.VehicleLayer, LayerManager.BuildingLayer, LayerManager.ItemsLayer}, UnitData.CheckingStateRange);
-            
+            var layersToCheck = new[] { LayerManager.VehicleLayer, LayerManager.BuildingLayer, LayerManager.ItemsLayer };
+            var nearbyUnits = GetNearbyObjects(layersToCheck, UnitData.CheckingStateRange);
+
             foreach (var ingameObject in nearbyUnits)
             {
-                if (ingameObject == null || ingameObject == this) 
+                if (ingameObject == null || ingameObject == this)
                     continue;
 
                 if (ingameObject is Vehicle vehicle)
@@ -33,7 +32,7 @@ namespace Objects.Vehicles
                     {
                         vehicle.TryToActivateStateButtons(Actions.Refill, this);
                     }
-                    
+
                     if (ingameObject is CombatVehicle combat)
                     {
                         foreach (var weapon in combat.Weapons)
@@ -49,19 +48,21 @@ namespace Objects.Vehicles
                 {
                     if (building is ProductionBuilding prodBuilding)
                     {
-                        prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this);
+                        prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this, true);
                     }
                     else if (building is BaseBuilding baseBuilding)
                     {
                         baseBuilding.SetNewStateTexts(Actions.Deposit);
-                        baseBuilding.TryToActivateStateButtons(Actions.Deposit, this, baseBuilding);
+                        baseBuilding.TryToActivateStateButtons(Actions.Deposit, this, baseBuilding, false);
                     }
                 }
                 else if (ingameObject is ItemOnGround item)
                 {
-                    item.TryToActivateStateButtons(Actions.Collect, item, this);
+                    item.TryToActivateStateButtons(Actions.Collect, item, this, true);
                 }
             }
+
+            base.CheckState();
         }
 
         private void HandleRefuel()

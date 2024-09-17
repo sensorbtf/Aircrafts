@@ -101,6 +101,20 @@ namespace Objects.Vehicles
             }
         }
 
+        public override void CheckState()
+        {
+            base.CheckState();
+
+            if (Weapons.Any(x => x.CurrentAmmo < x.Data.MaxAmmo))
+            {
+                SetNewStateTexts(Actions.Arm);
+            }
+            else
+            {
+                ResetStateText(Actions.Arm);
+            }
+        }
+
         public override void SelectObject()
         {
             base.SelectObject();
