@@ -44,6 +44,10 @@ namespace Enemies
             CurrentHp -= p_damage;
             CanvasInfo.HealthBar.value = CurrentHp;
 
+            float pushbackForce = p_damage;
+            Rigidbody2D.AddForce(new Vector2(pushbackForce, 0f), ForceMode2D.Impulse);
+
+
             if (CurrentHp <= 0)
             {
                 OnUnitDied?.Invoke(this);

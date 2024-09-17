@@ -13,7 +13,7 @@ namespace Objects
     public abstract class IngameObject: MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private SpriteRenderer _unitRenderer; // array will be needed
-        [SerializeField] private Collider2D _unitCollider;
+        [SerializeField] private BoxCollider2D _unitCollider;
         private InventoryController _inventory;
         public InfoCanvasRefs CanvasInfo;
 
@@ -22,7 +22,7 @@ namespace Objects
 
         public bool IsSelected => _isSelected;
         public SpriteRenderer ObjectRenderer => _unitRenderer;
-        public Collider2D ObjectCollider => _unitCollider;
+        public BoxCollider2D ObjectCollider => _unitCollider;
         public InventoryController Inventory => _inventory;
 
         public void Initialize()

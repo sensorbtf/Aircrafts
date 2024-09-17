@@ -34,7 +34,7 @@ MonoBehaviour:
     ProjectileSpeed: 30
     MinFireAngle: -10
     MaxFireAngle: 40
-    RecoilForce: 50
+    RecoilForce: 5
   - Type: 0
     AmmoType: 3
     Icon: {fileID: 21300000, guid: 4834d4b9d4192d24d941fdb032e869b4, type: 3}

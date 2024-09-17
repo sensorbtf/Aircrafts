@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Enemies;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,28 +9,43 @@ namespace Objects.Vehicles
 {
     public class CombatVehicle : Vehicle
     {
-        [Header("Combat Vehicle")] 
-
+        [Header("Combat Vehicle")]
         [SerializeField] private Transform _rightfirePoint;
         [SerializeField] private Transform _leftfirePoint;
         [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private LineRenderer _lineRenderer;
         [SerializeField] private int _lineRendererResolution = 100;
 
+        [Header("Movement Settings")]
+        [SerializeField] private float _jumpForce = 5f;
+        [SerializeField] private float _dashSpeed = 10f;
+        [SerializeField] private float _dashDuration = 0.2f;
+        [SerializeField] private GameObject _engineSprite;
+
+        [SerializeField] private float _thrustForce = 3f;
+        [SerializeField] private float _maxThrustSpeed = 10f;
+        [SerializeField] private float _gravityModifier = 1f;
+        [SerializeField] private float _maxHeight = 18f;
+
+        [SerializeField] private float _fallSpeedMultiplier = 2f;
+        [SerializeField] private float _fallDamageThreshold = 15f;
+        [SerializeField] private float _fallDamageMultiplier = 10f;
+
         private Weapon _currentWeapon;
         private List<Weapon> _weapons;
         private Camera _mainCamera;
         private Transform _currentFirePoint;
-
-        // TODO: Mechanika paliwa i refuellingu (pojazdy lub baza)
-        // TODO: Narrator, PoI oraz misje
+        private bool _isGrounded;
+        private bool _canJump;
+        private float _dashTime;
+        private float _lastFallSpeed = 0;
 
         public Weapon CurrentWeapon => _currentWeapon;
         public List<Weapon> Weapons => _weapons;
 
         internal Action OnFireShot;
         internal Action OnWeaponSwitch;
-        
+
         public override void Initialize(VehicleSO p_vehicleData)
         {
             _mainCamera = Camera.main;
@@ -47,7 +63,7 @@ namespace Objects.Vehicles
         public override void Update()
         {
             base.Update();
-            
+
             foreach (var weapon in _weapons)
             {
                 if (weapon.CurrentTimer < weapon.Data.FireRate && weapon.CurrentAmmo > 0)
@@ -55,38 +71,47 @@ namespace Objects.Vehicles
                     weapon.CurrentTimer += Time.deltaTime;
                 }
             }
+
+            RotateEngineSprite();
         }
 
         public override void SelectedFixedUpdate()
         {
             base.Update();
-            
+
             if (CurrentFuel <= 0)
                 return;
-            
-            var moveHorizontal = Input.GetAxis("Horizontal");
-            var direction = Vector2.zero;
 
-            if (moveHorizontal != 0)
+            CheckGrounded();
+
+            if (Input.GetKey(KeyCode.W))
             {
-                direction = moveHorizontal > 0 ? Vector2.right : Vector2.left;
+                Jump();
+                ApplyThrust();
             }
 
-            if (direction != Vector2.zero)
+            if (Input.GetKey(KeyCode.S) && !_isGrounded)
             {
-                var newPosition = (Vector2)transform.position + direction * VehicleData.Speed * Time.deltaTime;
-                Rigidbody2D.MovePosition(newPosition);
-                HandleFuelUsage();
+                Rigidbody2D.AddForce(Vector2.down * _fallSpeedMultiplier, ForceMode2D.Force);
             }
+
+            HandleMovement();
 
             HandleTurretRotationAndFirePoint();
             DrawTrajectory(_currentFirePoint.localPosition, Time.fixedDeltaTime);
+
+            if (_isGrounded && Rigidbody2D.velocity.y <= -_fallDamageThreshold)
+            {
+                ApplyFallDamage();
+            }
+
+            CorrectRotation();
         }
 
         public override void SelectedUpdate()
         {
             base.SelectedUpdate();
-            
+
             if (Input.GetKey(KeyCode.Space))
             {
                 if (_currentWeapon.CurrentTimer >= _currentWeapon.Data.FireRate)
@@ -129,7 +154,36 @@ namespace Objects.Vehicles
             _lineRenderer.enabled = false;
         }
 
-        private void HandleTurretRotationAndFirePoint() // tutaj dostosowywać kąt działa
+        private void HandleMovement()
+        {
+            var moveHorizontal = Input.GetAxis("Horizontal");
+
+            Rigidbody2D.velocity = new Vector2(moveHorizontal * VehicleData.Speed, Rigidbody2D.velocity.y);
+            HandleFuelUsage();
+        }
+
+        private void CheckGrounded()
+        {
+            float leftRightRayDistance = 1f;
+            float centerRayDistance = 0.6f;
+
+            Vector2 downLeft = new Vector2(-1.4f, -1).normalized; 
+            Vector2 down = Vector2.down;
+            Vector2 downRight = new Vector2(1.4f, -1).normalized; 
+
+            RaycastHit2D leftHit = Physics2D.Raycast(transform.position, downLeft, leftRightRayDistance, LayerManager.GroundLayer);
+            RaycastHit2D centerHit = Physics2D.Raycast(transform.position, down, centerRayDistance, LayerManager.GroundLayer);
+            RaycastHit2D rightHit = Physics2D.Raycast(transform.position, downRight, leftRightRayDistance, LayerManager.GroundLayer);
+
+            RaycastHit2D leftHit2 = Physics2D.Raycast(transform.position, downLeft, leftRightRayDistance, LayerManager.EnemyLayer);
+            RaycastHit2D centerHit2 = Physics2D.Raycast(transform.position, down, centerRayDistance, LayerManager.EnemyLayer);
+            RaycastHit2D rightHit2 = Physics2D.Raycast(transform.position, downRight, leftRightRayDistance, LayerManager.EnemyLayer);
+
+            _isGrounded = (leftHit.collider != null || centerHit.collider != null || rightHit.collider != null ||
+                           leftHit2.collider != null || centerHit2.collider != null || rightHit2.collider != null);
+        }
+
+        private void HandleTurretRotationAndFirePoint()
         {
             var mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0;
@@ -233,6 +287,42 @@ namespace Objects.Vehicles
             return direction * _currentWeapon.Data.ProjectileSpeed;
         }
 
+        private void RotateEngineSprite()
+        {
+            Vector2 movementDirection = Rigidbody2D.velocity.normalized;
+
+            float targetAngle;
+
+            if (movementDirection.x == 1 && movementDirection.y != 0)
+            {
+                targetAngle = -90;
+            }
+            else if (movementDirection.x == -1 && movementDirection.y != 0)
+            {
+                targetAngle = 90;
+            }
+            else if (movementDirection.y == 1 || movementDirection.y == -1)
+            {
+                targetAngle = 0;
+            }
+            else
+            {
+                float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
+
+                if (movementDirection.x < 0)
+                {
+                    targetAngle = Mathf.Clamp(angle + 180f, -90f, 90f);
+                }
+                else
+                {
+                    targetAngle = Mathf.Clamp(angle, -90f, 90f);
+                }
+            }
+
+            Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+            _engineSprite.transform.rotation = Quaternion.Lerp(_engineSprite.transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
+
         private void FireProjectile()
         {
             if (_currentWeapon.CurrentAmmo <= 0)
@@ -252,8 +342,94 @@ namespace Objects.Vehicles
         private void ApplyRecoil(Vector2 projectileVelocity)
         {
             Vector2 recoilDirection = -projectileVelocity.normalized;
-            float recoilForce = _currentWeapon.Data.RecoilForce; 
+            float recoilForce = _currentWeapon.Data.RecoilForce;
             Rigidbody2D.AddForce(recoilDirection * recoilForce, ForceMode2D.Impulse);
+        }
+
+        private void Jump()
+        {
+            if (_isGrounded)
+            {
+                Rigidbody2D.velocity = new Vector2(Rigidbody2D.velocity.x, _jumpForce);
+                _isGrounded = false;
+                _lastFallSpeed = 0;
+            }
+        }
+
+        private void ApplyThrust()
+        {
+            if (!_isGrounded && Input.GetKey(KeyCode.W) && transform.position.y < _maxHeight)
+            {
+                if (Rigidbody2D.velocity.y < _maxThrustSpeed)
+                {
+                    Rigidbody2D.AddForce(Vector2.up * _thrustForce, ForceMode2D.Force);
+                    HandleFuelUsage();
+                }
+            }
+        }
+
+        private void ApplyFallDamage()
+        {
+            _lastFallSpeed = Mathf.Abs(Rigidbody2D.velocity.y);
+
+            if (_lastFallSpeed >= _fallDamageThreshold)
+            {
+                int damage = Mathf.CeilToInt((_lastFallSpeed - _fallDamageThreshold) * _fallDamageMultiplier);
+                ReceiveDamage(damage);
+                Rigidbody2D.velocity = new Vector2(Rigidbody2D.velocity.x, 0);
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D p_collision)
+        {
+            if (_isGrounded)
+            {
+                if (p_collision.gameObject.layer == LayerManager.GroundLayerIndex)
+                { 
+                    _lastFallSpeed = 0;
+                }
+            }
+
+            if (_lastFallSpeed >= _fallDamageThreshold)
+            {
+                if (p_collision.gameObject.layer == LayerManager.EnemyLayerIndex)
+                {
+                    Enemy enemy = p_collision.gameObject.GetComponent<Enemy>();
+                    if (enemy != null)
+                    {
+                        enemy.ReceiveDamage((int)_lastFallSpeed);
+                    }
+
+                    _lastFallSpeed = 0;
+                }
+            }
+        }
+
+        private void CorrectRotation()
+        {
+            float currentZRotation = transform.eulerAngles.z;
+
+            if (currentZRotation > 180)
+                currentZRotation -= 360;
+
+            float correctionTorque = -currentZRotation * 0.5f;
+            Rigidbody2D.AddTorque(correctionTorque);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Vector2 downLeft = new Vector2(-1.4f, -1).normalized;
+            Vector2 down = Vector2.down;
+            Vector2 downRight = new Vector2(1.4f, -1).normalized;
+
+            float leftRightRayDistance = 1f;
+            float centerRayDistance = 0.6f;
+
+            Gizmos.color = Color.green;
+
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(downLeft * leftRightRayDistance));  
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(down * centerRayDistance));         
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3)(downRight * leftRightRayDistance)); 
         }
     }
 }
