@@ -45,4 +45,4 @@ MonoBehaviour:
     ProjectileSpeed: 30
     MinFireAngle: -10
     MaxFireAngle: 40
-    RecoilForce: 1
+    RecoilForce: 0.2

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 962a2774b1c945a89f76bb390583d93e, type: 3}
+  m_Name: FlyingEnemySO
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 3931662045494198967, guid: 2a78620edd4c2144c96e2a3c05f7de90, type: 3}
+  _icon: {fileID: 21300000, guid: 61a80dfc09f84d948b78d3983c37e6ad, type: 3}
+  _resources:
+  - Data: {fileID: 11400000, guid: e9f3b21a12520f644b7e708385612d11, type: 2}
+    CurrentAmount: 0
+    MaxAmount: 2
+    IsGlobalInventory: 0
+  _maxHp: 10
+  _speed: 5
+  _attackRange: 1
+  _attackCooldown: 1
+  _attackDamage: 1
+  _checkingStateRange: 0
+  _type: 2

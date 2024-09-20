@@ -347,7 +347,7 @@ namespace Objects.Vehicles
                 return;
 
             var projectile = Instantiate(_projectilePrefab, _currentFirePoint.position, Quaternion.identity);
-            projectile.GetComponent<Projectile>().Initialize(GetInitialVelocity(), _currentWeapon.Data.Damage);
+            projectile.GetComponent<Projectile>().Initialize(GetInitialVelocity(), _currentWeapon.Data.Damage, false);
 
             ApplyRecoil(GetInitialVelocity());
 

@@ -9,6 +9,8 @@ namespace Enemies
     {
         [SerializeField] private EnemySO[] _enemiesToSpawn;
         [SerializeField] private float _spawnCooldown; 
+        [SerializeField] private Transform _groundSpawner; 
+        [SerializeField] private Transform _flyingSpawner; 
 
         private float _currentSpawnCooldown; 
 
@@ -25,7 +27,14 @@ namespace Enemies
             {
                 foreach (var enemyData in _enemiesToSpawn)
                 {
-                    OnEnemySpawn?.Invoke(enemyData, gameObject.transform);
+                    if (enemyData.Type == EnemyType.GroundMelee)
+                    {
+                        OnEnemySpawn?.Invoke(enemyData, _groundSpawner);
+                    }
+                    else if (enemyData.Type == EnemyType.Flying)
+                    {
+                        OnEnemySpawn?.Invoke(enemyData, _flyingSpawner);
+                    }
                 }
 
                 _currentSpawnCooldown = _spawnCooldown;

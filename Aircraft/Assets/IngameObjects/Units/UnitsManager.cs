@@ -231,9 +231,13 @@ namespace Objects
 
             switch (p_enemy.Type)
             {
-                case EnemyType.GroundMelee:
+                case EnemyType.GroundMelee: 
                     AllEnemies.Add(newEnemy.GetComponent<GroundEnemy>());
                     newEnemy.GetComponent<GroundEnemy>().Initialize(p_enemy);
+                    break;
+                case EnemyType.Flying:
+                    AllEnemies.Add(newEnemy.GetComponent<FlyingEnemy>());
+                    newEnemy.GetComponent<FlyingEnemy>().Initialize(p_enemy);
                     break;
                 case EnemyType.Base:
                     break;
@@ -271,7 +275,6 @@ namespace Objects
                 if (enemy is EnemyBase baseOfEnemies)
                 {
                     baseOfEnemies.OnEnemySpawn -= SpawnEnemy;
-
                 }
 
                 enemy.DestroyHandler();
