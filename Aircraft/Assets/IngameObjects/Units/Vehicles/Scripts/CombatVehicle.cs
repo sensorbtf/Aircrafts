@@ -98,7 +98,7 @@ namespace Objects.Vehicles
             HandleMovement();
 
             HandleTurretRotationAndFirePoint();
-            DrawTrajectory(_currentFirePoint.localPosition, Time.fixedDeltaTime);
+            DrawTrajectory(_currentFirePoint.localPosition, Time.fixedDeltaTime, _currentWeapon);
 
             if (_isGrounded && Rigidbody2D.velocity.y <= -_fallDamageThreshold)
             {
@@ -252,7 +252,7 @@ namespace Objects.Vehicles
             OnWeaponSwitch?.Invoke();
         }
 
-        private void DrawTrajectory(Vector2 p_startPosition, float p_timeStep)
+        private void DrawTrajectory(Vector2 p_startPosition, float p_timeStep, Weapon p_currentWeapon)
         {
             _lineRenderer.positionCount = _lineRendererResolution;
             var positions = new Vector3[_lineRendererResolution];
@@ -261,7 +261,7 @@ namespace Objects.Vehicles
             for (int i = 1; i < positions.Length; i++)
             {
                 var time = i * p_timeStep;
-                positions[i] = p_startPosition + GetInitialVelocity() * time + Physics2D.gravity * (0.5f * time * time);
+                positions[i] = p_startPosition + GetInitialVelocity() * time + Physics2D.gravity * (p_currentWeapon.Data.TrajectoryModifier * time * time);
 
                 Vector2 rayOrigin = transform.TransformPoint(positions[i - 1]);
                 Vector2 rayDirection = positions[i] - positions[i - 1];
@@ -374,7 +374,6 @@ namespace Objects.Vehicles
 
             Debug.Log("Recoil applied: " + recoilDirection * recoilForce);
         }
-
 
         private void Jump()
         {

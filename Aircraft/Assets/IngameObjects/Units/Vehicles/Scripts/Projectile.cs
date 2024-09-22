@@ -9,17 +9,12 @@ public class Projectile : MonoBehaviour
     private int _damage;
     private bool _isFromEnemy;
 
-    private void Start()
-    {
-        _isFromEnemy = false;
-        Destroy(gameObject, _lifeTime); 
-    }
-
     public void Initialize(Vector2 p_initialVelocity, int p_damage, bool p_isFromEnemy)
     {
         _damage = p_damage;
         gameObject.GetComponent<Rigidbody2D>().velocity = p_initialVelocity;
         _isFromEnemy = p_isFromEnemy;
+        Destroy(gameObject, _lifeTime); 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
