@@ -44,7 +44,7 @@ MonoBehaviour:
     FireRate: 0.1
     MaxAmmo: 200
     ProjectileSpeed: 30
-    MinFireAngle: -10
-    MaxFireAngle: 40
+    MinFireAngle: -30
+    MaxFireAngle: 80
     RecoilForce: 0.2
     TrajectoryModifier: 0.18
