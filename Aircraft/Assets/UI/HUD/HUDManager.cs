@@ -222,9 +222,9 @@ namespace UI.HUD
             }
             else if (p_unit is Enemy enemy)
             {
-                _unitsManager.SelectUnit(enemy);
+                //_unitsManager.SelectUnit(enemy);
 
-                _rightDownPanelController.OpenPanel(PanelType.Enemy, enemy);
+                //_rightDownPanelController.OpenPanel(PanelType.Enemy, enemy);
             }
 
             EventSystem.current.SetSelectedGameObject(null);
