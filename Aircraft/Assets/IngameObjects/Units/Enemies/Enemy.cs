@@ -53,6 +53,11 @@ namespace Enemies
             }
         }
         
+        public override void Repair(int p_repaired)
+        {
+            
+        }
+        
         public override void CheckState()
         {
            // for attacking, states such as sleeping?
@@ -65,8 +70,6 @@ namespace Enemies
         
         public override void DestroyHandler()
         {
-            Inventory.CreateItemsOnDestroy(transform);
-
             Destroy(gameObject);
         }
     }

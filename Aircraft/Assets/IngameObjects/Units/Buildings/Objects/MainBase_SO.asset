@@ -23,7 +23,7 @@ MonoBehaviour:
     CurrentAmount: 0
     MaxAmount: 999
     IsGlobalInventory: 0
-  - Data: {fileID: 11400000, guid: 13ac81bfd861af94ba0a634f928fdeda, type: 2}
+  - Data: {fileID: 11400000, guid: e9f3b21a12520f644b7e708385612d11, type: 2}
     CurrentAmount: 0
     MaxAmount: 999
     IsGlobalInventory: 0

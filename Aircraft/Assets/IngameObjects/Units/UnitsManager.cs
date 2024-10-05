@@ -272,6 +272,8 @@ namespace Objects
             }
             else if (p_unit is Enemy enemy)
             {
+                _inventoriesManager.CreateItemsOnDestroy(p_unit);
+                
                 if (enemy is EnemyBase baseOfEnemies)
                 {
                     baseOfEnemies.OnEnemySpawn -= SpawnEnemy;
@@ -294,6 +296,8 @@ namespace Objects
             {
                 Debug.LogError("What have I clicked? " + p_unit);
             }
+
+            _inventoriesManager.TryToDeleteInventory(p_unit);
         }
 
         public BaseBuilding GetMainBase()

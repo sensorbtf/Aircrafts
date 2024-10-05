@@ -5,19 +5,20 @@ using UnityEngine.EventSystems;
 
 namespace Buildings
 {
-    public abstract class Building: Unit
+    public abstract class Building : Unit
     {
         [SerializeField] private BuildingSO _buildingData;
         [SerializeField] private bool _isBroken;
-        
+
         private bool _isFunctioning;
-        
+
         public BuildingSO BuildingData => _buildingData;
         public bool IsBroken => _isBroken;
         public bool IsFunctioning => _isFunctioning;
-        
+
         public virtual void Initialize(BuildingSO p_buildingData)
         {
+            _isBroken = false;
             _buildingData = p_buildingData;
             UnitData = p_buildingData;
             base.Initialize(p_buildingData);
@@ -32,7 +33,7 @@ namespace Buildings
         {
             base.SelectedFixedUpdate();
         }
-        
+
         public override void SelectedUpdate()
         {
             base.SelectedUpdate();
@@ -47,10 +48,25 @@ namespace Buildings
         {
             CurrentHp -= p_damage;
             CanvasInfo.HealthBar.value = CurrentHp;
-            
+
+            if (CurrentHp < _buildingData.MaxHp * 0.5f)
+            {
+                _isBroken = true;
+            }
+
             if (CurrentHp <= 0)
             {
                 OnUnitDied?.Invoke(this);
+            }
+        }
+
+        public override void Repair(int p_repaired)
+        {
+            base.Repair(p_repaired);
+
+            if (CurrentHp >= _buildingData.MaxHp * 0.5f)
+            {
+                _isBroken = true;
             }
         }
 
@@ -64,7 +80,7 @@ namespace Buildings
             {
                 ResetStateText(Actions.Repair);
             }
-            
+
             if (this is ProductionBuilding prod)
             {
                 if (Inventory.GetResourceAmount(prod.OutputProduction.Type) > 0)
@@ -88,12 +104,12 @@ namespace Buildings
             //     }
             // }
         }
-        
+
         public override void AttackTarget(GameObject p_target)
         {
             throw new NotImplementedException();
         }
-        
+
         public override void DestroyHandler()
         {
             Destroy(gameObject);

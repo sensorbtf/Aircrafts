@@ -20,7 +20,7 @@ MonoBehaviour:
   _attackRange: 0
   _attackCooldown: 0
   _attackDamage: 0
-  _checkingStateRange: 3
+  _checkingStateRange: 4
   _type: 1
   _maxFuel: 100
   _maxSpeed: 10

@@ -14,6 +14,7 @@ namespace Objects.Vehicles
         private int _currentFuel;
         private bool _isInBase;
         private int _fuelUsageInterval;
+        private float _repairInBaseInterval;
         private Collider2D _baseArea;
 
         public int CurrentFuel => _currentFuel;
@@ -28,6 +29,7 @@ namespace Objects.Vehicles
             UnitData = p_vehicleData;
             _currentFuel = p_vehicleData.MaxFuel;
             _fuelUsageInterval = 0;
+            _repairInBaseInterval = 0;
             
             base.Initialize(p_vehicleData);
         }
@@ -104,6 +106,12 @@ namespace Objects.Vehicles
             {
                 OnUnitDied?.Invoke(this);
             }
+        }
+
+        public override void Repair(int p_repaired)
+        {
+            CurrentHp += p_repaired;
+            CanvasInfo.HealthBar.value = CurrentHp;
         }
 
         public override void DestroyHandler()
@@ -201,6 +209,20 @@ namespace Objects.Vehicles
         {
             _isInBase = false;
             gameObject.SetActive(true);
+        }
+
+        public void TryToRepairInBase(int p_timeToRepair, float p_percentageRepairAmount)
+        {
+            if (CurrentHp >= _vehicleData.MaxHp)
+                return;
+
+            _repairInBaseInterval += Time.deltaTime;
+
+            if (_repairInBaseInterval >= p_timeToRepair)
+            {
+                Repair((int)(_vehicleData.MaxHp * p_percentageRepairAmount));
+                _repairInBaseInterval = 0;
+            }
         }
     }
 }

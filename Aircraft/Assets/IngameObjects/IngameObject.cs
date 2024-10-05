@@ -25,7 +25,7 @@ namespace Objects
         public BoxCollider2D ObjectCollider => _unitCollider;
         public InventoryController Inventory => _inventory;
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
@@ -104,9 +104,9 @@ namespace Objects
             }
         }
 
-        public void TryToActivateStateButtons(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver, bool p_checkReciever)
+        public void TryToActivateStateButtons(Actions p_actionType, IngameObject p_giver, IngameObject p_receiver, bool p_checkReceiver)
         {
-            if (p_checkReciever)
+            if (p_checkReceiver)
             {
                 if (!p_receiver.IsSelected)
                     return;
@@ -243,7 +243,7 @@ namespace Objects
             }
         }
 
-        protected void ResetStateText(Actions p_previousAction)
+        public void ResetStateText(Actions p_previousAction)
         {
             for (int i = 0; i < CanvasInfo.StateInfo.Length; i++)
             {
@@ -270,7 +270,11 @@ namespace Objects
                 CanvasInfo.StateInfo[i].TextInfo.text = "";
             }
         }
-        public virtual void OnPointerClick(PointerEventData p_eventData) { }
+
+        public virtual void OnPointerClick(PointerEventData p_eventData)
+        {
+            
+        }
 
         #endregion
 
