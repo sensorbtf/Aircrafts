@@ -37,13 +37,7 @@ namespace Resources
             }
             
             _inventories.Add(p_unit, newController);
-            newController.OnItemOnGroundMade += InvokeItemCreation;
             return newController;
-        }
-
-        private void InvokeItemCreation(ItemOnGround p_item)
-        {
-            OnItemOnGroundMade?.Invoke(p_item);
         }
 
         public void TryToDeleteInventory(Unit p_unit)

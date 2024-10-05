@@ -54,6 +54,6 @@ namespace UI.HUD
 
     public enum PanelType
     {
-        Vehicle, Building, Enemy
+        Vehicle, Building, Enemy, Item
     }
 }

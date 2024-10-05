@@ -46,15 +46,22 @@ namespace UI.HUD
         {
             _unitsManager.OnUnitCreated += HandleUnitIconCreation;
             _unitsManager.OnUnitSelected += SelectUnit;
+            _inventoriesManager.OnItemOnGroundMade += ListenToItem;
+        }
+
+        private void ListenToItem(ItemOnGround p_item)
+        {
+            p_item.OnItemClicked += SelectItem;
         }
 
         private void OnDestroy()
         {
             _unitsManager.OnUnitCreated -= HandleUnitIconCreation;
             _unitsManager.OnUnitSelected -= SelectUnit;
+            _inventoriesManager.OnItemOnGroundMade -= ListenToItem;
             _inventoriesManager.MainInventory.OnResourceValueChanged -= RefreshResourcesIcons;
         }
-
+        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Mouse1))
@@ -195,7 +202,15 @@ namespace UI.HUD
                 }  
             }
         }
-
+        
+        private void SelectItem(ItemOnGround p_item)
+        {
+            if (p_item == null)
+                return;
+            
+            _rightDownPanelController.OpenPanel(PanelType.Item, p_item);
+        }
+        
         private void SelectUnit(Unit p_unit)
         {
             if (p_unit == null)

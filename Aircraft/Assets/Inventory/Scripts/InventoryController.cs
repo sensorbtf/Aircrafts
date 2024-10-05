@@ -16,7 +16,6 @@ namespace Resources
         public List<ResourceInUnit> CurrentResources => _currentResources;
 
         public Action<ResourceInUnit> OnResourceValueChanged;
-        public Action<ItemOnGround> OnItemOnGroundMade;
 
         public InventoryController(ResourceInUnit[] p_specificResources, GameObject p_itemOnGround, bool p_isMain)
         {
