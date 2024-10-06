@@ -44,7 +44,7 @@ namespace Resources
             OnResourceValueChanged?.Invoke(resInUnit);
         }
 
-        public void AddResource(ResourceSO p_resource, int p_amount)
+        public ResourceInUnit AddResource(ResourceSO p_resource, int p_amount)
         {
             var so = GetSpecificResource(p_resource.Type);
             so.CurrentAmount += p_amount;
@@ -55,6 +55,8 @@ namespace Resources
             }
 
             OnResourceValueChanged?.Invoke(so);
+
+            return so;
         }
 
         public void RemoveResource(Resource p_resource, int p_amount)

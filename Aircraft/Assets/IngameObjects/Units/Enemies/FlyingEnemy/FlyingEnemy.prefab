@@ -94,9 +94,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5854499227263893862}
   - component: {fileID: 7372997087050897598}
+  - component: {fileID: 6554008527322233394}
   m_Layer: 9
   m_Name: Icon
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -143,6 +144,51 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!61 &6554008527322233394
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1152165672220096103}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -1.46, y: -1.1}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.63, y: 2.59}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 7.42, y: 4.64}
+  m_EdgeRadius: 0
 --- !u!1 &1362506913905696789
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +368,6 @@ GameObject:
   - component: {fileID: 6518522288525271135}
   - component: {fileID: 8190448832810724535}
   - component: {fileID: 7674380276792217758}
-  - component: {fileID: 565873739479492024}
   m_Layer: 9
   m_Name: FlyingEnemy
   m_TagString: Enemy
@@ -361,7 +406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _unitRenderer: {fileID: 0}
-  _unitCollider: {fileID: 565873739479492024}
+  _unitCollider: {fileID: 6554008527322233394}
   CanvasInfo: {fileID: 3830076512131699485}
   _rigidbody2D: {fileID: 7674380276792217758}
   CurrentHp: 0
@@ -370,7 +415,7 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 5379655993277838872, guid: 323ccfc358b70514caf1b765cdd5188a, type: 3}
   _shootingRange: 5
   _maneuverSpeed: 5
-  _targetAltitude: 5
+  _targetAltitude: 3.5
 --- !u!50 &7674380276792217758
 Rigidbody2D:
   serializedVersion: 4
@@ -398,51 +443,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &565873739479492024
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3931662045494198967}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.36, y: -0.19}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.63, y: 2.59}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.56, y: 1.09}
-  m_EdgeRadius: 0
 --- !u!1 &6346888552227167213
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,11 +889,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -0.324
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.14
+      value: 1.34
       objectReference: {fileID: 0}
     - target: {fileID: 5376144248805603678, guid: 56079766273cde4409462447634b3e36, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
