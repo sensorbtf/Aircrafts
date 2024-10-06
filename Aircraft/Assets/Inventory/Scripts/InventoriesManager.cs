@@ -21,7 +21,9 @@ namespace Resources
         public ResourceDatabase ResourceDatabase => _resourcesDatabase;
         public InventoryController MainInventory => _mainInventory;
         
-        public InventoryController  CreateInventory(Unit p_unit) // need change in initial value
+        public Action<ItemOnGround> OnItemOnGroundMade;
+        
+        public InventoryController CreateInventory(Unit p_unit) // need change in initial value
         {
             InventoryController newController;
                 
@@ -36,6 +38,34 @@ namespace Resources
             
             _inventories.Add(p_unit, newController);
             return newController;
+        }
+
+        public void TryToDeleteInventory(Unit p_unit)
+        {
+            _inventories.Remove(p_unit);
+        }
+
+        public void CreateItemsOnDestroy(Unit p_unit)
+        {
+            foreach (var inventory in _inventories)
+            {
+                if (inventory.Key != p_unit) 
+                    continue;
+                
+                foreach (var item in inventory.Value.CurrentResources)
+                {
+                    var itemOnGround = Instantiate(_itemOnGround);
+                    itemOnGround.transform.position = new Vector3(
+                        p_unit.transform.position.x + UnityEngine.Random.Range(-2, 2),
+                        p_unit.transform.position.y, p_unit.transform.position.z);
+
+                    var refs = itemOnGround.GetComponent<ItemOnGround>();
+                    
+                    refs.Initialize(item);
+                    OnItemOnGroundMade?.Invoke(refs);
+                }
+                break;
+            }
         }
     }
     

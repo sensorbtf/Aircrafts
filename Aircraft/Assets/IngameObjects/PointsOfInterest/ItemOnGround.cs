@@ -12,12 +12,17 @@ namespace Objects
     public class ItemOnGround : IngameObject
     {
         private ResourceInUnit _item;
+        
+        public ResourceInUnit Item => _item;
+
+        public event Action<ItemOnGround> OnItemClicked; 
 
         internal void Initialize(ResourceInUnit p_item)
         {
             ObjectRenderer.sprite = p_item.Data.Icon;
 
             _item = p_item;
+            _item.CurrentAmount = p_item.MaxAmount;
 
             Initialize();
             CanvasInfo.HealthBar.gameObject.SetActive(false);
@@ -57,6 +62,11 @@ namespace Objects
             {
                 Destroy(gameObject);
             }
+        }
+
+        public override void OnPointerClick(PointerEventData p_eventData)
+        {
+            OnItemClicked?.Invoke(this);
         }
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Resources
 {
-    public class InventoryController : MonoBehaviour
+    public class InventoryController 
     {
         private GameObject _itemOnGround;
         private List<ResourceInUnit> _currentResources;
@@ -73,6 +73,19 @@ namespace Resources
             OnResourceValueChanged?.Invoke(so);
         }
 
+        public bool HaveAnyResources()
+        {
+            foreach (var resourceInUnit in _currentResources)
+            {
+                if (resourceInUnit.CurrentAmount > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public int GetResourceAmount(Resource p_resource)
         {
             var res = GetSpecificResource(p_resource);
@@ -94,22 +107,6 @@ namespace Resources
         public ResourceInUnit GetSpecificResource(Resource p_resource)
         {
             return _currentResources.FirstOrDefault(x => x.Data.Type == p_resource);
-        }
-
-        internal void CreateItemsOnDestroy(Transform p_transform)
-        {
-            foreach (var item in CurrentResources)
-            {
-                var itemOnGround = Instantiate(_itemOnGround);
-
-                itemOnGround.transform.position = new Vector3(
-                p_transform.position.x + UnityEngine.Random.Range(-2, 2),
-                p_transform.position.y,
-                p_transform.position.z);
-
-                var refs = itemOnGround.GetComponent<ItemOnGround>();
-                refs.Initialize(item);
-            }
         }
     }
 }

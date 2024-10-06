@@ -53,6 +53,7 @@ MonoBehaviour:
   CanvasInfo: {fileID: 1599447531419505522}
   _rigidbody2D: {fileID: 5258709787621168229}
   CurrentHp: 0
+  _repairingPercentage: 0.05
 --- !u!50 &5258709787621168229
 Rigidbody2D:
   serializedVersion: 4

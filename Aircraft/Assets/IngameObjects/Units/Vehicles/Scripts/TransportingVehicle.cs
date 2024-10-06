@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Objects.Vehicles
 {
-    public class TransportingVehicle: Vehicle
+    public class TransportingVehicle : Vehicle
     {
         [SerializeField] private int _refuelAmount;
 
@@ -18,7 +18,8 @@ namespace Objects.Vehicles
 
         public override void CheckState()
         {
-            var layersToCheck = new[] { LayerManager.VehicleLayer, LayerManager.BuildingLayer, LayerManager.ItemsLayer };
+            var layersToCheck = new[]
+                { LayerManager.VehicleLayer, LayerManager.BuildingLayer, LayerManager.ItemsLayer };
             var nearbyUnits = GetNearbyObjects(layersToCheck, UnitData.CheckingStateRange);
 
             foreach (var ingameObject in nearbyUnits)
@@ -46,14 +47,22 @@ namespace Objects.Vehicles
                 }
                 else if (ingameObject is Building building)
                 {
-                    if (building is ProductionBuilding prodBuilding)
+                    if (building is ProductionBuilding
+                        prodBuilding) //TODO: change it to make it possible to get from production site
                     {
                         prodBuilding.TryToActivateStateButtons(Actions.Collect, prodBuilding, this, true);
                     }
                     else if (building is BaseBuilding baseBuilding)
                     {
-                        baseBuilding.SetNewStateTexts(Actions.Deposit);
-                        baseBuilding.TryToActivateStateButtons(Actions.Deposit, this, baseBuilding, false);
+                        if (!Inventory.HaveAnyResources())
+                        {
+                            baseBuilding.ResetStateText(Actions.Deposit);
+                        }
+                        else
+                        {
+                            baseBuilding.SetNewStateTexts(Actions.Deposit);
+                            baseBuilding.TryToActivateStateButtons(Actions.Deposit, this, baseBuilding, false);
+                        }
                     }
                 }
                 else if (ingameObject is ItemOnGround item)

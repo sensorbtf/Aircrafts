@@ -92,6 +92,10 @@ namespace Objects
 
                     break;
                 case Actions.Repair:
+                    if (p_receiver is Unit toRepair && p_giver is GPUVehicle repairer)
+                    {
+                        toRepair.Repair((int)(toRepair.UnitData.MaxHp * repairer.RepairingPercentage));
+                    }
                     break;
 
                 case Actions.Collect:
@@ -118,10 +122,33 @@ namespace Objects
                     break;
 
                 case Actions.Deposit:
-                    Debug.Log("trying to depo" + p_receiver + "gover:" + p_giver);
-                    //przemyśleć depositing i collection z transporting vehicles i jak czołgi można dozbrajać
+                    Debug.Log("trying to depo to" + p_receiver + "from:" + p_giver);
+
+                    foreach (var resources in p_giver.Inventory.CurrentResources)
+                    {
+                        var resourceInTV = p_giver.Inventory.GetResourceAmount(resources.Data.Type);
+                        var spaceLeft = p_receiver.Inventory.GetFreeSpace(resources.Data.Type);
+
+                        if (resourceInTV >= spaceLeft)
+                        {
+                            p_giver.Inventory.RemoveResource(resources.Data.Type, spaceLeft);
+                            p_receiver.Inventory.AddResource(resources.Data.Type, spaceLeft);
+                        }
+                        else
+                        {
+                            p_giver.Inventory.RemoveResource(resources.Data.Type, resourceInTV);
+                            p_receiver.Inventory.AddResource(resources.Data.Type, resourceInTV);
+                        }
+                    }
+                    
                     break;
             }
+        }
+        
+        public virtual void Repair(int p_repaired)
+        {
+            CurrentHp += p_repaired;
+            CanvasInfo.HealthBar.value = CurrentHp;
         }
 
         #region Abstracs
