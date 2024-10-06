@@ -7,11 +7,11 @@ namespace Resources.Scripts
     public class ResourceSO: ScriptableObject
     {
         [SerializeField] private Sprite _icon;
-        [SerializeField] private Resource type;
+        [FormerlySerializedAs("type")] [SerializeField] private Resource _type;
         [SerializeField] private int _initialValue;
         
         public Sprite Icon => _icon;
-        public Resource Type => type;
+        public Resource Type => _type;
         public int InitialValue => _initialValue;
     }
 

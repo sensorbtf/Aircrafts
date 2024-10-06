@@ -1,6 +1,6 @@
 using System;
 
-public class GoldEvents
+public class EnergyEvents
 {
     public event Action<int> OnGoldGained;
     public event Action<int> OnGoldChange;

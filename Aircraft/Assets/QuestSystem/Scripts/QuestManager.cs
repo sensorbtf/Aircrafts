@@ -137,7 +137,7 @@ public class QuestManager : MonoBehaviour
 
     private void ClaimRewards(Quest quest)
     {
-        EventsManager.Instance.GoldEvents.GoldGained(quest.Info.goldReward);
+        EventsManager.Instance.EnergyEvents.GoldGained(quest.Info.goldReward);
         EventsManager.Instance.PlayerEvents.ExperienceGained(quest.Info.experienceReward);
     }
 

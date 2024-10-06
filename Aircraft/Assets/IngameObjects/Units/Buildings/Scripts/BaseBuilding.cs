@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Buildings
 {
-    public class BaseBuilding : Building
+    public class BaseBuilding: Building
     {
         [SerializeField] private float _percentageRepairAmount = 0.05f;
         [SerializeField] private int _timeToRepair = 5;

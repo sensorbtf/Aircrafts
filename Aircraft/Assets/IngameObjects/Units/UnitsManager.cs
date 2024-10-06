@@ -11,14 +11,14 @@ using Vehicles;
 
 namespace Objects
 {
-    public class UnitsManager: MonoBehaviour
+    public class UnitsManager : MonoBehaviour
     {
-        [SerializeField] private EnemyDatabase _enemyDatabase;
-        [SerializeField] private BuildingsDatabase _buildingsDatabase;
         [SerializeField] private VehiclesDatabase _vehiclesDatabase;
         [SerializeField] private InventoriesManager _inventoriesManager;
-
         [SerializeField] private CameraController _cameraController;
+
+        private int _currentEnergyNeed;
+        private int _currentEnergyInput;
 
         public List<Enemy> AllEnemies = new List<Enemy>();
         public List<Vehicle> AllVehicles = new List<Vehicle>();
@@ -28,7 +28,19 @@ namespace Objects
         private Unit _selectedUnit;
 
         public Unit SelectedUnit => _selectedUnit;
-        
+
+        public int CurrentEnergyNeed
+        {
+            get => _currentEnergyNeed;
+            set => _currentEnergyInput = value;
+        }
+
+        public int CurrentEnergyInput
+        {
+            get => _currentEnergyInput;
+            set => _currentEnergyInput = value;
+        }
+
         public Action<Unit> OnUnitCreated;
         public Action<Unit> OnUnitSelected;
 
@@ -69,7 +81,7 @@ namespace Objects
                         building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData);
                         break;
                     case BuildingType.Solar_Installation:
-                        building.GetComponent<PhotovoltaicFarmBuilding>().Initialize(building.BuildingData);
+                        building.GetComponent<SolarPanelsBuilding>().Initialize(building.BuildingData);
                         break;
                     case BuildingType.Sand_Collector:
                         building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData);
@@ -78,7 +90,7 @@ namespace Objects
                         building.GetComponent<WorkshopBuilding>().Initialize(building.BuildingData);
                         break;
                 }
-                
+
                 var unit = building.GetComponent<Unit>();
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
@@ -87,7 +99,7 @@ namespace Objects
 
                 OnUnitCreated?.Invoke(unit);
             }
-            
+
             foreach (var vehicleSo in _vehiclesDatabase.Vehicles)
             {
                 var newVehicle = Instantiate(vehicleSo.Prefab, gameObject.transform, true);
@@ -128,6 +140,13 @@ namespace Objects
             foreach (var enemy in AllEnemies.ToList())
             {
                 enemy.HandleSpecialAction();
+            }
+
+            foreach (var building in AllBuildings)
+            {
+                if (building is EnergyBuilding energyBuilding)
+                {
+                }
             }
 
             _selectedUnitController?.Update();
@@ -201,7 +220,7 @@ namespace Objects
             }
 
             _cameraController.UnitTransform = p_unit.transform;
-            
+
             if (p_invokeEvent)
             {
                 OnUnitSelected?.Invoke(p_unit);
@@ -231,7 +250,7 @@ namespace Objects
 
             switch (p_enemy.Type)
             {
-                case EnemyType.GroundMelee: 
+                case EnemyType.GroundMelee:
                     AllEnemies.Add(newEnemy.GetComponent<GroundEnemy>());
                     newEnemy.GetComponent<GroundEnemy>().Initialize(p_enemy);
                     break;
@@ -273,7 +292,7 @@ namespace Objects
             else if (p_unit is Enemy enemy)
             {
                 _inventoriesManager.CreateItemsOnDestroy(p_unit);
-                
+
                 if (enemy is EnemyBase baseOfEnemies)
                 {
                     baseOfEnemies.OnEnemySpawn -= SpawnEnemy;
@@ -304,11 +323,11 @@ namespace Objects
         {
             return AllBuildings.FirstOrDefault(x => x.BuildingData.Type == BuildingType.Base) as BaseBuilding;
         }
-        
+
         public BaseBuilding GetBaseOfVehicle(Vehicle p_vehicle)
         {
             return AllBuildings.Where(x => x.BuildingData.Type == BuildingType.Base)
-                .OfType<BaseBuilding>().FirstOrDefault(x=>x.VehiclesInBase.Contains(p_vehicle)); 
+                .OfType<BaseBuilding>().FirstOrDefault(x => x.VehiclesInBase.Contains(p_vehicle));
         }
 
         public void SelectUnit(Unit p_unit)

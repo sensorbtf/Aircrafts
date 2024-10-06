@@ -3,6 +3,7 @@ using Enemies;
 using Objects;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Serialization;
 
 namespace UI.HUD
@@ -10,6 +11,7 @@ namespace UI.HUD
     public class ItemPanel: MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _itemName;
+        [SerializeField] private Image _itemIcon;
 
         private void Start()
         {
@@ -20,7 +22,8 @@ namespace UI.HUD
         {
             gameObject.SetActive(true);
 
-            _itemName.text = $"{p_item.Item.Data.Type} ({p_item.Item.CurrentAmount})";
+            _itemName.text = $"{p_item.ItemToCollect.Data.Type} ({p_item.ItemToCollect.CurrentAmount})";
+            _itemIcon.sprite = p_item.ItemToCollect.Data.Icon;
         }
 
         public void ClosePanel()

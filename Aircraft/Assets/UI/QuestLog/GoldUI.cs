@@ -10,15 +10,15 @@ public class GoldUI : MonoBehaviour
 
     private void OnEnable() 
     {
-        EventsManager.Instance.GoldEvents.OnGoldChange += GoldChange;
+        EventsManager.Instance.EnergyEvents.OnGoldChange += EnergyChange;
     }
 
     private void OnDisable() 
     {
-        EventsManager.Instance.GoldEvents.OnGoldChange -= GoldChange;
+        EventsManager.Instance.EnergyEvents.OnGoldChange -= EnergyChange;
     }
 
-    private void GoldChange(int gold) 
+    private void EnergyChange(int gold) 
     {
         goldText.text = gold.ToString();
     }
