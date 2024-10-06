@@ -60,6 +60,7 @@ MonoBehaviour:
   _enemiesToSpawn:
   - {fileID: 11400000, guid: 6bc7515d54227634990bd8428e97f4f6, type: 2}
   - {fileID: 11400000, guid: 01449d68a2751404387fad86984edb53, type: 2}
+  - {fileID: 11400000, guid: e4b55ab18f4904c48b97effc74513345, type: 2}
   _spawnCooldown: 10
   _groundSpawner: {fileID: 6410637889339635464}
   _flyingSpawner: {fileID: 6285763792529817285}

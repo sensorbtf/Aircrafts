@@ -17,18 +17,18 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, _lifeTime); 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D p_collision)
     {
-        if (collision.CompareTag("Ground"))
+        if (p_collision.CompareTag("Ground"))
         {
             Destroy(gameObject);
         }
         
         if (!_isFromEnemy)
         {
-            if (collision.CompareTag("Enemy"))
+            if (p_collision.CompareTag("Enemy"))
             {
-                var enemy = collision.GetComponent<Unit>();
+                var enemy = p_collision.GetComponentInParent<Unit>();
                 if (enemy != null)
                 {
                     enemy.ReceiveDamage(_damage);
@@ -39,9 +39,9 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            if (collision.CompareTag("Vehicle") || collision.CompareTag("Building"))
+            if (p_collision.CompareTag("Vehicle") || p_collision.CompareTag("Building"))
             {
-                var unit = collision.GetComponent<Unit>();
+                var unit = p_collision.GetComponent<Unit>();
                 if (unit != null)
                 {
                     unit.ReceiveDamage(_damage);

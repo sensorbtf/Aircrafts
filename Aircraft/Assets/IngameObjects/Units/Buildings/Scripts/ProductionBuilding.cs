@@ -1,13 +1,16 @@
-﻿using Resources;
+﻿using Objects;
+using Resources;
 using Resources.Scripts;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Buildings
 {
-    public class ProductionBuilding : Building// oil/ sand 
+    public class ProductionBuilding: Building// oil/ sand 
     {
         [SerializeField] private int _timeToComplete;
+        [SerializeField] private GameObject _oilCanPrefab;
+        [SerializeField] private Transform _oilCanSpot;
         [SerializeField] private ResourceSO _outputProduction;
 
         private float _currentProductionTime;
@@ -44,8 +47,12 @@ namespace Buildings
 
                 if (_currentProductionTime >= _timeToComplete)
                 {
-                    Inventory.AddResource(_outputProduction, 1);
+                    var res = Inventory.AddResource(_outputProduction, 1);
                     _currentProductionTime = 0;
+
+                    var itemOnGround = Instantiate(_oilCanPrefab, _oilCanSpot.position, _oilCanSpot.rotation);
+                    var refs = itemOnGround.GetComponent<ItemOnGround>();
+                    refs.Initialize(res);
                 }
             }
         }

@@ -4,7 +4,7 @@ using Vehicles;
 
 namespace Enemies
 {
-    public class FlyingEnemy: Enemy
+    public class ShootingEnemyLogic: Enemy
     {
         internal Transform _currentTarget;
         private float _attackCooldown;
@@ -23,7 +23,7 @@ namespace Enemies
             }
             else
             {
-                MoveOnAttacks();
+                StopMovement();
                 PerformManeuversAndAttack();
             }
         }
@@ -56,19 +56,19 @@ namespace Enemies
         {
             if (_currentTarget == null)
             {
-                MoveOnAttacks();
+                StopMovement();
                 return;
             }
+
+            // Vector2 direction = (_currentTarget.position - transform.position).normalized;
+            // Rigidbody2D.velocity = new Vector2(direction.x * _maneuverSpeed, Rigidbody2D.velocity.y);
 
             HandleAttackCooldown();
         }
 
-        private void MoveOnAttacks()
+        private void StopMovement()
         {
-            float distanceToTarget = Vector2.Distance(transform.position, _currentTarget.position);
-            float acceleration = Mathf.Clamp(distanceToTarget / 10f, 0.5f, 1.5f); 
-
-            Rigidbody2D.AddForce(transform.up * (EnemyData.Speed * acceleration), ForceMode2D.Force);
+            Rigidbody2D.velocity = Vector2.zero;
         }
 
         private void HandleAttackCooldown()
