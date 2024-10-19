@@ -10,14 +10,14 @@ using Vehicles;
 
 namespace Enemies
 {
-    public abstract class Enemy : Unit
+    public class Enemy: Unit
     {
         [SerializeField] private EnemySO _enemyData;
         [SerializeField] private MonoBehaviour[] _monoComponents;
 
         private IEnemyMovementComponent[] _movementComponents;
         private IEnemyCombatComponent[] _combatComponents;
-        private bool _isMoving;
+        private bool _isAttacking;
 
         internal Unit CurrentTarget;
         public EnemySO EnemyData => _enemyData;
@@ -54,11 +54,14 @@ namespace Enemies
             OnUnitAttack?.Invoke(this, p_target.GetComponent<Unit>());
         }
 
-        public virtual void HandleMovement(Transform p_nearestPlayerUnit)
+        public void HandleMovement(Transform p_nearestPlayerUnit)
         {
             foreach (var component in _movementComponents)
             {
-                component.PhysicUpdate(p_nearestPlayerUnit, Rigidbody2D, CurrentTarget, _enemyData.Speed);
+                if (!_isAttacking)
+                {
+                    component.PhysicUpdate(p_nearestPlayerUnit, Rigidbody2D, CurrentTarget, _enemyData.Speed, _isAttacking);
+                }
             }
         }
 
@@ -73,7 +76,8 @@ namespace Enemies
                 
                 if (CurrentTarget != null)
                 {
-                    component.AttackUpdate(_enemyData.AttackCooldown, _enemyData.AttackDamage, CurrentTarget);
+                    component.AttackUpdate(_enemyData.AttackCooldown, _enemyData.AttackDamage, CurrentTarget, out var p_isAttacking);
+                    _isAttacking = p_isAttacking;
                 }
             }
         }

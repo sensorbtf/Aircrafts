@@ -5,16 +5,20 @@ namespace Enemies
 {
     public class WalkingMovementComponent: MonoBehaviour, IEnemyMovementComponent
     {
-        public void PhysicUpdate(Transform p_nearestPlayerUnit, Rigidbody2D p_enemyRb, Unit p_currentTarget, float p_speed)
+        public void PhysicUpdate(Transform p_nearestPlayerUnit, Rigidbody2D p_enemyRb, Unit p_currentTarget,
+            float p_speed, bool p_isAttacking)
         {
-            if (p_currentTarget == null)
+            if (p_isAttacking)
             {
-                Vector2 direction = (p_nearestPlayerUnit.position - transform.position).normalized;
-                MoveTowards(direction, p_enemyRb, p_speed);
+                StopMovement(p_enemyRb);
             }
             else
             {
-                StopMovement(p_enemyRb);
+                Vector2 direction = p_currentTarget != null ? (p_currentTarget.gameObject.transform
+                                            .position - transform.position).normalized : (p_nearestPlayerUnit.position 
+                                            - transform.position).normalized;
+                
+                MoveTowards(direction, p_enemyRb, p_speed);
             }
         }
 

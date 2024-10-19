@@ -11,7 +11,7 @@ namespace Enemies
         public float AttackRange { get;}
         public float AttackCooldown { get;}
         public Transform AttackPoint { get;}
-        void AttackUpdate(float p_attackCooldown, int p_attackDamage, Unit p_target);
+        void AttackUpdate(float p_attackCooldown, int p_attackDamage, Unit p_target, out bool p_isAttacking);
         Unit TryToDetectUnit();
     }
 }

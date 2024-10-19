@@ -5,16 +5,22 @@ namespace Enemies
 {
     public class MeleeCombatComponent : MonoBehaviour, IEnemyCombatComponent
     {
-        private float _currentAttackCooldown;
-        public bool IsMain { get; }
-        public float DetectionRange { get; }
-        public float AttackRange { get; }
-        public float AttackCooldown { get; }
-        public Transform AttackPoint { get; }
+        [SerializeField] private bool _isMain;
+        [SerializeField] private float _attackCooldown;
+        [SerializeField] private float _detectionRange;
+        [SerializeField] private float _attackRange;
+        [SerializeField] private Transform _attackPoint;
 
-        public void AttackUpdate(float p_attackCooldown, int p_attackDamage, Unit p_target)
+        private float _currentAttackCooldown;
+        public bool IsMain => _isMain;
+        public float DetectionRange => _detectionRange;
+        public float AttackRange => _attackRange;
+        public float AttackCooldown => _attackCooldown;
+        public Transform AttackPoint => _attackPoint;
+
+        public void AttackUpdate(float p_attackCooldown, int p_attackDamage, Unit p_target, out bool p_isAttacking)
         {
-            HandleAttackCooldown(p_attackCooldown, p_attackDamage, p_target);
+            p_isAttacking = HandleAttackCooldown(p_attackCooldown, p_attackDamage, p_target);
         }
 
         public Unit TryToDetectUnit()
@@ -30,20 +36,37 @@ namespace Enemies
             return null;
         }
 
-        private void HandleAttackCooldown(float p_attackCooldown, int p_attackDamage, Unit p_currentTarget)
+        private bool HandleAttackCooldown(float p_attackCooldown, int p_attackDamage, Unit p_currentTarget)
         {
             _currentAttackCooldown -= Time.deltaTime;
 
-            if (_currentAttackCooldown <= 0f && p_currentTarget != null)
-            {
-                var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, AttackRange);
+            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, AttackRange);
 
-                if (hitCollider != null && (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
-                                            hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag)))
+            if (hitCollider != null && (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
+                                        hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag)))
+            {
+                if (_currentAttackCooldown <= 0f && p_currentTarget != null)
                 {
                     p_currentTarget.GetComponent<Unit>().ReceiveDamage(p_attackDamage);
                     _currentAttackCooldown = p_attackCooldown;
                 }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (AttackPoint != null)
+            {
+                Gizmos.color = Color.yellow;
+                var position = AttackPoint.position;
+                Gizmos.DrawWireSphere(position, DetectionRange);
+
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(position, AttackRange);
             }
         }
     }

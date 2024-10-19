@@ -250,8 +250,8 @@ namespace Objects
             switch (p_enemy.Type)
             {
                 case EnemyType.GroundMelee:
-                    AllEnemies.Add(newEnemy.GetComponent<GroundEnemy>());
-                    newEnemy.GetComponent<GroundEnemy>().Initialize(p_enemy);
+                    AllEnemies.Add(newEnemy.GetComponent<Enemy>());
+                    newEnemy.GetComponent<Enemy>().Initialize(p_enemy);
                     break;
                 case EnemyType.Flying:
                     AllEnemies.Add(newEnemy.GetComponent<FlyingEnemy>());

@@ -6,6 +6,7 @@ namespace Enemies
 {
     public interface IEnemyMovementComponent
     {
-        void PhysicUpdate(Transform p_nearestPlayerUnit, Rigidbody2D p_enemyRb, Unit p_currentTarget, float p_speed);
+        void PhysicUpdate(Transform p_nearestPlayerUnit, Rigidbody2D p_enemyRb, Unit p_currentTarget, float p_speed,
+            bool p_isAttacking);
     }
 }
