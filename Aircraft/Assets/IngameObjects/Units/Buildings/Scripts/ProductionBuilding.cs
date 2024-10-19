@@ -9,7 +9,6 @@ namespace Buildings
     public class ProductionBuilding: Building// oil/ sand 
     {
         [SerializeField] private int _timeToComplete;
-        [SerializeField] private GameObject _oilCanPrefab;
         [SerializeField] private Transform _oilCanSpot;
         [SerializeField] private ResourceSO _outputProduction;
 
@@ -34,10 +33,10 @@ namespace Buildings
 
             _timer += Time.deltaTime;
 
-            if (Inventory.GetResourceAmount(_outputProduction) > 0)
-            { 
-                SetNewStateTexts(Actions.Collect);
-            }
+            // if (Inventory.GetResourceAmount(_outputProduction) > 0)
+            // { 
+            //     SetNewStateTexts(Actions.Collect);
+            // }
 
             if (_timer >= 1f)
             {
@@ -47,15 +46,25 @@ namespace Buildings
 
                 if (_currentProductionTime >= _timeToComplete)
                 {
-                    var res = Inventory.AddResource(_outputProduction, 1);
                     _currentProductionTime = 0;
-
-                    var itemOnGround = Instantiate(_oilCanPrefab, _oilCanSpot.position, _oilCanSpot.rotation);
-                    var refs = itemOnGround.GetComponent<ItemOnGround>();
-                    refs.Initialize(res);
+                    var res = new ResourceInUnit(_outputProduction, 99)
+                    {
+                        CurrentAmount = 1,
+                    };
+                    
+                    InventoriesManager.Instance.CreateItem(res, _oilCanSpot);
                 }
             }
         }
+        
+        public float GetOutputRatePerMinute()
+        {
+            float cyclesPerMinute = 60f / _timeToComplete;
+            float outputPerMinute = cyclesPerMinute * 1f; 
+
+            return outputPerMinute;
+        }
+
     }
 
     public enum ProductionType

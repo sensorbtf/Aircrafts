@@ -11,6 +11,7 @@ namespace Buildings
         [SerializeField] private bool _isBroken;
 
         private bool _isFunctioning;
+        private bool _isConnectedToGrid;
 
         public BuildingSO BuildingData => _buildingData;
         public bool IsBroken => _isBroken;

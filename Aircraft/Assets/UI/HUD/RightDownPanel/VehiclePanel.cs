@@ -88,7 +88,7 @@ namespace UI.HUD
                     var newGo = Instantiate(_resourcesPrefab, _resourcesGrid.transform);
                     var refs = newGo.GetComponent<HudIconRefs>();
 
-                    refs.Icon.sprite = resource.Data.Icon;
+                    refs.Icon.sprite = resource.Data.GetSpriteBasedOnAmount(resource.CurrentAmount);
                     refs.Text.text = $"{resource.CurrentAmount}";
 
                     _createdResources.Add(resource.Data, refs);

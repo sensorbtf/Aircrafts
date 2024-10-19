@@ -368,6 +368,8 @@ GameObject:
   - component: {fileID: 6518522288525271135}
   - component: {fileID: 5770259954536167791}
   - component: {fileID: 7674380276792217758}
+  - component: {fileID: -3951893801484146631}
+  - component: {fileID: -7905266561793871302}
   m_Layer: 9
   m_Name: KamikazeFlyingEnemy
   m_TagString: Enemy
@@ -412,10 +414,9 @@ MonoBehaviour:
   CurrentHp: 0
   _enemyData: {fileID: 11400000, guid: 01449d68a2751404387fad86984edb53, type: 2}
   AttackPoint: {fileID: 6660245239635009211}
-  _projectilePrefab: {fileID: 5379655993277838872, guid: 323ccfc358b70514caf1b765cdd5188a, type: 3}
-  _shootingRange: 4.5
-  _maneuverSpeed: 5
   _targetAltitude: 3.5
+  ShootingComponent: {fileID: -3951893801484146631}
+  KamikazeComponent: {fileID: -7905266561793871302}
 --- !u!50 &7674380276792217758
 Rigidbody2D:
   serializedVersion: 4
@@ -443,6 +444,35 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-3951893801484146631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3931662045494198967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e637d5344a64164bc0b16ddcca8ecb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _projectilePrefab: {fileID: 5379655993277838872, guid: 323ccfc358b70514caf1b765cdd5188a, type: 3}
+  _shootingRange: 4
+--- !u!114 &-7905266561793871302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3931662045494198967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1efee232cd9d4f789b41dc6dc6d3aff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _kamikazeSpeedMultiplier: 4
+  _damageMultiplier: 2
+  _hpPercentageThreshold: 0.3
 --- !u!1 &6346888552227167213
 GameObject:
   m_ObjectHideFlags: 0

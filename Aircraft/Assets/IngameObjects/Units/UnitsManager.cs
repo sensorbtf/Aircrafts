@@ -14,7 +14,6 @@ namespace Objects
     public class UnitsManager : MonoBehaviour
     {
         [SerializeField] private VehiclesDatabase _vehiclesDatabase;
-        [SerializeField] private InventoriesManager _inventoriesManager;
         [SerializeField] private CameraController _cameraController;
 
         private int _currentEnergyNeed;
@@ -32,7 +31,7 @@ namespace Objects
         public int CurrentEnergyNeed
         {
             get => _currentEnergyNeed;
-            set => _currentEnergyInput = value;
+            set => _currentEnergyNeed = value;
         }
 
         public int CurrentEnergyInput
@@ -63,7 +62,7 @@ namespace Objects
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
-                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
+                unit.PostInitialize(InventoriesManager.Instance.CreateInventory(unit));
 
                 OnUnitCreated?.Invoke(unit);
             }
@@ -86,16 +85,13 @@ namespace Objects
                     case BuildingType.Sand_Collector:
                         building.GetComponent<ProductionBuilding>().Initialize(building.BuildingData);
                         break;
-                    case BuildingType.Workshop:
-                        building.GetComponent<WorkshopBuilding>().Initialize(building.BuildingData);
-                        break;
                 }
 
                 var unit = building.GetComponent<Unit>();
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
-                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
+                unit.PostInitialize(InventoriesManager.Instance.CreateInventory(unit));
 
                 OnUnitCreated?.Invoke(unit);
             }
@@ -129,7 +125,7 @@ namespace Objects
                 unit.OnUnitClicked += SelectUnit;
                 unit.OnUnitAttack += UnitAttacked;
                 unit.OnUnitDied += UnitDied;
-                unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
+                unit.PostInitialize(InventoriesManager.Instance.CreateInventory(unit));
                 GetMainBase().TryToAddVehicleToBase(unit as Vehicle);
                 OnUnitCreated?.Invoke(unit);
             }
@@ -144,8 +140,11 @@ namespace Objects
 
             foreach (var building in AllBuildings)
             {
+                _currentEnergyNeed += building.BuildingData.EnergyNeed;
+                
                 if (building is EnergyBuilding energyBuilding)
                 {
+                    _currentEnergyNeed += energyBuilding.CurrentEnergyGeneration;
                 }
             }
 
@@ -268,7 +267,7 @@ namespace Objects
             unit.OnUnitAttack += UnitAttacked;
             unit.OnUnitDied += UnitDied;
 
-            unit.PostInitialize(_inventoriesManager.CreateInventory(unit));
+            unit.PostInitialize(InventoriesManager.Instance.CreateInventory(unit));
 
             OnUnitCreated?.Invoke(unit);
         }
@@ -291,7 +290,7 @@ namespace Objects
             }
             else if (p_unit is Enemy enemy)
             {
-                _inventoriesManager.CreateItemsOnDestroy(p_unit);
+                InventoriesManager.Instance.CreateItemsOnDestroy(p_unit);
 
                 if (enemy is EnemyBase baseOfEnemies)
                 {
@@ -316,7 +315,7 @@ namespace Objects
                 Debug.LogError("What have I clicked? " + p_unit);
             }
 
-            _inventoriesManager.TryToDeleteInventory(p_unit);
+            InventoriesManager.Instance.TryToDeleteInventory(p_unit);
         }
 
         public BaseBuilding GetMainBase()

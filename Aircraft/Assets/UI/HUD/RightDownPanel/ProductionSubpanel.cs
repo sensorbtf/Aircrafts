@@ -31,7 +31,7 @@ public class ProductionSubpanel : MonoBehaviour
     public void CustomStart(ProductionBuilding p_currentProductionBuilding)
     {
         _currentProductionBuilding = p_currentProductionBuilding;
-        _output.sprite = _currentProductionBuilding.OutputProduction.Icon;
+        _output.sprite = _currentProductionBuilding.OutputProduction.GetSpriteBasedOnAmount(1);
 
         if (_currentProductionBuilding.IsBroken)
         {
@@ -43,8 +43,8 @@ public class ProductionSubpanel : MonoBehaviour
         }
 
         _currentProductionBuilding.Inventory.OnResourceValueChanged += RefreshCurrentAmount;
-        _stateAmount.text = _currentProductionBuilding.Inventory.GetResourceAmount(_currentProductionBuilding.OutputProduction).ToString();
-        
+        _stateAmount.text = $"{_currentProductionBuilding.GetOutputRatePerMinute()}/m";
+            
         gameObject.SetActive(true);
     }
     

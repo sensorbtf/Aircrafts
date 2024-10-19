@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Buildings
 {
-    public class WindTurbineBuilding: Building
+    public class WindTurbineBuilding: EnergyBuilding
     {
 
     }

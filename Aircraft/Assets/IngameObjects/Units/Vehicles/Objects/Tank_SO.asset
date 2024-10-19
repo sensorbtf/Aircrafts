@@ -35,7 +35,7 @@ MonoBehaviour:
     ProjectileSpeed: 30
     MinFireAngle: -10
     MaxFireAngle: 40
-    RecoilForce: 10
+    RecoilForce: 8
     TrajectoryModifier: 0.18
   - Type: 0
     AmmoType: 3
@@ -46,5 +46,5 @@ MonoBehaviour:
     ProjectileSpeed: 30
     MinFireAngle: -30
     MaxFireAngle: 80
-    RecoilForce: 0.2
+    RecoilForce: 0.1
     TrajectoryModifier: 0.18

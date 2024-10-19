@@ -12,6 +12,7 @@ namespace Objects
     public class ItemOnGround : IngameObject
     {
         private ResourceInUnit _itemToCollect;
+        private bool _isMerging = false;
 
         public ResourceInUnit ItemToCollect => _itemToCollect;
 
@@ -19,10 +20,10 @@ namespace Objects
 
         internal void Initialize(ResourceInUnit p_item)
         {
-            ObjectRenderer.sprite = p_item.Data.Icon;
+            ObjectRenderer.sprite = p_item.Data.GetSpriteBasedOnAmount(p_item.CurrentAmount);
 
             _itemToCollect = p_item;
-            _itemToCollect.CurrentAmount = p_item.MaxAmount;
+            _itemToCollect.CurrentAmount = p_item.CurrentAmount;
 
             Initialize();
             CanvasInfo.HealthBar.gameObject.SetActive(false);
@@ -68,24 +69,36 @@ namespace Objects
         {
             OnItemClicked?.Invoke(this);
         }
-
+        
         private void OnCollisionEnter2D(Collision2D p_collision)
         {
-            // if (p_collision.gameObject.layer != LayerManager.ItemsLayerIndex) 
-            //     return;
-            //
-            // var item = p_collision.gameObject.GetComponent<ItemOnGround>();
-            //
-            // if (item.ItemToCollect.Data.Type != ItemToCollect.Data.Type) 
-            //     return;
-            //
-            // JoinItem(item);
-            // Destroy(item.gameObject);
+            if (_isMerging) 
+                return;
+
+            if (p_collision.gameObject.layer != LayerManager.ItemsLayerIndex) 
+                return;
+
+            var itemOnGround = p_collision.gameObject.GetComponent<ItemOnGround>();
+
+            if (itemOnGround.ItemToCollect.Data.Type != _itemToCollect.Data.Type) 
+                return;
+
+            itemOnGround.SetMergingFlag();
+
+            JoinItem(itemOnGround);
+            Destroy(itemOnGround.gameObject);
         }
 
         private void JoinItem(ItemOnGround p_itemOnGround)
         {
-            //_itemToCollect.CurrentAmount += p_itemOnGround.ItemToCollect.CurrentAmount;
+            _itemToCollect.CurrentAmount += p_itemOnGround.ItemToCollect.CurrentAmount;
+
+            ObjectRenderer.sprite = _itemToCollect.Data.GetSpriteBasedOnAmount(_itemToCollect.CurrentAmount);
+        }
+
+        private void SetMergingFlag()
+        {
+            _isMerging = true;
         }
     }
 }

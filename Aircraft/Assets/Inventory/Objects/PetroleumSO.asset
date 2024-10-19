@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae2e68269a14c85bb5575b0d2d81509, type: 3}
   m_Name: PetroleumSO
   m_EditorClassIdentifier: 
-  _icon: {fileID: 21300000, guid: 4c7f87eb3366e564e895792524c757e2, type: 3}
-  type: 0
+  _smallIcon: {fileID: 21300000, guid: 4c7f87eb3366e564e895792524c757e2, type: 3}
+  _mediumIcon: {fileID: 21300000, guid: 4c7f87eb3366e564e895792524c757e2, type: 3}
+  _bigIcon: {fileID: 21300000, guid: 4c7f87eb3366e564e895792524c757e2, type: 3}
+  _hugeIcon: {fileID: 21300000, guid: 4c7f87eb3366e564e895792524c757e2, type: 3}
+  _type: 0
   _initialValue: 30

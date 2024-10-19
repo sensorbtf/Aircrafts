@@ -6,13 +6,30 @@ namespace Resources.Scripts
     [CreateAssetMenu(fileName = "ResourceSO", menuName = "Resource/Data", order = 3)]
     public class ResourceSO: ScriptableObject
     {
-        [SerializeField] private Sprite _icon;
+        [SerializeField] private Sprite _smallIcon;
+        [SerializeField] private Sprite _mediumIcon;
+        [SerializeField] private Sprite _bigIcon;
+        [SerializeField] private Sprite _hugeIcon;
         [FormerlySerializedAs("type")] [SerializeField] private Resource _type;
         [SerializeField] private int _initialValue;
         
-        public Sprite Icon => _icon;
         public Resource Type => _type;
         public int InitialValue => _initialValue;
+
+        public Sprite GetSpriteBasedOnAmount(int p_currentAmount)
+        {
+            switch (p_currentAmount)
+            {
+                case <= 3:
+                    return _smallIcon;
+                case <= 6:
+                    return _mediumIcon;
+                case <= 9:
+                    return _bigIcon;
+                case > 9:
+                    return _hugeIcon;
+            }
+        }
     }
 
     public enum Resource

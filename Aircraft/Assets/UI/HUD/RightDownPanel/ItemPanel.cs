@@ -23,7 +23,7 @@ namespace UI.HUD
             gameObject.SetActive(true);
 
             _itemName.text = $"{p_item.ItemToCollect.Data.Type} ({p_item.ItemToCollect.CurrentAmount})";
-            _itemIcon.sprite = p_item.ItemToCollect.Data.Icon;
+            _itemIcon.sprite = p_item.ItemToCollect.Data.GetSpriteBasedOnAmount(p_item.ItemToCollect.CurrentAmount);
         }
 
         public void ClosePanel()

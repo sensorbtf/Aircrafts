@@ -5,8 +5,10 @@ using UnityEngine;
 public class BuildingSO: UnitSO
 {
     [SerializeField] private BuildingType _type;
+    [SerializeField] private int _energyNeed;
     
     public BuildingType Type => _type;
+    public int EnergyNeed => _energyNeed;
 }
 
 public enum BuildingType
@@ -15,5 +17,7 @@ public enum BuildingType
     Oil_Rig = 1,
     Solar_Installation = 2,
     Sand_Collector = 3,
-    Workshop = 4,
+    Generator = 4,
+    WindTurbine = 5,
+    Ark = 6,
 }

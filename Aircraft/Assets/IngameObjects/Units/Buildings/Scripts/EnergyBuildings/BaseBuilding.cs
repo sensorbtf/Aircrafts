@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace Buildings
 {
-    public class BaseBuilding: Building
+    public class BaseBuilding: EnergyBuilding
     {
         [SerializeField] private float _percentageRepairAmount = 0.05f;
         [SerializeField] private int _timeToRepair = 5;
 
-        private List<Vehicle> _vehiclesInBase = new();
+        [SerializeField] private List<Vehicle> _vehiclesInBase = new();
         public List<Vehicle> VehiclesInBase => _vehiclesInBase;
 
         public override void Initialize(BuildingSO p_buildingData)

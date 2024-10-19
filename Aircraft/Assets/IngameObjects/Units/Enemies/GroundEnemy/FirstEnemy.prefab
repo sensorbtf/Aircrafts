@@ -399,6 +399,7 @@ GameObject:
   - component: {fileID: 6518522288525271135}
   - component: {fileID: 7674380276792217758}
   - component: {fileID: 6783969454189815690}
+  - component: {fileID: 4978812374023329986}
   m_Layer: 9
   m_Name: FirstEnemy
   m_TagString: Enemy
@@ -470,7 +471,20 @@ MonoBehaviour:
   _rigidbody2D: {fileID: 7674380276792217758}
   CurrentHp: 0
   _enemyData: {fileID: 11400000, guid: 6bc7515d54227634990bd8428e97f4f6, type: 2}
-  AttackPoint: {fileID: 6660245239635009211}
+  _monoComponents:
+  - {fileID: 4978812374023329986}
+--- !u!114 &4978812374023329986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3931662045494198967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c878379ca7be433995815caac7ecdbc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6346888552227167213
 GameObject:
   m_ObjectHideFlags: 0

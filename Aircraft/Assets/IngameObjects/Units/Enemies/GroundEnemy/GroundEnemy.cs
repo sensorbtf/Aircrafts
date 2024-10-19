@@ -9,45 +9,31 @@ namespace Enemies
         private Transform _currentTarget;
         private float _attackCooldown;
 
-        public override void HandleMovement(Transform p_playerBase)
+        public override void HandleMovement(Transform p_nearestPlayerUnit)
         {
-            if (_currentTarget == null)
-            {
-                Vector2 direction = (p_playerBase.position - transform.position).normalized;
-                MoveTowards(direction);
-            }
-            else
-            {
-                StopMovement();
-                HandleAttackCooldown();
-            }
+            HandleAttackCooldown();
+            base.HandleMovement(p_nearestPlayerUnit);
         }
-
+        // TODO przemyśleć t komponenty. Czy należy oddzielać atakowanie od wykrywania, czy lepiej zostawić je w jednym przez 
+        //     kwestię zasięgu, jak określać, czy wróg powinien atakować z łapy czy z bliska,
+        //     czy pozwolić przeciwnikom wyprowadzać dwa rodzaje ataku
+        //     czy przyda isę komponent związany z kamikadze/wchodzeniem w kolizję, czy to już sprawa czołgu
+        //         jak rozwiązać komponent przekopywania się
+        //     jak rozwinąć komponent np. tarczy
         public override void HandleSpecialAction()
         {
-            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, 0.1f);
-            if (hitCollider != null && (hitCollider.gameObject.CompareTag("Building") ||
-                                        hitCollider.gameObject.CompareTag("Vehicle")))
-            {
-                _currentTarget = hitCollider.transform;
-            }
-            else
-            {
-                _currentTarget = null;
-            }
+            // var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, 0.1f);
+            // if (hitCollider != null && (hitCollider.gameObject.CompareTag("Building") ||
+            //                             hitCollider.gameObject.CompareTag("Vehicle")))
+            // {
+            //     _currentTarget = hitCollider.transform;
+            // }
+            // else
+            // {
+            //     _currentTarget = null;
+            // }
         }
-
-        private void MoveTowards(Vector2 direction)
-        {
-            Rigidbody2D.AddForce(direction * EnemyData.Speed, ForceMode2D.Force);
-        }
-
-        private void StopMovement()
-        {
-            // Stop the enemy's movement by setting the velocity to zero
-            Rigidbody2D.velocity = Vector2.zero;
-        }
-
+        
         private void HandleAttackCooldown()
         {
             _attackCooldown -= Time.deltaTime;

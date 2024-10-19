@@ -18,10 +18,7 @@ namespace UI.HUD
     public class HUDManager : MonoBehaviour
     {
         [Header("Panels")] [SerializeField] private RightDownPanelController _rightDownPanelController;
-
-        [FormerlySerializedAs("_inventoryManager")]
-        [Header("Managers")] 
-        [SerializeField] private InventoriesManager _inventoriesManager;
+        
         [SerializeField] private UnitsManager _unitsManager;
         [Header("Refs")] 
         [SerializeField] private Slider _fuelSlider;
@@ -39,17 +36,17 @@ namespace UI.HUD
         {
             HandleResourcesCreation();
             
-            _inventoriesManager.MainInventory.OnResourceValueChanged += RefreshResourcesIcons;
+            InventoriesManager.Instance.MainInventory.OnResourceValueChanged += RefreshResourcesIcons;
         }
 
         private void Awake()
         {
             _unitsManager.OnUnitCreated += HandleUnitIconCreation;
             _unitsManager.OnUnitSelected += SelectUnit;
-            _inventoriesManager.OnItemOnGroundMade += ListenToItem;
+            InventoriesManager.Instance.OnItemOnGroundMade += StartListeningToItem;
         }
 
-        private void ListenToItem(ItemOnGround p_item)
+        private void StartListeningToItem(ItemOnGround p_item)
         {
             p_item.OnItemClicked += SelectItem;
         }
@@ -58,8 +55,8 @@ namespace UI.HUD
         {
             _unitsManager.OnUnitCreated -= HandleUnitIconCreation;
             _unitsManager.OnUnitSelected -= SelectUnit;
-            _inventoriesManager.OnItemOnGroundMade -= ListenToItem;
-            _inventoriesManager.MainInventory.OnResourceValueChanged -= RefreshResourcesIcons;
+            InventoriesManager.Instance.OnItemOnGroundMade -= StartListeningToItem;
+            InventoriesManager.Instance.MainInventory.OnResourceValueChanged -= RefreshResourcesIcons;
         }
         
         private void Update()
@@ -134,13 +131,13 @@ namespace UI.HUD
 
         private void HandleResourcesCreation()
         {
-            foreach (var resource in _inventoriesManager.ResourceDatabase.Resources)
+            foreach (var resource in InventoriesManager.Instance.ResourceDatabase.Resources)
             {
                 var newGo = Instantiate(_iconPrefab, _resourcesTab.transform);
 
                 var refs = newGo.GetComponent<HudIconRefs>();
-                refs.Icon.sprite = resource.Icon;
-                refs.Text.text = _inventoriesManager.MainInventory.GetResourceAmount(resource.Type).ToString();
+                refs.Icon.sprite = resource.GetSpriteBasedOnAmount(99);
+                refs.Text.text = InventoriesManager.Instance.MainInventory.GetResourceAmount(resource.Type).ToString();
 
                 _createdResources.Add(resource, refs);
             }
@@ -154,7 +151,7 @@ namespace UI.HUD
                 {
                     if (icon.Key == p_resourceInUnit.Data)
                     {
-                        icon.Value.Text.text = _inventoriesManager.MainInventory.GetResourceAmount(p_resourceInUnit.Data.Type).ToString();
+                        icon.Value.Text.text = InventoriesManager.Instance.MainInventory.GetResourceAmount(p_resourceInUnit.Data.Type).ToString();
                         return;
                     }
                 }
