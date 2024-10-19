@@ -124,7 +124,7 @@ namespace Objects.Vehicles
             if (_isInBase)
                 return;
 
-            var nearbyUnits = GetNearbyObjects(new[] { LayerManager.PointOfInterest }, UnitData.CheckingStateRange);
+            var nearbyUnits = GetNearbyObjects(new[] { LayerTagsManager.PointOfInterest }, UnitData.CheckingStateRange);
 
             foreach (var ingameObject in nearbyUnits)
             {

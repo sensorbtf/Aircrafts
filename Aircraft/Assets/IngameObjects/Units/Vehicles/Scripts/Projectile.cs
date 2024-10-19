@@ -12,21 +12,22 @@ public class Projectile : MonoBehaviour
     public void Initialize(Vector2 p_initialVelocity, int p_damage, bool p_isFromEnemy)
     {
         _damage = p_damage;
-        gameObject.GetComponent<Rigidbody2D>().velocity = p_initialVelocity;
+        GameObject gO;
+        (gO = gameObject).GetComponent<Rigidbody2D>().velocity = p_initialVelocity;
         _isFromEnemy = p_isFromEnemy;
-        Destroy(gameObject, _lifeTime); 
+        Destroy(gO, _lifeTime); 
     }
 
     private void OnTriggerEnter2D(Collider2D p_collision)
     {
-        if (p_collision.CompareTag("Ground"))
+        if (p_collision.CompareTag(LayerTagsManager.GroundTag))
         {
             Destroy(gameObject);
         }
         
         if (!_isFromEnemy)
         {
-            if (p_collision.CompareTag("Enemy"))
+            if (p_collision.CompareTag(LayerTagsManager.EnemyTag))
             {
                 var enemy = p_collision.GetComponentInParent<Unit>();
                 if (enemy != null)
@@ -39,7 +40,7 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            if (p_collision.CompareTag("Vehicle") || p_collision.CompareTag("Building"))
+            if (p_collision.CompareTag(LayerTagsManager.VehicleTag) || p_collision.CompareTag(LayerTagsManager.BuildingTag))
             {
                 var unit = p_collision.GetComponent<Unit>();
                 if (unit != null)

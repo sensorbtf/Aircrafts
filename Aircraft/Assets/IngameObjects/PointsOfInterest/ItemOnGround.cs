@@ -75,7 +75,7 @@ namespace Objects
             if (_isMerging) 
                 return;
 
-            if (p_collision.gameObject.layer != LayerManager.ItemsLayerIndex) 
+            if (p_collision.gameObject.layer != LayerTagsManager.ItemsLayerIndex) 
                 return;
 
             var itemOnGround = p_collision.gameObject.GetComponent<ItemOnGround>();

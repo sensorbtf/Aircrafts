@@ -40,7 +40,7 @@ namespace Buildings
 
         private void HandleNearestUnits()
         {
-            var nearbyUnits = GetNearbyObjects(new[] { LayerManager.VehicleLayer }, UnitData.CheckingStateRange);
+            var nearbyUnits = GetNearbyObjects(new[] { LayerTagsManager.VehicleLayer }, UnitData.CheckingStateRange);
 
             foreach (var unit in nearbyUnits)
             {

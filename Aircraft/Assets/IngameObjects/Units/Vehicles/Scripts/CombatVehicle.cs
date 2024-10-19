@@ -189,13 +189,13 @@ namespace Objects.Vehicles
             Vector2 down = Vector2.down;
             Vector2 downRight = new Vector2(1.4f, -1).normalized;
 
-            RaycastHit2D leftHit = Physics2D.Raycast(transform.position, downLeft, leftRightRayDistance, LayerManager.GroundLayer);
-            RaycastHit2D centerHit = Physics2D.Raycast(transform.position, down, centerRayDistance, LayerManager.GroundLayer);
-            RaycastHit2D rightHit = Physics2D.Raycast(transform.position, downRight, leftRightRayDistance, LayerManager.GroundLayer);
+            RaycastHit2D leftHit = Physics2D.Raycast(transform.position, downLeft, leftRightRayDistance, LayerTagsManager.GroundLayer);
+            RaycastHit2D centerHit = Physics2D.Raycast(transform.position, down, centerRayDistance, LayerTagsManager.GroundLayer);
+            RaycastHit2D rightHit = Physics2D.Raycast(transform.position, downRight, leftRightRayDistance, LayerTagsManager.GroundLayer);
 
-            RaycastHit2D leftHit2 = Physics2D.Raycast(transform.position, downLeft, leftRightRayDistance, LayerManager.EnemyLayer);
-            RaycastHit2D centerHit2 = Physics2D.Raycast(transform.position, down, centerRayDistance, LayerManager.EnemyLayer);
-            RaycastHit2D rightHit2 = Physics2D.Raycast(transform.position, downRight, leftRightRayDistance, LayerManager.EnemyLayer);
+            RaycastHit2D leftHit2 = Physics2D.Raycast(transform.position, downLeft, leftRightRayDistance, LayerTagsManager.EnemyLayer);
+            RaycastHit2D centerHit2 = Physics2D.Raycast(transform.position, down, centerRayDistance, LayerTagsManager.EnemyLayer);
+            RaycastHit2D rightHit2 = Physics2D.Raycast(transform.position, downRight, leftRightRayDistance, LayerTagsManager.EnemyLayer);
 
             _isGrounded = (leftHit.collider != null || centerHit.collider != null || rightHit.collider != null ||
                            leftHit2.collider != null || centerHit2.collider != null || rightHit2.collider != null);
@@ -267,7 +267,7 @@ namespace Objects.Vehicles
                 Vector2 rayDirection = positions[i] - positions[i - 1];
                 var rayDistance = Vector2.Distance(positions[i - 1], positions[i]);
 
-                var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, LayerManager.GroundLayer);
+                var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, LayerTagsManager.GroundLayer);
 
                 if (hit.collider != null && hit.collider.CompareTag("Ground"))
                 {
@@ -417,7 +417,7 @@ namespace Objects.Vehicles
         {
             if (_isGrounded)
             {
-                if (p_collision.gameObject.layer == LayerManager.GroundLayerIndex)
+                if (p_collision.gameObject.layer == LayerTagsManager.GroundLayerIndex)
                 {
                     _lastFallSpeed = 0;
                 }
@@ -425,7 +425,7 @@ namespace Objects.Vehicles
 
             if (_lastFallSpeed >= _fallDamageThreshold)
             {
-                if (p_collision.gameObject.layer == LayerManager.EnemyLayerIndex)
+                if (p_collision.gameObject.layer == LayerTagsManager.EnemyLayerIndex)
                 {
                     Enemy enemy = p_collision.gameObject.GetComponent<Enemy>();
                     if (enemy != null)

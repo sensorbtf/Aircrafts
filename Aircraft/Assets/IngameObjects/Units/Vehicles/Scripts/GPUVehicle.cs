@@ -11,7 +11,7 @@ namespace Objects.Vehicles
 
         public override void CheckState()
         {
-            var layersToCheck = new[] { LayerManager.VehicleLayer, LayerManager.BuildingLayer };
+            var layersToCheck = new[] { LayerTagsManager.VehicleLayer, LayerTagsManager.BuildingLayer };
             var nearbyUnits = GetNearbyObjects(layersToCheck, UnitData.CheckingStateRange);
 
             foreach (var ingameObject in nearbyUnits)

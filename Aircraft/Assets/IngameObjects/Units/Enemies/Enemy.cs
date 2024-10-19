@@ -19,7 +19,7 @@ namespace Enemies
         private IEnemyCombatComponent[] _combatComponents;
         private bool _isMoving;
 
-        internal Transform CurrentTarget;
+        internal Unit CurrentTarget;
         public EnemySO EnemyData => _enemyData;
 
         public void Initialize(EnemySO p_enemyData)
@@ -66,7 +66,15 @@ namespace Enemies
         {
             foreach (var component in _combatComponents)
             {
-                component.AttackUpdate();
+                if (!component.IsMain && CurrentTarget != null) // priorytety główne ataki
+                    continue;
+
+                CurrentTarget = component.TryToDetectUnit();
+                
+                if (CurrentTarget != null)
+                {
+                    component.AttackUpdate(_enemyData.AttackCooldown, _enemyData.AttackDamage, CurrentTarget);
+                }
             }
         }
 
@@ -86,7 +94,6 @@ namespace Enemies
 
         public override void Repair(int p_repaired)
         {
-
         }
 
         public override void CheckState()

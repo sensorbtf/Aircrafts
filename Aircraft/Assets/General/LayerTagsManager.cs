@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class LayerManager
+public static class LayerTagsManager
 {
     public static LayerMask VehicleLayer { get; private set; }
     public static LayerMask BuildingLayer { get; private set; }
@@ -15,9 +15,20 @@ public static class LayerManager
     public static int EnemyLayerIndex { get; private set; }
     public static int GroundLayerIndex { get; private set; }
     public static int PointOfInterestIndex { get; private set; }
+    
+    
+    public static string VehicleTag { get; private set; }
+    public static string BuildingTag { get; private set; }
+    public static string GroundTag { get; private set; }
+    public static string EnemyTag { get; private set; }
 
-    static LayerManager()
+    static LayerTagsManager()
     {
+        BuildingTag = "Building";
+        VehicleTag = "Vehicle";
+        GroundTag = "Ground";
+        EnemyTag = "Enemy";
+        
         VehicleLayer = LayerMask.GetMask("Vehicles");
         BuildingLayer = LayerMask.GetMask("Buildings");
         EnemyLayer = LayerMask.GetMask("Enemies"); 

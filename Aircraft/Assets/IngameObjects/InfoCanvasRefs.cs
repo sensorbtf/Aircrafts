@@ -26,7 +26,7 @@ public class InfoCanvasRefs : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D p_collision)
     {
-        if (_initialPosition == Vector3.zero && p_collision.gameObject.layer == LayerManager.GroundLayerIndex)
+        if (_initialPosition == Vector3.zero && p_collision.gameObject.layer == LayerTagsManager.GroundLayerIndex)
         {
             _initialPosition = transform.position;
         }

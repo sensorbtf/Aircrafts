@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using Objects;
+using UnityEngine;
 
 namespace Enemies
 {
     public class WalkingMovementComponent: MonoBehaviour, IEnemyMovementComponent
     {
-        public void PhysicUpdate(Transform p_nearestPlayerUnit, Rigidbody2D p_enemyRb, Transform p_currentTarget, float p_speed)
+        public void PhysicUpdate(Transform p_nearestPlayerUnit, Rigidbody2D p_enemyRb, Unit p_currentTarget, float p_speed)
         {
             if (p_currentTarget == null)
             {

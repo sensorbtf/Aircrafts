@@ -19,7 +19,7 @@ namespace Objects.Vehicles
         public override void CheckState()
         {
             var layersToCheck = new[]
-                { LayerManager.VehicleLayer, LayerManager.BuildingLayer, LayerManager.ItemsLayer };
+                { LayerTagsManager.VehicleLayer, LayerTagsManager.BuildingLayer, LayerTagsManager.ItemsLayer };
             var nearbyUnits = GetNearbyObjects(layersToCheck, UnitData.CheckingStateRange);
 
             foreach (var ingameObject in nearbyUnits)
@@ -65,7 +65,10 @@ namespace Objects.Vehicles
                         }
                     }
                 }
-                else if (ingameObject is ItemOnGround item)
+                else if (ingameObject is ItemOnGround item) 
+                    // TODO: automatic picking up? Switching inventory for limited generic one
+                    // TODO: and adding small inventory to every vehicle
+                    // TODO: Rethinking way of collecting and depositing
                 {
                     item.TryToActivateStateButtons(Actions.Collect, item, this, true);
                 }
