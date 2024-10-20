@@ -1,4 +1,5 @@
-﻿using Objects;
+﻿using System.Linq;
+using Objects;
 using UnityEngine;
 
 namespace Enemies
@@ -25,33 +26,40 @@ namespace Enemies
 
         public Unit TryToDetectUnit()
         {
-            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, DetectionRange);
+            var hitColliders = Physics2D.OverlapCircleAll(AttackPoint.position, DetectionRange);
+            var validTargets = hitColliders
+                .Where(hitCollider => hitCollider != null &&
+                                      (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
+                                       hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag))).ToList();
 
-            if (hitCollider != null && (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
-                                        hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag)))
-            {
-                return hitCollider.gameObject.GetComponent<Unit>();
-            }
+            if (!validTargets.Any())
+                return null;
 
-            return null;
+            var closestTarget = validTargets
+                .OrderBy(hitCollider => Vector2.Distance(AttackPoint.position, hitCollider.transform.position))
+                .FirstOrDefault();
+
+            return closestTarget?.gameObject.GetComponent<Unit>();
         }
 
         private bool HandleAttackCooldown(float p_attackCooldown, int p_attackDamage, Unit p_currentTarget)
         {
             _currentAttackCooldown -= Time.deltaTime;
 
-            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, AttackRange);
+            var hitColliders = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange);
 
-            if (hitCollider != null && (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
-                                        hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag)))
+            foreach (var hitCollider in hitColliders)
             {
-                if (_currentAttackCooldown <= 0f && p_currentTarget != null)
+                if (hitCollider.gameObject == p_currentTarget.gameObject)
                 {
-                    p_currentTarget.GetComponent<Unit>().ReceiveDamage(p_attackDamage);
-                    _currentAttackCooldown = p_attackCooldown;
-                }
+                    if (_currentAttackCooldown <= 0f && p_currentTarget != null)
+                    {
+                        p_currentTarget.GetComponent<Unit>().ReceiveDamage(p_attackDamage);
+                        _currentAttackCooldown = p_attackCooldown;
+                    }
 
-                return true;
+                    return true;
+                }
             }
 
             return false;
@@ -70,4 +78,5 @@ namespace Enemies
             }
         }
     }
+
 }
