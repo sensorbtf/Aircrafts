@@ -247,19 +247,8 @@ namespace Objects
             var newEnemy = Instantiate(p_enemy.Prefab, gameObject.transform);
             newEnemy.transform.position = p_trans.position;
 
-            switch (p_enemy.Type)
-            {
-                case EnemyType.GroundMelee:
-                    AllEnemies.Add(newEnemy.GetComponent<Enemy>());
-                    newEnemy.GetComponent<Enemy>().Initialize(p_enemy);
-                    break;
-                case EnemyType.Flying:
-                    AllEnemies.Add(newEnemy.GetComponent<FlyingEnemy>());
-                    newEnemy.GetComponent<FlyingEnemy>().Initialize(p_enemy);
-                    break;
-                case EnemyType.Base:
-                    break;
-            }
+            AllEnemies.Add(newEnemy.GetComponent<Enemy>());
+            newEnemy.GetComponent<Enemy>().Initialize(p_enemy);
 
             var unit = newEnemy.GetComponent<Unit>();
 

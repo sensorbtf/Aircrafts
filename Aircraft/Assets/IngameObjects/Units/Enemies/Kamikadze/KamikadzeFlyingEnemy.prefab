@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5854499227263893862}
   - component: {fileID: 7372997087050897598}
-  - component: {fileID: 196944198002704556}
+  - component: {fileID: 6554008527322233394}
   m_Layer: 9
   m_Name: Icon
   m_TagString: Enemy
@@ -144,7 +144,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!61 &196944198002704556
+--- !u!61 &6554008527322233394
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,7 +176,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.75, y: -1.25}
+  m_Offset: {x: -1.46, y: -1.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -187,7 +187,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6.82, y: 4.74}
+  m_Size: {x: 7.42, y: 4.64}
   m_EdgeRadius: 0
 --- !u!1 &1362506913905696789
 GameObject:
@@ -366,12 +366,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6518522288525271135}
-  - component: {fileID: 5770259954536167791}
+  - component: {fileID: 8190448832810724535}
   - component: {fileID: 7674380276792217758}
-  - component: {fileID: -3951893801484146631}
-  - component: {fileID: -7905266561793871302}
+  - component: {fileID: 151078749857786211}
+  - component: {fileID: 6407994510958219945}
   m_Layer: 9
-  m_Name: KamikazeFlyingEnemy
+  m_Name: KamikadzeFlyingEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -395,7 +395,7 @@ Transform:
   - {fileID: 3547263381495695656}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5770259954536167791
+--- !u!114 &8190448832810724535
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -404,19 +404,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 3931662045494198967}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 613d7b30b0199904988034bfc0744e24, type: 3}
+  m_Script: {fileID: 11500000, guid: 229d6f81a1b94435a052b680b5c463b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _unitRenderer: {fileID: 0}
-  _unitCollider: {fileID: 196944198002704556}
+  _unitCollider: {fileID: 6554008527322233394}
   CanvasInfo: {fileID: 3830076512131699485}
   _rigidbody2D: {fileID: 7674380276792217758}
   CurrentHp: 0
-  _enemyData: {fileID: 11400000, guid: 01449d68a2751404387fad86984edb53, type: 2}
-  AttackPoint: {fileID: 6660245239635009211}
-  _targetAltitude: 3.5
-  ShootingComponent: {fileID: -3951893801484146631}
-  KamikazeComponent: {fileID: -7905266561793871302}
+  _enemyData: {fileID: 11400000, guid: e4b55ab18f4904c48b97effc74513345, type: 2}
+  _monoComponents:
+  - {fileID: 151078749857786211}
+  - {fileID: 6407994510958219945}
 --- !u!50 &7674380276792217758
 Rigidbody2D:
   serializedVersion: 4
@@ -444,7 +443,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &-3951893801484146631
+--- !u!114 &151078749857786211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -457,8 +456,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectilePrefab: {fileID: 5379655993277838872, guid: 323ccfc358b70514caf1b765cdd5188a, type: 3}
-  _shootingRange: 4
---- !u!114 &-7905266561793871302
+  _projectileSpeed: 5
+  _isMain: 1
+  _attackCooldown: 1
+  _detectionRange: 5
+  _attackRange: 5
+  _attackPoint: {fileID: 6660245239635009211}
+--- !u!114 &6407994510958219945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -467,12 +471,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3931662045494198967}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1efee232cd9d4f789b41dc6dc6d3aff9, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a95b8f230a2493ca56a08738405713a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _kamikazeSpeedMultiplier: 4
-  _damageMultiplier: 2
-  _hpPercentageThreshold: 0.3
+  _targetAltitude: 5
+  _performManevuers: 1
 --- !u!1 &6346888552227167213
 GameObject:
   m_ObjectHideFlags: 0

@@ -31,10 +31,5 @@ namespace Enemies
         {
             p_enemyRb.velocity = Vector2.zero;
         }
-        
-        public void NormalUpdate()
-        {
-            
-        }
     }
 }

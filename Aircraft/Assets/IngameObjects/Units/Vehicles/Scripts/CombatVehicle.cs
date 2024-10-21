@@ -371,8 +371,6 @@ namespace Objects.Vehicles
             {
                 Rigidbody2D.AddForce(recoilDirection * recoilForce, ForceMode2D.Impulse);
             }
-
-            Debug.Log("Recoil applied: " + recoilDirection * recoilForce);
         }
 
         private void Jump()

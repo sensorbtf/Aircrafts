@@ -58,10 +58,7 @@ namespace Enemies
         {
             foreach (var component in _movementComponents)
             {
-                if (!_isAttacking)
-                {
-                    component.PhysicUpdate(p_nearestPlayerUnit, Rigidbody2D, CurrentTarget, _enemyData.Speed, _isAttacking);
-                }
+                component.PhysicUpdate(p_nearestPlayerUnit, Rigidbody2D, CurrentTarget, _enemyData.Speed, _isAttacking);
             }
         }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Enemies
 {
-    public class MeleeCombatComponent : MonoBehaviour, IEnemyCombatComponent
+    public class MeleeCombatComponent: MonoBehaviour, IEnemyCombatComponent
     {
         [SerializeField] private bool _isMain;
         [SerializeField] private float _attackCooldown;
@@ -50,16 +50,16 @@ namespace Enemies
 
             foreach (var hitCollider in hitColliders)
             {
-                if (hitCollider.gameObject == p_currentTarget.gameObject)
-                {
-                    if (_currentAttackCooldown <= 0f && p_currentTarget != null)
-                    {
-                        p_currentTarget.GetComponent<Unit>().ReceiveDamage(p_attackDamage);
-                        _currentAttackCooldown = p_attackCooldown;
-                    }
+                if (hitCollider.gameObject != p_currentTarget.gameObject)
+                    continue;
 
-                    return true;
+                if (_currentAttackCooldown <= 0f && p_currentTarget != null)
+                {
+                    p_currentTarget.GetComponent<Unit>().ReceiveDamage(p_attackDamage);
+                    _currentAttackCooldown = p_attackCooldown;
                 }
+
+                return true;
             }
 
             return false;
@@ -67,16 +67,12 @@ namespace Enemies
 
         private void OnDrawGizmos()
         {
-            if (AttackPoint != null)
-            {
-                Gizmos.color = Color.yellow;
-                var position = AttackPoint.position;
-                Gizmos.DrawWireSphere(position, DetectionRange);
+            Gizmos.color = Color.yellow;
+            var position = AttackPoint.position;
+            Gizmos.DrawWireSphere(position, DetectionRange);
 
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(position, AttackRange);
-            }
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(position, AttackRange);
         }
     }
-
 }

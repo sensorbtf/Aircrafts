@@ -1,19 +1,25 @@
-﻿using Objects;
+﻿using System.Linq;
+using Objects;
 using UnityEngine;
 
 namespace Enemies
 {
-    public class ShootingComponent : MonoBehaviour, IEnemyCombatComponent
+    public class ShootingComponent: MonoBehaviour, IEnemyCombatComponent
     {
         [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private float _projectileSpeed = 5f;
-
+        [SerializeField] private bool _isMain;
+        [SerializeField] private float _attackCooldown;
+        [SerializeField] private float _detectionRange;
+        [SerializeField] private float _attackRange;
+        [SerializeField] private Transform _attackPoint;
+        
         private float _currentAttackCooldown;
-        public bool IsMain { get; }
-        public float DetectionRange { get; }
-        public float AttackRange { get; }
-        public float AttackCooldown { get; }
-        public Transform AttackPoint { get; }
+        public bool IsMain => _isMain;
+        public float DetectionRange => _detectionRange;
+        public float AttackRange => _attackRange;
+        public float AttackCooldown => _attackCooldown;
+        public Transform AttackPoint => _attackPoint;
 
         public void AttackUpdate(float p_attackCooldown, int p_attackDamage, Unit p_target, out bool p_isAttacking)
         {
@@ -22,33 +28,40 @@ namespace Enemies
 
         public Unit TryToDetectUnit()
         {
-            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, DetectionRange);
+            var hitColliders = Physics2D.OverlapCircleAll(AttackPoint.position, DetectionRange);
+            var validTargets = hitColliders
+                .Where(hitCollider => hitCollider != null &&
+                                      (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
+                                       hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag))).ToList();
 
-            if (hitCollider != null && (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
-                                        hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag)))
-            {
-                return hitCollider.gameObject.GetComponent<Unit>();
-            }
+            if (!validTargets.Any())
+                return null;
 
-            return null;
+            var closestTarget = validTargets
+                .OrderBy(hitCollider => Vector2.Distance(AttackPoint.position, hitCollider.transform.position))
+                .FirstOrDefault();
+
+            return closestTarget?.gameObject.GetComponent<Unit>();
         }
 
         private bool HandleAttackCooldown(float p_attackCooldown, int p_attackDamage, Unit p_currentTarget)
         {
             _currentAttackCooldown -= Time.deltaTime;
 
-            var hitCollider = Physics2D.OverlapCircle(AttackPoint.position, AttackRange);
+            var hitColliders = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange);
 
-            if (hitCollider != null && (hitCollider.gameObject.CompareTag(LayerTagsManager.BuildingTag) ||
-                                        hitCollider.gameObject.CompareTag(LayerTagsManager.VehicleTag)))
+            foreach (var hitCollider in hitColliders)
             {
+                if (hitCollider.gameObject != p_currentTarget.gameObject)
+                    continue;
+
                 if (_currentAttackCooldown <= 0f && p_currentTarget != null)
                 {
                     ShootProjectile(p_currentTarget, p_attackDamage);
                     _currentAttackCooldown = p_attackCooldown;
-                    
-                    return true;
                 }
+
+                return true;
             }
 
             return false;
